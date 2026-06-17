@@ -114,7 +114,7 @@ export const keyboards: Keyboard[] = [
     tagline: "MGX magnetic switches with adjustable actuation",
     image: "/keyboards/corsair-k70-max.png",
     purchaseUrl:
-      "https://www.corsair.com/us/en/p/keyboards/k70-max-rgb-magnetic-mechanical-gaming-keyboard-ch-910941e-na",
+      "https://www.corsair.com/us/en/p/keyboards/ch-910961g-na/k70-max-rgb-magnetic-mechanical-gaming-keyboard-adjustable-corsair-mgx-switches-steel-grey-ch-910961g-na",
     badge: "Fastest",
     stats: {
       switchType: "Corsair MGX Hyper-Fast (Magnetic)",
@@ -200,7 +200,7 @@ export const keyboards: Keyboard[] = [
     tagline: "Pro-grade wireless with sub-1 ms Lightspeed latency",
     image: "/keyboards/logitech-g-pro-x-tkl-lightspeed.jpg",
     purchaseUrl:
-      "https://www.logitechg.com/en-us/products/gaming-keyboards/pro-x-tkl-lightspeed-wireless-keyboard.html",
+      "https://www.logitechg.com/en-us/shop/p/pro-x-tkl-wireless-keyboard",
     stats: {
       switchType: "GX mechanical (hot-swappable)",
       layout: "TKL",
@@ -262,7 +262,7 @@ export const keyboards: Keyboard[] = [
     priceUsd: 149,
     tagline: "Hot-swappable TKL with PBT keycaps and RGB",
     image: "/keyboards/ducky-one-3-rgb-tkl.jpg",
-    purchaseUrl: "https://archive.ducky.global/en/One3-RGB-TKL",
+    purchaseUrl: "https://mechanicalkeyboards.com/products/ducky-one-3-tkl-classic",
     stats: {
       switchType: "Cherry MX Speed Silver",
       layout: "TKL",
@@ -282,7 +282,7 @@ export const keyboards: Keyboard[] = [
     priceUsd: 139,
     tagline: "Compact speed build with Cherry MX Speed Silver",
     image: "/keyboards/ducky-one-3-mini-sf.jpg",
-    purchaseUrl: "https://ducky.global/en/One3-Mini",
+    purchaseUrl: "https://mechanicalkeyboards.com/products/ducky-one-3-mini-classic",
     stats: {
       switchType: "Cherry MX Speed Silver",
       layout: "60%",
@@ -322,7 +322,8 @@ export const keyboards: Keyboard[] = [
     priceUsd: 300,
     tagline: "OmniPoint 3.0 adjustable magnetic switches at 8000 Hz",
     image: "/keyboards/steelseries-apex-pro-gen3-tkl.jpg",
-    purchaseUrl: "https://steelseries.com/gaming-keyboards/apex-pro-gen-3-tkl",
+    purchaseUrl:
+      "https://steelseries.com/gaming-keyboards/apex-pro-gen-3?keyboardSize=tkl",
     stats: {
       switchType: "OmniPoint 3.0 (Magnetic)",
       layout: "TKL",

@@ -1,3 +1,4 @@
+import https from "node:https";
 import { keyboards } from "@/data/keyboards";
 import type { Keyboard } from "@/types";
 import {
@@ -11,7 +12,71 @@ import type { AvailabilityMap, AvailabilityRecord } from "./types";
 import { FETCH_TIMEOUT_MS } from "./types";
 
 const USER_AGENT =
-  "KeySol/1.0 (+https://github.com/Let-it-happen339/Keysol; availability checker)";
+  "Mozilla/5.0 (compatible; KeySol/1.0; +https://github.com/Let-it-happen339/Keysol)";
+
+const FETCH_HEADERS = {
+  "User-Agent": USER_AGENT,
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "en-US,en;q=0.9",
+  "Cache-Control": "no-cache",
+};
+
+function isHeadersOverflowError(error: unknown): boolean {
+  if (!(error instanceof TypeError)) {
+    return false;
+  }
+
+  const cause = error.cause as { code?: string } | undefined;
+  return cause?.code === "UND_ERR_HEADERS_OVERFLOW";
+}
+
+function fetchWithHttpsLargeHeaders(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const requestUrl = new URL(url);
+    const req = https.get(
+      {
+        hostname: requestUrl.hostname,
+        path: `${requestUrl.pathname}${requestUrl.search}`,
+        headers: FETCH_HEADERS,
+        maxHeaderSize: 65536,
+      },
+      (response) => {
+        if (
+          response.statusCode &&
+          response.statusCode >= 300 &&
+          response.statusCode < 400 &&
+          response.headers.location
+        ) {
+          response.resume();
+          resolve(
+            fetchWithHttpsLargeHeaders(
+              new URL(response.headers.location, url).href,
+            ),
+          );
+          return;
+        }
+
+        if (!response.statusCode || response.statusCode >= 400) {
+          response.resume();
+          reject(new Error(`HTTP ${response.statusCode ?? "error"}`));
+          return;
+        }
+
+        let body = "";
+        response.setEncoding("utf8");
+        response.on("data", (chunk) => {
+          body += chunk;
+        });
+        response.on("end", () => resolve(body));
+      },
+    );
+
+    req.on("error", reject);
+    req.setTimeout(FETCH_TIMEOUT_MS, () => {
+      req.destroy(new Error("Timeout"));
+    });
+  });
+}
 
 async function fetchPurchasePage(url: string): Promise<string> {
   const controller = new AbortController();
@@ -20,10 +85,7 @@ async function fetchPurchasePage(url: string): Promise<string> {
   try {
     const response = await fetch(url, {
       signal: controller.signal,
-      headers: {
-        "User-Agent": USER_AGENT,
-        Accept: "text/html,application/xhtml+xml",
-      },
+      headers: FETCH_HEADERS,
       redirect: "follow",
       cache: "no-store",
     });
@@ -33,6 +95,12 @@ async function fetchPurchasePage(url: string): Promise<string> {
     }
 
     return await response.text();
+  } catch (error) {
+    if (isHeadersOverflowError(error)) {
+      return fetchWithHttpsLargeHeaders(url);
+    }
+
+    throw error;
   } finally {
     clearTimeout(timeout);
   }
@@ -45,7 +113,7 @@ export async function checkKeyboardAvailability(
 
   try {
     const html = await fetchPurchasePage(keyboard.purchaseUrl);
-    const status = parseAvailabilityFromHtml(html);
+    const status = parseAvailabilityFromHtml(html, keyboard.purchaseUrl);
 
     return {
       keyboardId: keyboard.id,
