@@ -11,6 +11,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
+## Verification
+
+Run the full regression suite before pushing:
+
+```bash
+npm run check        # lint + unit tests + production build
+npm run test:e2e     # browser smoke tests (prod server on port 3100)
+```
+
+CI runs the same checks on every push and pull request to `main`.
+
 ## Tech Stack
 
 - **Next.js 16** (App Router)

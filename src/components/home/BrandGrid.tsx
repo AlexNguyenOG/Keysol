@@ -10,12 +10,13 @@ export function BrandGrid() {
             Top Keyboard Brands
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-text-muted">
-            From hall-effect pioneers to esports legends — explore the brands
-            shaping how we type and play.
+            From hall-effect pioneers to esports legends — explore each
+            brand&apos;s fastest keyboard with pricing, release dates, and
+            performance stats.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {brands.map((brand) => (
             <BrandCard key={brand.id} brand={brand} />
           ))}

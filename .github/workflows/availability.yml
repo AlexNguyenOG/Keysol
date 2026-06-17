@@ -1,0 +1,23 @@
+name: Refresh availability
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run availability:refresh
+      - name: Upload cache artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: availability-cache
+          path: .cache/availability.json

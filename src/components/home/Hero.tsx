@@ -23,9 +23,9 @@ export function Hero() {
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-text-muted">
-          An unbiased guide across gaming, productivity, and enthusiast boards.
-          Compare top brands like Wooting, Razer, Corsair, and more — all in one
-          place.
+          An unbiased guide to the fastest keyboards from Wooting, Razer,
+          Corsair, and more — with pricing, release dates, and performance
+          stats side by side.
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -35,9 +35,12 @@ export function Hero() {
           >
             Explore Brands
           </a>
-          <span className="w-full cursor-not-allowed rounded-lg border border-white/10 px-8 py-3 text-sm font-medium text-text-muted/50 sm:w-auto">
-            View Rankings (soon)
-          </span>
+          <a
+            href="/rankings"
+            className="w-full rounded-lg border border-white/10 px-8 py-3 text-sm font-medium text-text-primary transition-colors hover:border-solana-purple/40 hover:bg-white/5 sm:w-auto"
+          >
+            View Rankings
+          </a>
         </div>
       </div>
     </section>

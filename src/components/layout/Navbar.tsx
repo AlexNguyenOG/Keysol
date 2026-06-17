@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 function SolanaLogo() {
   return (
     <svg
@@ -42,37 +44,40 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-bg-primary/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <a href="#" className="flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2.5">
           <SolanaLogo />
           <span className="text-lg font-semibold tracking-tight">
             Key<span className="gradient-text">Sol</span>
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          <a
-            href="#brands"
+          <Link
+            href="/#brands"
             className="text-sm text-text-muted transition-colors hover:text-text-primary"
           >
             Brands
-          </a>
-          <a
-            href="#about"
+          </Link>
+          <Link
+            href="/rankings"
+            className="text-sm text-text-muted transition-colors hover:text-text-primary"
+          >
+            Rankings
+          </Link>
+          <Link
+            href="/#about"
             className="text-sm text-text-muted transition-colors hover:text-text-primary"
           >
             About
-          </a>
-          <span className="cursor-not-allowed text-sm text-text-muted/50">
-            Rankings (soon)
-          </span>
+          </Link>
         </div>
 
-        <a
-          href="#brands"
+        <Link
+          href="/rankings"
           className="rounded-lg bg-gradient-to-r from-solana-purple to-solana-green px-4 py-2 text-sm font-semibold text-bg-primary transition-opacity hover:opacity-90"
         >
-          Explore Brands
-        </a>
+          View Rankings
+        </Link>
       </nav>
     </header>
   );
