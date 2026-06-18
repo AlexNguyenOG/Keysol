@@ -36,7 +36,7 @@ export function BrandCard({ brand }: BrandCardProps) {
       </ul>
 
       {brandKeyboards.length > 0 && (
-        <div className="mt-auto space-y-3 border-t border-white/10 pt-4">
+        <div className="space-y-3 border-t border-white/10 pt-4">
           <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
             Fastest keyboards
           </p>

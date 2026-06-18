@@ -113,7 +113,7 @@ export async function checkKeyboardAvailability(
 
   try {
     const html = await fetchPurchasePage(keyboard.purchaseUrl);
-    const status = parseAvailabilityFromHtml(html, keyboard.purchaseUrl);
+    const status = parseAvailabilityFromHtml(html);
 
     return {
       keyboardId: keyboard.id,

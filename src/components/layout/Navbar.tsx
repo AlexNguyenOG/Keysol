@@ -56,7 +56,7 @@ export function Navbar() {
             href="/#brands"
             className="text-sm text-text-muted transition-colors hover:text-text-primary"
           >
-            Brands
+            Brands and Shopping
           </Link>
           <Link
             href="/rankings"

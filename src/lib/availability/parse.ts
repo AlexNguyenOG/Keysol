@@ -1,8 +1,20 @@
-import { parseDomainAvailability } from "./domains";
 import type { AvailabilityStatus } from "./types";
 
-const SCHEMA_IN_STOCK =
-  /schema\.org\/(InStock|OnlineOnly|PreOrder|PreSale|LimitedAvailability)/i;
+/** Visible purchase CTAs that mean a keyboard can be bought right now. */
+const IN_STOCK_PHRASES = [
+  "add to cart",
+  "order now",
+  "buy now",
+  "buy it now",
+] as const;
+
+const IN_STOCK_PATTERN = new RegExp(IN_STOCK_PHRASES.join("|"), "i");
+const IN_STOCK_BUTTON_PATTERN = new RegExp(
+  IN_STOCK_PHRASES.map((phrase) => phrase.replace(/\s+/g, "\\s+")).join("|"),
+  "i",
+);
+
+const SCHEMA_IN_STOCK = /schema\.org\/(InStock|OnlineOnly|PreOrder|PreSale)/i;
 const SCHEMA_OUT_OF_STOCK = /schema\.org\/(OutOfStock|SoldOut|Discontinued)/i;
 
 const OUT_OF_STOCK_PHRASES = [
@@ -14,78 +26,103 @@ const OUT_OF_STOCK_PHRASES = [
   "notify me when available",
   "notify me when in stock",
   "email when available",
-  "backorder only",
 ];
 
-const LIMITED_PHRASES = [
-  "limited stock",
-  "low stock",
-  "only a few left",
-  "few left in stock",
-  "almost gone",
-];
-
-const IN_STOCK_PHRASES = [
-  "add to cart",
-  "add to bag",
-  "add to basket",
-  "buy now",
-  "buy it now",
-  "order now",
-  "in stock",
-  "add to order",
-  "ready to ship",
-];
-
-function stripTags(html: string): string {
+function stripScriptsAndStyles(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ");
+}
+
+function pageText(html: string): string {
+  return stripScriptsAndStyles(html)
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .toLowerCase();
 }
 
-function collectSchemaStatuses(data: unknown, statuses: AvailabilityStatus[]): void {
-  if (!data || typeof data !== "object") {
-    return;
+function hasShopifyPurchasableVariant(html: string): boolean {
+  const multiSelectInputs =
+    html.match(/name="id\[\]"[^>]*form="product-form[^"]*"[^>]*>/gi) ?? [];
+  if (multiSelectInputs.some((input) => !/\bdisabled\b/i.test(input))) {
+    return true;
   }
 
-  if (Array.isArray(data)) {
-    for (const item of data) {
-      collectSchemaStatuses(item, statuses);
-    }
-    return;
+  const variantOptions =
+    html.match(/<option[^>]*value="\d+"[^>]*>[^<]*<\/option>/gi) ?? [];
+  return variantOptions.some(
+    (option) =>
+      !/\bdisabled\b/i.test(option) && !/sold out/i.test(option),
+  );
+}
+
+function hasPurchaseOption(html: string): boolean {
+  const visible = stripScriptsAndStyles(html);
+
+  const enabledButtons =
+    visible.match(/<button(?![^>]*\bdisabled\b)[^>]*>[\s\S]*?<\/button>/gi) ??
+    [];
+  if (enabledButtons.some((button) => IN_STOCK_BUTTON_PATTERN.test(button))) {
+    return true;
   }
 
-  const record = data as Record<string, unknown>;
-
-  if (typeof record.availability === "string") {
-    const status = schemaUrlToStatus(record.availability);
-    if (status) {
-      statuses.push(status);
-    }
+  const enabledInputs =
+    visible.match(/<input(?![^>]*\bdisabled\b)[^>]*>/gi) ?? [];
+  if (enabledInputs.some((input) => IN_STOCK_BUTTON_PATTERN.test(input))) {
+    return true;
   }
 
-  if (record.offers) {
-    collectSchemaStatuses(record.offers, statuses);
+  const enabledLinks =
+    visible.match(
+      /<a(?![^>]*\baria-disabled=["']true["'])[^>]*>[\s\S]*?<\/a>/gi,
+    ) ?? [];
+  if (enabledLinks.some((link) => IN_STOCK_BUTTON_PATTERN.test(link))) {
+    return true;
   }
 
-  if (record["@graph"]) {
-    collectSchemaStatuses(record["@graph"], statuses);
+  // Match purchase CTAs in aria-labels (Corsair bundles, etc. are ignored below).
+  const ariaLabels =
+    visible.match(/aria-label=["']([^"']+)["']/gi) ?? [];
+  if (
+    ariaLabels.some((label) => {
+      if (/more to consider|bundle/i.test(label)) {
+        return false;
+      }
+      return IN_STOCK_BUTTON_PATTERN.test(label);
+    })
+  ) {
+    return true;
   }
+
+  // Keychron/Shopify: submit button may read "Sold out" for the default variant while
+  // other variants remain purchasable via the same add-to-cart flow.
+  if (
+    /data-add-to-cart-text=["']add to cart["']/i.test(html) &&
+    hasShopifyPurchasableVariant(html)
+  ) {
+    return true;
+  }
+
+  if (!IN_STOCK_PATTERN.test(pageText(html))) {
+    return false;
+  }
+
+  const withoutDisabledButtons = visible.replace(
+    /<button[^>]*\bdisabled\b[^>]*>[\s\S]*?<\/button>/gi,
+    " ",
+  );
+
+  return IN_STOCK_PATTERN.test(pageText(withoutDisabledButtons));
 }
 
 function parseJsonLdAvailability(html: string): AvailabilityStatus | null {
-  const blocks = html.match(
-    /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
-  );
+  const blocks =
+    html.match(
+      /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+    ) ?? [];
 
-  if (!blocks) {
-    return null;
-  }
-
-  const statuses: AvailabilityStatus[] = [];
+  let hasInStock = false;
+  let hasOutOfStock = false;
 
   for (const block of blocks) {
     const jsonText = block
@@ -93,148 +130,78 @@ function parseJsonLdAvailability(html: string): AvailabilityStatus | null {
       .replace(/<\/script>/i, "")
       .trim();
 
-    try {
-      const data = JSON.parse(jsonText) as unknown;
-      collectSchemaStatuses(data, statuses);
-    } catch {
-      // Ignore malformed JSON-LD blocks.
+    if (SCHEMA_IN_STOCK.test(jsonText)) {
+      hasInStock = true;
     }
-  }
-
-  return mergeAvailabilityStatuses(statuses);
-}
-
-function schemaUrlToStatus(value: string): AvailabilityStatus | null {
-  if (SCHEMA_OUT_OF_STOCK.test(value)) {
-    return "out_of_stock";
-  }
-
-  if (/LimitedAvailability/i.test(value)) {
-    return "limited";
-  }
-
-  if (SCHEMA_IN_STOCK.test(value)) {
-    return "in_stock";
-  }
-
-  return null;
-}
-
-function mergeAvailabilityStatuses(
-  statuses: AvailabilityStatus[],
-): AvailabilityStatus | null {
-  if (statuses.length === 0) {
-    return null;
-  }
-
-  if (statuses.includes("in_stock")) {
-    return "in_stock";
-  }
-
-  if (statuses.includes("limited")) {
-    return "limited";
-  }
-
-  if (statuses.includes("out_of_stock")) {
-    return "out_of_stock";
-  }
-
-  return null;
-}
-
-function parseEmbeddedJsonAvailability(html: string): AvailabilityStatus | null {
-  const hasAvailableTrue = /"available"\s*:\s*true/i.test(html);
-  const hasAvailableFalse = /"available"\s*:\s*false/i.test(html);
-  const hasInStockTrue =
-    /"in_stock"\s*:\s*true/i.test(html) || /"isInStock"\s*:\s*true/i.test(html);
-  const hasInStockFalse =
-    /"in_stock"\s*:\s*false/i.test(html) || /"isInStock"\s*:\s*false/i.test(html);
-
-  if (hasAvailableTrue || hasInStockTrue) {
-    return "in_stock";
-  }
-
-  if (hasAvailableFalse || hasInStockFalse) {
-    return "out_of_stock";
-  }
-
-  if (/"inventory_quantity"\s*:\s*0\b/i.test(html)) {
-    return "out_of_stock";
-  }
-
-  return null;
-}
-
-function phraseMatch(text: string, phrases: string[]): boolean {
-  return phrases.some((phrase) => text.includes(phrase));
-}
-
-function parsePhraseAvailability(html: string): AvailabilityStatus | null {
-  const text = stripTags(html);
-  const hasInStock = phraseMatch(text, IN_STOCK_PHRASES);
-  const hasOutOfStock = phraseMatch(text, OUT_OF_STOCK_PHRASES);
-  const hasLimited = phraseMatch(text, LIMITED_PHRASES);
-
-  if (hasInStock && hasOutOfStock) {
-    // Related products or footer copy often mention sold-out items while the
-    // primary product still has a buy button.
-    if (/add to cart|buy now|buy it now|order now|ready to ship/i.test(html)) {
-      return "in_stock";
+    if (SCHEMA_OUT_OF_STOCK.test(jsonText)) {
+      hasOutOfStock = true;
     }
-    return "out_of_stock";
-  }
-
-  if (hasOutOfStock) {
-    return "out_of_stock";
-  }
-
-  if (hasLimited) {
-    return "limited";
   }
 
   if (hasInStock) {
     return "in_stock";
   }
 
-  return null;
-}
-
-export function parseAvailabilityFromHtml(
-  html: string,
-  purchaseUrl?: string,
-): AvailabilityStatus {
-  if (purchaseUrl) {
-    const domainStatus = parseDomainAvailability(html, purchaseUrl);
-    if (domainStatus) {
-      return domainStatus;
-    }
-  }
-
-  const jsonLdStatus = parseJsonLdAvailability(html);
-  if (jsonLdStatus) {
-    return jsonLdStatus;
-  }
-
-  const embeddedStatus = parseEmbeddedJsonAvailability(html);
-  if (embeddedStatus) {
-    return embeddedStatus;
-  }
-
-  if (SCHEMA_IN_STOCK.test(html) && !SCHEMA_OUT_OF_STOCK.test(html)) {
-    return "in_stock";
-  }
-
-  if (SCHEMA_OUT_OF_STOCK.test(html) && !SCHEMA_IN_STOCK.test(html)) {
+  if (hasOutOfStock) {
     return "out_of_stock";
   }
 
-  if (/schema\.org\/LimitedAvailability/i.test(html)) {
-    return "limited";
+  return null;
+}
+
+function hasEmbeddedPurchaseConfig(html: string): boolean {
+  if (
+    /addToCartButtonTitle["'\s]*:["'\s]*["']Add to Cart["']/i.test(html) ||
+    /"cta(?:Label|Text)"\s*:\s*"(?:Buy Now|Add to Cart|Order Now)"/i.test(html)
+  ) {
+    return true;
   }
 
-  const phraseStatus = parsePhraseAvailability(html);
-  if (phraseStatus) {
-    return phraseStatus;
+  const hasBuyFlowMarkup =
+    /add-to-cart-placeholder|add-to-cart-button|PDP_add-to-cart/i.test(html);
+
+  const hasStructuredInStock =
+    SCHEMA_IN_STOCK.test(html) ||
+    /"availability"\s*:\s*"InStock"/i.test(html) ||
+    /"inventoryStatus"\s*:\s*"IN_STOCK"/i.test(html);
+
+  if (hasBuyFlowMarkup && hasStructuredInStock) {
+    return true;
+  }
+
+  if (
+    hasStructuredInStock &&
+    IN_STOCK_PATTERN.test(html) &&
+    !SCHEMA_OUT_OF_STOCK.test(html) &&
+    !/"availability"\s*:\s*"OutOfStock"/i.test(html)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function hasOutOfStockSignal(html: string): boolean {
+  const text = pageText(html);
+  return OUT_OF_STOCK_PHRASES.some((phrase) => text.includes(phrase));
+}
+
+export function parseAvailabilityFromHtml(html: string): AvailabilityStatus {
+  if (hasPurchaseOption(html)) {
+    return "in_stock";
+  }
+
+  const jsonLdStatus = parseJsonLdAvailability(html);
+  if (jsonLdStatus === "in_stock") {
+    return "in_stock";
+  }
+
+  if (hasEmbeddedPurchaseConfig(html)) {
+    return "in_stock";
+  }
+
+  if (jsonLdStatus === "out_of_stock" || hasOutOfStockSignal(html)) {
+    return "out_of_stock";
   }
 
   return "unknown";

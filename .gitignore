@@ -41,6 +41,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# pm2
+logs/
+.pm2/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
