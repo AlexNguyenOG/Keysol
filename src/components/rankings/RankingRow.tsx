@@ -51,12 +51,12 @@ export function RankingRow({ keyboard }: RankingRowProps) {
         <div className="flex items-center gap-4">
           <RankBadge rank={keyboard.rank} />
 
-          <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-bg-primary/80 sm:h-24 sm:w-32">
+          <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-[#0a0b0f] sm:h-24 sm:w-32">
             <Image
               src={keyboard.image}
               alt={`${keyboard.name} product photo`}
               fill
-              className="object-contain p-2"
+              className="object-contain p-0.5"
               sizes="128px"
             />
           </div>

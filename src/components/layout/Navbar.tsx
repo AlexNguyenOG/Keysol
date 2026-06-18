@@ -65,6 +65,12 @@ export function Navbar() {
             Rankings
           </Link>
           <Link
+            href="/tokens"
+            className="text-sm text-text-muted transition-colors hover:text-text-primary"
+          >
+            Token Guide
+          </Link>
+          <Link
             href="/#about"
             className="text-sm text-text-muted transition-colors hover:text-text-primary"
           >

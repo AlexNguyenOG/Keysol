@@ -226,4 +226,70 @@ export const keyboardTokens: KeyboardToken[] = [
     rationale:
       "Legacy full-size K70 with long production history — easiest board in the catalog to source.",
   },
+  {
+    id: "keysol-wooting-80he",
+    keyboardId: "wooting-80he",
+    symbol: "KSOL-W80HE",
+    name: "KeySol Wooting 80HE Token",
+    rarityTier: "legendary",
+    rarityScore: 97,
+    maxSupply: 500,
+    rationale:
+      "Flagship 80% Wooting with true 8 kHz — high demand and frequent restock sellouts.",
+  },
+  {
+    id: "keysol-razer-hv3-full",
+    keyboardId: "razer-huntsman-v3-pro-8khz",
+    symbol: "KSOL-HV3FS",
+    name: "KeySol Huntsman V3 Pro 8KHz Token",
+    rarityTier: "rare",
+    rarityScore: 73,
+    maxSupply: 1500,
+    rationale:
+      "Full-size 8 kHz analog optical flagship — newest Razer speed tier board.",
+  },
+  {
+    id: "keysol-keychron-q3-he-8k",
+    keyboardId: "keychron-q3-he-8k",
+    symbol: "KSOL-Q3HE8K",
+    name: "KeySol Keychron Q3 HE 8K Token",
+    rarityTier: "rare",
+    rarityScore: 71,
+    maxSupply: 2000,
+    rationale:
+      "Keychron's aluminum 8 kHz TKL magnetic board — strong enthusiast demand.",
+  },
+  {
+    id: "keysol-nuphy-field75-he",
+    keyboardId: "nuphy-field75-he",
+    symbol: "KSOL-F75HE",
+    name: "KeySol NuPhy Field75 HE Token",
+    rarityTier: "rare",
+    rarityScore: 69,
+    maxSupply: 2500,
+    rationale:
+      "Popular value 75% magnetic board with 8 kHz — often restocks quickly but high interest.",
+  },
+  {
+    id: "keysol-apex-pro-tkl-v2",
+    keyboardId: "steelseries-apex-pro-tkl-v2",
+    symbol: "KSOL-APTKL2",
+    name: "KeySol Apex Pro TKL Token",
+    rarityTier: "rare",
+    rarityScore: 67,
+    maxSupply: 3000,
+    rationale:
+      "OmniPoint 2.0 TKL — still widely available but superseded by Gen 3 for 8 kHz.",
+  },
+  {
+    id: "keysol-apex-pro-mini",
+    keyboardId: "steelseries-apex-pro-mini",
+    symbol: "KSOL-APMINI",
+    name: "KeySol Apex Pro Mini Token",
+    rarityTier: "uncommon",
+    rarityScore: 65,
+    maxSupply: 3500,
+    rationale:
+      "Compact OmniPoint 2.0 board with steady retail availability.",
+  },
 ];

@@ -14,6 +14,12 @@ export function Footer() {
 
           <div className="flex gap-6">
             <a
+              href="/tokens"
+              className="text-sm text-text-muted transition-colors hover:text-text-primary"
+            >
+              Token Guide
+            </a>
+            <a
               href="#"
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >
@@ -29,9 +35,11 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-white/10 pt-8 text-center">
-          <p className="text-xs text-text-muted">
-            Built with Solana-inspired design — a visual homage, not a
-            blockchain product.
+          <p className="text-base font-medium text-text-muted sm:text-lg">
+            Solana-inspired design ·{" "}
+            <span className="gradient-text text-lg font-semibold sm:text-xl">
+              Keyboard token collectibles coming soon
+            </span>
           </p>
         </div>
       </div>

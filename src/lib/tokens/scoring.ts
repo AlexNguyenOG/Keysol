@@ -17,6 +17,14 @@ const STOCK_SCORE: Record<AvailabilityStatus, number> = {
   in_stock: 15,
 };
 
+/** Stock score lookup for docs and UI (mirrors internal scoring). */
+export const TOKEN_STOCK_SCORES = STOCK_SCORE;
+
+export const TOKEN_EFFECTIVE_TIER_THRESHOLDS = {
+  legendary: 85,
+  rare: 65,
+} as const;
+
 export function stockScoreFromStatus(
   status: AvailabilityStatus | undefined,
 ): number {

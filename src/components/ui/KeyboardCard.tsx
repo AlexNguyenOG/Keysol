@@ -41,12 +41,12 @@ export function KeyboardCard({ keyboard }: KeyboardCardProps) {
 
   return (
     <div className="overflow-hidden rounded-xl border border-white/10 bg-bg-primary/40">
-      <div className="relative aspect-[16/10] w-full bg-bg-primary/80">
+      <div className="relative aspect-[16/10] w-full bg-[#0a0b0f]">
         <Image
           src={keyboard.image}
           alt={`${keyboard.name} product photo`}
           fill
-          className="object-contain p-4"
+          className="object-contain p-1.5"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>

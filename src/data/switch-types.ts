@@ -84,7 +84,7 @@ export const switchTypes: SwitchTypeEntry[] = [
     ],
     bestFor: "Competitive FPS players who want analog movement and rapid trigger",
     rapidTrigger: true,
-    keyboardIds: ["wooting-60he-plus", "wooting-two-he"],
+    keyboardIds: ["wooting-60he-plus", "wooting-two-he", "wooting-80he"],
   },
   {
     id: "gateron-jupiter-he",
@@ -102,7 +102,7 @@ export const switchTypes: SwitchTypeEntry[] = [
     tradeoffs: ["Feature depth varies by firmware", "Less analog-native than Wooting"],
     bestFor: "Enthusiasts who want HE performance with custom keyboard layouts",
     rapidTrigger: true,
-    keyboardIds: ["keychron-q1-he", "keychron-k2-he"],
+    keyboardIds: ["keychron-q1-he", "keychron-k2-he", "nuphy-field75-he"],
   },
   {
     id: "corsair-mgx",
@@ -141,6 +141,24 @@ export const switchTypes: SwitchTypeEntry[] = [
     keyboardIds: ["steelseries-apex-pro-gen3", "steelseries-apex-pro-gen3-tkl"],
   },
   {
+    id: "omnipoint-2",
+    categoryId: "magnetic",
+    name: "OmniPoint 2.0 (Magnetic)",
+    tagline: "SteelSeries adjustable hyper-magnetic Gen 2",
+    howItWorks:
+      "Magnetic hall-effect sensing with per-key actuation from 0.1–4.0 mm and rapid trigger via SteelSeries GG.",
+    actuation: "Down to 0.1 mm with software tuning",
+    strengths: [
+      "Rapid trigger on Mini and TKL",
+      "Adjustable actuation per key",
+      "Compact layouts for esports desks",
+    ],
+    tradeoffs: ["1000 Hz polling vs Gen 3 8 kHz", "SteelSeries Engine required"],
+    bestFor: "Players who want OmniPoint tuning in 60% or TKL form factors",
+    rapidTrigger: true,
+    keyboardIds: ["steelseries-apex-pro-mini", "steelseries-apex-pro-tkl-v2"],
+  },
+  {
     id: "gateron-double-rail",
     categoryId: "magnetic",
     name: "Gateron Double-Rail Magnetic",
@@ -152,7 +170,7 @@ export const switchTypes: SwitchTypeEntry[] = [
     tradeoffs: ["Switch ecosystem still growing vs Cherry MX"],
     bestFor: "Custom board fans who want magnetic switches in a premium chassis",
     rapidTrigger: true,
-    keyboardIds: ["keychron-q1-he"],
+    keyboardIds: ["keychron-q1-he", "keychron-q3-he-8k"],
   },
   {
     id: "hyperx-magnetic",
@@ -187,7 +205,7 @@ export const switchTypes: SwitchTypeEntry[] = [
     ],
     bestFor: "Razer fans who want optical speed with analog esports features",
     rapidTrigger: true,
-    keyboardIds: ["razer-huntsman-v3-pro-tkl-8khz", "razer-huntsman-v3-pro-mini"],
+    keyboardIds: ["razer-huntsman-v3-pro-tkl-8khz", "razer-huntsman-v3-pro-mini", "razer-huntsman-v3-pro-8khz"],
   },
   {
     id: "cherry-mx-speed",

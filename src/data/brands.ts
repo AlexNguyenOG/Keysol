@@ -97,4 +97,16 @@ export const brands: Brand[] = [
     ],
     website: "https://hyperx.com",
   },
+  {
+    id: "nuphy",
+    name: "NuPhy",
+    tagline: "Compact magnetic speed boards",
+    category: "enthusiast",
+    highlights: [
+      "Field HE line with 8000 Hz polling",
+      "Low-profile and compact layouts",
+      "Strong value in the magnetic segment",
+    ],
+    website: "https://nuphy.com",
+  },
 ];
