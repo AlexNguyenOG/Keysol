@@ -1,5 +1,6 @@
 import https from "node:https";
 import { keyboards } from "@/data/keyboards";
+import { isPublicHttpUrl } from "@/lib/security/url";
 import type { Keyboard } from "@/types";
 import {
   isStale,
@@ -10,6 +11,9 @@ import {
 import { parseAvailabilityFromHtml } from "./parse";
 import type { AvailabilityMap, AvailabilityRecord } from "./types";
 import { FETCH_TIMEOUT_MS } from "./types";
+
+const MAX_RESPONSE_BYTES = 5 * 1024 * 1024;
+const MAX_REDIRECTS = 5;
 
 const USER_AGENT =
   "Mozilla/5.0 (compatible; KeySol/1.0; +https://github.com/Let-it-happen339/Keysol)";
@@ -30,7 +34,18 @@ function isHeadersOverflowError(error: unknown): boolean {
   return cause?.code === "UND_ERR_HEADERS_OVERFLOW";
 }
 
-function fetchWithHttpsLargeHeaders(url: string): Promise<string> {
+function fetchWithHttpsLargeHeaders(
+  url: string,
+  redirectCount = 0,
+): Promise<string> {
+  if (!isPublicHttpUrl(url)) {
+    return Promise.reject(new Error("Blocked URL"));
+  }
+
+  if (redirectCount > MAX_REDIRECTS) {
+    return Promise.reject(new Error("Too many redirects"));
+  }
+
   return new Promise((resolve, reject) => {
     const requestUrl = new URL(url);
     const req = https.get(
@@ -48,11 +63,8 @@ function fetchWithHttpsLargeHeaders(url: string): Promise<string> {
           response.headers.location
         ) {
           response.resume();
-          resolve(
-            fetchWithHttpsLargeHeaders(
-              new URL(response.headers.location, url).href,
-            ),
-          );
+          const nextUrl = new URL(response.headers.location, url).href;
+          resolve(fetchWithHttpsLargeHeaders(nextUrl, redirectCount + 1));
           return;
         }
 
@@ -63,8 +75,14 @@ function fetchWithHttpsLargeHeaders(url: string): Promise<string> {
         }
 
         let body = "";
+        let bytes = 0;
         response.setEncoding("utf8");
-        response.on("data", (chunk) => {
+        response.on("data", (chunk: string) => {
+          bytes += Buffer.byteLength(chunk, "utf8");
+          if (bytes > MAX_RESPONSE_BYTES) {
+            req.destroy(new Error("Response too large"));
+            return;
+          }
           body += chunk;
         });
         response.on("end", () => resolve(body));
@@ -78,7 +96,47 @@ function fetchWithHttpsLargeHeaders(url: string): Promise<string> {
   });
 }
 
-async function fetchPurchasePage(url: string): Promise<string> {
+async function readResponseText(response: Response): Promise<string> {
+  if (!response.body) {
+    return response.text();
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let body = "";
+  let bytes = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+
+    bytes += value.byteLength;
+    if (bytes > MAX_RESPONSE_BYTES) {
+      await reader.cancel();
+      throw new Error("Response too large");
+    }
+
+    body += decoder.decode(value, { stream: true });
+  }
+
+  body += decoder.decode();
+  return body;
+}
+
+async function fetchPurchasePage(
+  url: string,
+  redirectCount = 0,
+): Promise<string> {
+  if (!isPublicHttpUrl(url)) {
+    throw new Error("Blocked URL");
+  }
+
+  if (redirectCount > MAX_REDIRECTS) {
+    throw new Error("Too many redirects");
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
@@ -86,15 +144,25 @@ async function fetchPurchasePage(url: string): Promise<string> {
     const response = await fetch(url, {
       signal: controller.signal,
       headers: FETCH_HEADERS,
-      redirect: "follow",
+      redirect: "manual",
       cache: "no-store",
     });
+
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location");
+      if (!location) {
+        throw new Error("Redirect without location");
+      }
+
+      const nextUrl = new URL(location, url).href;
+      return fetchPurchasePage(nextUrl, redirectCount + 1);
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
 
-    return await response.text();
+    return await readResponseText(response);
   } catch (error) {
     if (isHeadersOverflowError(error)) {
       return fetchWithHttpsLargeHeaders(url);
@@ -110,6 +178,16 @@ export async function checkKeyboardAvailability(
   keyboard: Keyboard,
 ): Promise<AvailabilityRecord> {
   const checkedAt = new Date().toISOString();
+
+  if (!isPublicHttpUrl(keyboard.purchaseUrl)) {
+    return {
+      keyboardId: keyboard.id,
+      status: "unknown",
+      checkedAt,
+      source: keyboard.purchaseUrl,
+      error: "Invalid purchase URL",
+    };
+  }
 
   try {
     const html = await fetchPurchasePage(keyboard.purchaseUrl);

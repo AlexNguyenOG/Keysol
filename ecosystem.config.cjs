@@ -16,5 +16,16 @@ module.exports = {
         NODE_ENV: "development",
       },
     },
+    {
+      name: "keysol-availability-cron",
+      script: "node",
+      args: "scripts/availability-cron.mjs",
+      cwd: __dirname,
+      interpreter: "none",
+      autorestart: false,
+      watch: false,
+      /** Every 6 hours — matches availability cache TTL. */
+      cron_restart: "0 */6 * * *",
+    },
   ],
 };

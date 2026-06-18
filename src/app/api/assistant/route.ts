@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { generateAssistantReply } from "@/lib/assistant/respond";
 import type { AssistantMessage } from "@/lib/assistant/types";
+import {
+  enforceRateLimit,
+  jsonResponse,
+  withRateLimitHeaders,
+} from "@/lib/security/api";
+import { readJsonBody } from "@/lib/security/request";
+import type { RateLimitResult } from "@/lib/security/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +16,10 @@ const MAX_HISTORY = 8;
 
 function isValidHistory(value: unknown): value is AssistantMessage[] {
   if (!Array.isArray(value)) {
+    return false;
+  }
+
+  if (value.length > MAX_HISTORY) {
     return false;
   }
 
@@ -23,14 +34,17 @@ function isValidHistory(value: unknown): value is AssistantMessage[] {
 }
 
 export async function POST(request: Request) {
-  let body: unknown;
-
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  const rate = enforceRateLimit(request, "assistant");
+  if (rate instanceof NextResponse) {
+    return rate;
   }
 
+  const parsed = await readJsonBody(request);
+  if (!parsed.ok) {
+    return jsonResponse({ error: parsed.error }, { status: 400 });
+  }
+
+  const body = parsed.data;
   const message =
     body &&
     typeof body === "object" &&
@@ -40,11 +54,11 @@ export async function POST(request: Request) {
       : "";
 
   if (!message) {
-    return NextResponse.json({ error: "Message is required" }, { status: 400 });
+    return jsonResponse({ error: "Message is required" }, { status: 400 });
   }
 
   if (message.length > MAX_MESSAGE_LENGTH) {
-    return NextResponse.json({ error: "Message is too long" }, { status: 400 });
+    return jsonResponse({ error: "Message is too long" }, { status: 400 });
   }
 
   const history =
@@ -56,6 +70,6 @@ export async function POST(request: Request) {
       : [];
 
   const result = await generateAssistantReply(message, history);
-
-  return NextResponse.json(result);
+  const response = jsonResponse(result);
+  return withRateLimitHeaders(response, rate as RateLimitResult);
 }

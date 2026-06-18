@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAvailability } from "@/lib/availability/checker";
+import { buildTokenSnapshots } from "@/lib/tokens";
 import {
   enforceRateLimit,
   jsonResponse,
@@ -7,11 +8,16 @@ import {
 } from "@/lib/security/api";
 import { isCronAuthorized } from "@/lib/security/auth";
 import type { RateLimitResult } from "@/lib/security/rate-limit";
+import { TOKEN_STOCK_TRUST_MODEL } from "@/lib/tokens/scoring";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Server-only token snapshot: catalog rarity + verified retailer stock.
+ * Force refresh requires cron authorization in production.
+ */
 export async function GET(request: Request) {
-  const rate = enforceRateLimit(request, "availability");
+  const rate = enforceRateLimit(request, "tokensSnapshot");
   if (rate instanceof NextResponse) {
     return rate;
   }
@@ -24,10 +30,13 @@ export async function GET(request: Request) {
   }
 
   const availability = await getAvailability({ refresh: wantsRefresh });
+  const snapshotAt = new Date().toISOString();
+  const snapshots = buildTokenSnapshots(availability, snapshotAt);
 
   const response = jsonResponse({
-    availability,
-    refreshedAt: new Date().toISOString(),
+    trustModel: TOKEN_STOCK_TRUST_MODEL,
+    snapshotAt,
+    snapshots,
   });
   return withRateLimitHeaders(response, rate as RateLimitResult);
 }

@@ -28,9 +28,8 @@ const AvailabilityContext = createContext<AvailabilityContextValue | null>(
 
 const CLIENT_REFRESH_MS = 30 * 60 * 1000;
 
-async function fetchAvailability(refresh = false): Promise<AvailabilityMap> {
-  const query = refresh ? "?refresh=1" : "";
-  const response = await fetch(`/api/availability${query}`, {
+async function fetchAvailability(): Promise<AvailabilityMap> {
+  const response = await fetch("/api/availability", {
     cache: "no-store",
   });
 
@@ -47,7 +46,7 @@ export function AvailabilityProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    const next = await fetchAvailability(true);
+    const next = await fetchAvailability();
     setAvailability(next);
     setLoading(false);
   }, []);
@@ -55,7 +54,7 @@ export function AvailabilityProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
 
-    fetchAvailability(false)
+    fetchAvailability()
       .then((next) => {
         if (!cancelled) {
           setAvailability(next);
@@ -71,7 +70,7 @@ export function AvailabilityProvider({ children }: { children: ReactNode }) {
       });
 
     const interval = window.setInterval(() => {
-      fetchAvailability(true)
+      fetchAvailability()
         .then((next) => {
           if (!cancelled) {
             setAvailability(next);

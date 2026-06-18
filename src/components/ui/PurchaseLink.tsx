@@ -26,6 +26,7 @@ export function PurchaseLink({
   availabilityStatus,
   loading = false,
 }: PurchaseLinkProps) {
+  const safeHref = href.startsWith("https://") ? href : undefined;
   const outOfStock = availabilityStatus === "out_of_stock";
   const unknown = !availabilityStatus || availabilityStatus === "unknown";
 
@@ -48,13 +49,17 @@ export function PurchaseLink({
 
   return (
     <a
-      href={href}
+      href={safeHref}
       target="_blank"
       rel="noopener noreferrer"
-      aria-disabled={loading ? true : undefined}
-      className={`${baseStyles} ${styles} ${className}`}
+      aria-disabled={loading || !safeHref ? true : undefined}
+      className={`${baseStyles} ${styles} ${className} ${!safeHref ? "pointer-events-none opacity-50" : ""}`}
     >
-      {loading ? "Loading stock…" : buttonLabel(keyboardName, availabilityStatus)}
+      {loading
+        ? "Loading stock…"
+        : !safeHref
+          ? "Link unavailable"
+          : buttonLabel(keyboardName, availabilityStatus)}
     </a>
   );
 }
