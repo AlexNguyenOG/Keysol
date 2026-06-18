@@ -133,6 +133,29 @@ export function SwitchTypesGuide({
                       {entry.howItWorks}
                     </p>
 
+                    <div className="mb-3 grid gap-2 sm:grid-cols-2">
+                      <div className="rounded-lg border border-solana-purple/20 bg-solana-purple/5 px-3 py-2">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-solana-purple">
+                          Sound
+                        </p>
+                        <p
+                          className={`mt-1 leading-relaxed text-text-muted ${isSidebar ? "text-xs" : "text-sm"}`}
+                        >
+                          {entry.sound}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border border-solana-green/20 bg-solana-green/5 px-3 py-2">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-solana-green">
+                          Feel
+                        </p>
+                        <p
+                          className={`mt-1 leading-relaxed text-text-muted ${isSidebar ? "text-xs" : "text-sm"}`}
+                        >
+                          {entry.feel}
+                        </p>
+                      </div>
+                    </div>
+
                     <dl
                       className={`mb-3 grid gap-2 ${isSidebar ? "text-xs" : "text-sm"}`}
                     >

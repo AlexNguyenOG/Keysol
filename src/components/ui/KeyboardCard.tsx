@@ -8,8 +8,10 @@ import {
   formatReleaseDate,
 } from "@/lib/format";
 import { useAvailability } from "@/components/providers/AvailabilityProvider";
+import { getSwitchTypeForKeyboard } from "@/data/switch-types";
 import { AvailabilityBadge } from "./AvailabilityBadge";
 import { PurchaseLink } from "./PurchaseLink";
+import { SwitchSensoryNote } from "./SwitchSensoryNote";
 
 interface KeyboardCardProps {
   keyboard: Keyboard;
@@ -37,6 +39,7 @@ function StatItem({ label, value, highlight }: StatItemProps) {
 export function KeyboardCard({ keyboard }: KeyboardCardProps) {
   const { stats } = keyboard;
   const badge = keyboard.badge ?? "Fastest";
+  const switchProfile = getSwitchTypeForKeyboard(keyboard.id);
   const { status, checkedAt, loading } = useAvailability(keyboard.id);
 
   return (
@@ -113,6 +116,10 @@ export function KeyboardCard({ keyboard }: KeyboardCardProps) {
             highlight={stats.rapidTrigger}
           />
         </dl>
+
+        {switchProfile && (
+          <SwitchSensoryNote entry={switchProfile} className="mt-3" />
+        )}
 
         <PurchaseLink
           href={keyboard.purchaseUrl}

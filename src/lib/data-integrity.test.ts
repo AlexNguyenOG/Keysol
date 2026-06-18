@@ -3,6 +3,7 @@ import path from "path";
 import { describe, expect, it } from "vitest";
 import { brands } from "@/data/brands";
 import { keyboards } from "@/data/keyboards";
+import { getSwitchTypeForKeyboard, switchTypes } from "@/data/switch-types";
 import { getKeyboardsByBrandId } from "@/lib/keyboards";
 
 const publicDir = path.join(process.cwd(), "public");
@@ -64,6 +65,20 @@ describe("keyboard data", () => {
   it("has valid purchase links", () => {
     for (const keyboard of keyboards) {
       expect(keyboard.purchaseUrl).toMatch(/^https:\/\//);
+    }
+  });
+
+  it("maps every keyboard to a switch profile with sound and feel", () => {
+    for (const keyboard of keyboards) {
+      const profile = getSwitchTypeForKeyboard(keyboard.id);
+      expect(profile).toBeDefined();
+      expect(profile?.sound.length).toBeGreaterThan(10);
+      expect(profile?.feel.length).toBeGreaterThan(10);
+    }
+
+    for (const entry of switchTypes) {
+      expect(entry.sound.length).toBeGreaterThan(10);
+      expect(entry.feel.length).toBeGreaterThan(10);
     }
   });
 

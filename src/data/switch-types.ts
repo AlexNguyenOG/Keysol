@@ -19,6 +19,10 @@ export interface SwitchTypeEntry {
   tagline: string;
   howItWorks: string;
   actuation: string;
+  /** Short sensory note — how the switch sounds at the desk. */
+  sound: string;
+  /** Short sensory note — how the switch feels under the finger. */
+  feel: string;
   strengths: string[];
   tradeoffs: string[];
   bestFor: string;
@@ -73,6 +77,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Hall sensors measure magnetic field strength as the stem moves. Every key reports full travel as an analog value, not just on/off.",
     actuation: "Down to ~0.1 mm with analog tuning",
+    sound:
+      "Soft, muted thock with a clean bottom-out — little ping or spring noise.",
+    feel:
+      "Butter-smooth linear glide; the key feels like it floats through travel once actuation is set shallow.",
     strengths: [
       "Full analog input for games",
       "Rapid trigger & adjustable actuation",
@@ -94,6 +102,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Magnetic hall sensors inside a hot-swappable housing deliver adjustable actuation with QMK/VIA support on HE models.",
     actuation: "Adjustable via software on HE boards",
+    sound:
+      "Medium-low clack with a damped, slightly foamy tone on most HE builds.",
+    feel:
+      "Light, smooth linear with minimal stem wobble and an even press top to bottom.",
     strengths: [
       "Hot-swappable magnetic ecosystem",
       "Wireless options on HE models",
@@ -112,6 +124,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Magnetic hall sensors detect stem position. iCUE lets you set actuation depth per key and enable rapid trigger on supported models.",
     actuation: "0.1–3.8 mm adjustable on HE models",
+    sound:
+      "Crisp but controlled clack; iCUE-tuned boards keep ping and rattle in check.",
+    feel:
+      "Quick, snappy linear with a short effective travel once you dial actuation in.",
     strengths: [
       "Deep iCUE integration",
       "Up to 8,000 Hz polling on flagship HE boards",
@@ -130,6 +146,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Redesigned hall-effect switches with 20× faster actuation sensing than mechanical. Per-key actuation from 0.1–4.0 mm in SteelSeries GG.",
     actuation: "0.1–4.0 mm per key",
+    sound:
+      "Tight, muted keystroke with a firm landing — esports-tuned and not overly loud.",
+    feel:
+      "Stable linear with almost no pre-travel slack; precise and quick off the top.",
     strengths: [
       "Protection Mode & Rapid Trigger in GG",
       "OLED display for on-board tuning",
@@ -148,6 +168,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Magnetic hall-effect sensing with per-key actuation from 0.1–4.0 mm and rapid trigger via SteelSeries GG.",
     actuation: "Down to 0.1 mm with software tuning",
+    sound:
+      "Similar to OmniPoint 3 but a touch more housing resonance on hard presses.",
+    feel:
+      "Clean linear with a tunable break point — feels lighter when actuation is set shallow.",
     strengths: [
       "Rapid trigger on Mini and TKL",
       "Adjustable actuation per key",
@@ -166,6 +190,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Two rails guide the stem while magnets and sensors track position. Reduces wobble and enables magnetic actuation tuning.",
     actuation: "Software-adjustable on supported HE firmware",
+    sound:
+      "Controlled clack with less stem rattle thanks to the dual-rail guide.",
+    feel:
+      "Very centered, stable linear — the stem tracks straight with a confident push.",
     strengths: ["Very stable key feel", "Hot-swappable on Q1 HE", "Good for modders"],
     tradeoffs: ["Switch ecosystem still growing vs Cherry MX"],
     bestFor: "Custom board fans who want magnetic switches in a premium chassis",
@@ -180,6 +208,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Magnetic sensing replaces traditional contact points. Alloy Rise and Origins 2 Pro 65 pair magnetic switches with HyperX NGENUITY tuning and rapid trigger.",
     actuation: "Adjustable actuation on magnetic models",
+    sound:
+      "Medium-pitch clack with a softer bottom-out on Alloy and Origins shells.",
+    feel:
+      "Smooth magnetic glide with a gentle landing — less harsh than speed mechanicals.",
     strengths: ["Strong value in magnetic segment", "HyperX NGENUITY integration"],
     tradeoffs: ["Magnetic line still smaller than Corsair or SteelSeries"],
     bestFor: "Gamers wanting magnetic features without flagship price tags",
@@ -194,6 +226,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "An infrared beam is interrupted when you press a key — no metal debounce delay. Gen-2 adds analog sensing for adjustable actuation.",
     actuation: "Down to ~0.1 mm with analog tuning",
+    sound:
+      "Light, quick tick at actuation — optical stems tend to sound brighter and cleaner.",
+    feel:
+      "Extremely light and fast with almost no debounce slack; floaty at shallow actuation.",
     strengths: [
       "Near-instant optical registration",
       "8,000 Hz HyperPolling support",
@@ -215,6 +251,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Traditional metal contact leaves with a shortened travel distance and lighter spring. Actuates at 1.2 mm with 3.4 mm total travel.",
     actuation: "1.2 mm actuation · 3.4 mm travel",
+    sound:
+      "Classic Cherry clack — sharper and brighter than MX Red, with a short bottom-out.",
+    feel:
+      "Short-travel linear with a crisp snap at 1.2 mm; familiar mechanical speed switch.",
     strengths: [
       "Proven Cherry build quality",
       "Easy to find replacement switches",
@@ -230,6 +270,7 @@ export const switchTypes: SwitchTypeEntry[] = [
       "ducky-one-3-rgb-tkl",
       "ducky-one-3-mini-sf",
       "corsair-k70-rgb-mk2",
+      "corsair-k70-rgb-pro",
     ],
   },
   {
@@ -240,6 +281,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Linear stem compresses a spring until gold contacts meet. Smooth keystroke with no tactile bump.",
     actuation: "2.0 mm actuation · 4.0 mm travel",
+    sound:
+      "Lower-pitched linear thock than Speed Silver — fuller, less sharp on bottom-out.",
+    feel:
+      "Smooth 4 mm linear with a heavier spring; comfortable for long sessions.",
     strengths: ["Ubiquitous and well-supported", "Smooth linear feel", "Reliable daily driver"],
     tradeoffs: ["Slower actuation vs Speed Silver or magnetic", "No per-key tuning"],
     bestFor: "General gaming and typing on a traditional full-size board",
@@ -254,6 +299,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Standard mechanical contact switches in a hot-swappable GX socket. Swap between GX Red, Blue, Brown, or tactile variants.",
     actuation: "Varies by GX switch (~1.9 mm on many linear variants)",
+    sound:
+      "Medium clack with a solid bottom-out — tone depends on your GX linear, tactile, or clicky choice.",
+    feel:
+      "Classic mechanical depending on the socket; GX linears feel quick, tactiles add a noticeable bump.",
     strengths: [
       "Hot-swappable pro boards",
       "Lightspeed wireless on G Pro line",
@@ -272,6 +321,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "HyperX-designed linear switch with factory lubrication on Origins 2 boards. Standard contact-based actuation with up to 8,000 Hz polling.",
     actuation: "1.8 mm actuation · 3.8–4.0 mm travel",
+    sound:
+      "Soft-moderate clack with factory lube — muted and pleasant on Origins 2 plates.",
+    feel:
+      "Smooth linear daily driver; not as short or sharp as Cherry Speed Silver.",
     strengths: [
       "Comfortable stock tuning",
       "Hot-swap on Origins 2 line",
@@ -290,6 +343,10 @@ export const switchTypes: SwitchTypeEntry[] = [
     howItWorks:
       "Short-travel magnetic switches in a low-profile chassis. Analog sensing enables rapid trigger in a thinner board.",
     actuation: "Down to ~0.1 mm with analog tuning",
+    sound:
+      "Quiet, short-throw tick — less keycap resonance than full-height boards.",
+    feel:
+      "Shallow, laptop-like stroke with magnetic smoothness; actuation happens near the top.",
     strengths: [
       "Slim desk-friendly design",
       "Magnetic rapid trigger in low profile",
@@ -304,4 +361,10 @@ export const switchTypes: SwitchTypeEntry[] = [
 
 export function getSwitchTypesByCategory(categoryId: SwitchCategoryId) {
   return switchTypes.filter((entry) => entry.categoryId === categoryId);
+}
+
+export function getSwitchTypeForKeyboard(
+  keyboardId: string,
+): SwitchTypeEntry | undefined {
+  return switchTypes.find((entry) => entry.keyboardIds.includes(keyboardId));
 }
