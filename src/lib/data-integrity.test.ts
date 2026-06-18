@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { describe, expect, it } from "vitest";
 import { brands } from "@/data/brands";
@@ -64,6 +64,25 @@ describe("keyboard data", () => {
   it("has valid purchase links", () => {
     for (const keyboard of keyboards) {
       expect(keyboard.purchaseUrl).toMatch(/^https:\/\//);
+    }
+  });
+
+  it("has bundled availability snapshot for production deploys", () => {
+    const snapshotPath = path.join(
+      process.cwd(),
+      "src/data/availability.snapshot.json",
+    );
+    expect(existsSync(snapshotPath)).toBe(true);
+
+    const snapshot = JSON.parse(
+      readFileSync(snapshotPath, "utf8"),
+    ) as Record<string, { keyboardId: string; status: string }>;
+
+    for (const keyboard of keyboards) {
+      expect(snapshot[keyboard.id]).toBeDefined();
+      expect(snapshot[keyboard.id]?.status).toMatch(
+        /^(in_stock|out_of_stock|limited|unknown)$/,
+      );
     }
   });
 });

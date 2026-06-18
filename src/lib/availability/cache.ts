@@ -5,6 +5,11 @@ import { CACHE_TTL_MS } from "./types";
 
 const CACHE_DIR = path.join(process.cwd(), ".cache");
 const CACHE_FILE = path.join(CACHE_DIR, "availability.json");
+/** Shipped with each deploy — used on Vercel where .cache is ephemeral. */
+const BUNDLED_SNAPSHOT_FILE = path.join(
+  process.cwd(),
+  "src/data/availability.snapshot.json",
+);
 
 let memoryCache: AvailabilityMap | null = null;
 
@@ -12,19 +17,38 @@ async function ensureCacheDir(): Promise<void> {
   await fs.mkdir(CACHE_DIR, { recursive: true });
 }
 
+async function readJsonFile(filePath: string): Promise<AvailabilityMap | null> {
+  try {
+    const raw = await fs.readFile(filePath, "utf8");
+    return JSON.parse(raw) as AvailabilityMap;
+  } catch {
+    return null;
+  }
+}
+
+export async function readBundledSnapshot(): Promise<AvailabilityMap | null> {
+  return readJsonFile(BUNDLED_SNAPSHOT_FILE);
+}
+
 export async function readCache(): Promise<AvailabilityMap> {
   if (memoryCache) {
     return memoryCache;
   }
 
-  try {
-    const raw = await fs.readFile(CACHE_FILE, "utf8");
-    memoryCache = JSON.parse(raw) as AvailabilityMap;
-    return memoryCache;
-  } catch {
-    memoryCache = {};
+  const runtimeCache = await readJsonFile(CACHE_FILE);
+  if (runtimeCache && Object.keys(runtimeCache).length > 0) {
+    memoryCache = runtimeCache;
     return memoryCache;
   }
+
+  const bundled = await readBundledSnapshot();
+  if (bundled && Object.keys(bundled).length > 0) {
+    memoryCache = bundled;
+    return memoryCache;
+  }
+
+  memoryCache = {};
+  return memoryCache;
 }
 
 export async function writeCache(map: AvailabilityMap): Promise<void> {

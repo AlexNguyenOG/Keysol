@@ -11,6 +11,19 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
+## Deploying on Vercel
+
+1. **Production branch** — In Vercel → Project → Settings → Git, set **Production Branch** to the branch you push (e.g. `main` or your feature branch). Redeploy after merging latest changes.
+2. **Environment variable** — Add `AVAILABILITY_CRON_SECRET` (or Vercel’s auto-generated `CRON_SECRET`) with `openssl rand -hex 32`. Vercel Cron calls `/api/availability/refresh` every 6 hours with `Authorization: Bearer …`.
+3. **Stock data** — Production reads `src/data/availability.snapshot.json` bundled with each deploy. Refresh locally before pushing:
+   ```bash
+   npm run availability:snapshot
+   git add src/data/availability.snapshot.json && git commit -m "chore: refresh availability snapshot"
+   ```
+   GitHub Actions also updates the snapshot every 6 hours on `main`.
+
+If every keyboard shows **Unknown** stock, the deploy is missing the snapshot file or is running an old build without the latest catalog.
+
 ## Verification
 
 Run the full regression suite before pushing:

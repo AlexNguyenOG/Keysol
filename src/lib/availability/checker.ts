@@ -237,11 +237,22 @@ export async function refreshAvailability(options?: {
 export async function getAvailability(options?: {
   refresh?: boolean;
 }): Promise<AvailabilityMap> {
+  if (options?.refresh) {
+    return refreshAvailability({ force: true });
+  }
+
   const cache = await readCache();
+
+  // Vercel/serverless: never block page loads on 26 parallel retailer scrapes.
+  // Serve bundled snapshot (or warm memory) and refresh via cron/CI instead.
+  if (process.env.VERCEL === "1") {
+    return cache;
+  }
+
   const needsRefresh = keyboards.some((keyboard) => isStale(cache[keyboard.id]));
 
-  if (options?.refresh || needsRefresh) {
-    return refreshAvailability({ force: options?.refresh });
+  if (needsRefresh) {
+    return refreshAvailability();
   }
 
   return cache;
