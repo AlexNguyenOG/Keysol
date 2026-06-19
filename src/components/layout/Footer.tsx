@@ -14,6 +14,12 @@ export function Footer() {
 
           <div className="flex gap-6">
             <a
+              href="/value-trends"
+              className="text-sm text-text-muted transition-colors hover:text-text-primary"
+            >
+              Value Trends
+            </a>
+            <a
               href="/tokens"
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >

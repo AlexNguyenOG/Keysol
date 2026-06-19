@@ -65,6 +65,12 @@ export function Navbar() {
             Rankings
           </Link>
           <Link
+            href="/value-trends"
+            className="text-sm text-text-muted transition-colors hover:text-text-primary"
+          >
+            Value Trends
+          </Link>
+          <Link
             href="/tokens"
             className="text-sm text-text-muted transition-colors hover:text-text-primary"
           >

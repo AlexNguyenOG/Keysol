@@ -134,3 +134,42 @@ test.describe("tokens page", () => {
     await expect(page.getByText("KSOL-W60HE")).toBeVisible();
   });
 });
+
+test.describe("value trends page", () => {
+  test("shows trend badges and keyboard list", async ({ page }) => {
+    await page.route("**/api/tokens/snapshot**", async (route) => {
+      const { buildTokenSnapshots } = await import("../src/lib/tokens");
+      const { mockAvailabilityFixture } = await import("./fixtures/availability");
+      const availability = mockAvailabilityFixture({
+        "corsair-k70-max": "out_of_stock",
+      });
+      const snapshots = buildTokenSnapshots(availability, new Date().toISOString(), {
+        "corsair-k70-max": 70,
+      });
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          trustModel: "server-verified-availability",
+          snapshotAt: new Date().toISOString(),
+          snapshots,
+        }),
+      });
+    });
+
+    await page.goto("/value-trends");
+
+    await expect(
+      page.getByRole("heading", { name: /value trends/i }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /how value trends work/i }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /keyboard value trends/i }),
+    ).toBeVisible();
+    await expect(page.getByText("Rising").first()).toBeVisible();
+    await expect(page.getByText("Stable").first()).toBeVisible();
+  });
+});

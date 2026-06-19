@@ -4,10 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { keyboards } from "@/data/keyboards";
 import { getKeyboardTokensByRarity } from "@/lib/tokens";
 import { computeEffectiveTokenScore } from "@/lib/tokens/scoring";
-import {
-  VALUE_TREND_LABELS,
-  type ValueTrend,
-} from "@/lib/tokens/trend";
 import { AVAILABILITY_LABELS, AVAILABILITY_STYLES } from "@/lib/availability/labels";
 import type { TokenSnapshot } from "@/types";
 
@@ -91,24 +87,6 @@ function StockBadge({ status }: { status: TokenSnapshot["stockStatus"] }) {
     >
       <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
       {AVAILABILITY_LABELS[status]}
-    </span>
-  );
-}
-
-const valueTrendStyles: Record<ValueTrend, string> = {
-  rising:
-    "border-solana-green/40 bg-solana-green/10 text-solana-green hover:bg-solana-green/15",
-  stable: "border-white/15 bg-white/5 text-text-muted hover:bg-white/10",
-  dropping:
-    "border-red-400/40 bg-red-400/10 text-red-400 hover:bg-red-400/15",
-};
-
-function ValueTrendBadge({ trend }: { trend: ValueTrend }) {
-  return (
-    <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors ${valueTrendStyles[trend]}`}
-    >
-      {VALUE_TREND_LABELS[trend]}
     </span>
   );
 }
@@ -240,25 +218,13 @@ export function TokenCatalogList() {
                 </div>
               </div>
 
-              <dl className="grid shrink-0 grid-cols-2 gap-3 sm:grid-cols-5 lg:min-w-[28rem]">
+              <dl className="grid shrink-0 grid-cols-2 gap-3 sm:grid-cols-4 lg:min-w-[22rem]">
                 <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">
                   <dt className="text-[11px] uppercase tracking-wide text-text-muted">
                     Effective
                   </dt>
                   <dd className="mt-0.5 text-lg font-bold text-solana-green">
                     {loading ? "—" : snapshot.effectiveScore}
-                  </dd>
-                </div>
-                <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">
-                  <dt className="text-[11px] uppercase tracking-wide text-text-muted">
-                    Trend
-                  </dt>
-                  <dd className="mt-1">
-                    {loading ? (
-                      <span className="text-xs text-text-muted">…</span>
-                    ) : (
-                      <ValueTrendBadge trend={snapshot.valueTrend} />
-                    )}
                   </dd>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">

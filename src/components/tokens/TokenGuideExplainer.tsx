@@ -7,6 +7,7 @@ import {
 } from "@/lib/tokens/scoring";
 import { AVAILABILITY_LABELS } from "@/lib/availability/labels";
 import type { AvailabilityStatus } from "@/lib/availability/types";
+import Link from "next/link";
 
 const stockStatuses: AvailabilityStatus[] = [
   "out_of_stock",
@@ -29,10 +30,6 @@ const principles = [
     body: "Retailer availability is checked server-side and blended into an effective score. Out-of-stock boards score higher on scarcity; easy-to-buy boards score lower.",
   },
   {
-    title: "Value trend badge",
-    body: "Rising, Stable, and Dropping compare each token’s effective score to the previous stock refresh — green when scarcity is up, gray when unchanged, red when it’s easing.",
-  },
-  {
     title: "Utility, not gambling",
     body: "Tokens are collectibles tied to real keyboards and verified stock — not loot boxes, not wagers, and not pay-to-win mechanics.",
   },
@@ -52,7 +49,15 @@ export function TokenGuideExplainer() {
           scarce the keyboard is in the real world) and an{" "}
           <span className="text-text-primary">effective score</span> that blends
           rarity with live retailer stock. Minting and wallet flows are coming
-          soon; this guide documents how tokens are ranked today.
+          soon; this guide documents how tokens are ranked today. Track live
+          movers on the{" "}
+          <Link
+            href="/value-trends"
+            className="text-solana-green underline-offset-2 hover:underline"
+          >
+            Value Trends
+          </Link>{" "}
+          page.
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
