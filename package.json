@@ -13,6 +13,7 @@
     "availability:cron": "node scripts/availability-cron.mjs",
     "availability:refresh": "tsx scripts/refresh-availability.ts",
     "availability:snapshot": "node scripts/update-availability-snapshot.mjs",
+    "tokens:baseline": "tsx scripts/update-token-baseline.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

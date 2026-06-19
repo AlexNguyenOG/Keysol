@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAvailability } from "@/lib/availability/checker";
 import { buildTokenSnapshots } from "@/lib/tokens";
+import { readTokenValueBaseline } from "@/lib/tokens/baseline";
 import {
   enforceRateLimit,
   jsonResponse,
@@ -31,7 +32,12 @@ export async function GET(request: Request) {
 
   const availability = await getAvailability({ refresh: wantsRefresh });
   const snapshotAt = new Date().toISOString();
-  const snapshots = buildTokenSnapshots(availability, snapshotAt);
+  const previousScores = await readTokenValueBaseline();
+  const snapshots = buildTokenSnapshots(
+    availability,
+    snapshotAt,
+    previousScores,
+  );
 
   const response = jsonResponse({
     trustModel: TOKEN_STOCK_TRUST_MODEL,

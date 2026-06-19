@@ -29,6 +29,10 @@ const principles = [
     body: "Retailer availability is checked server-side and blended into an effective score. Out-of-stock boards score higher on scarcity; easy-to-buy boards score lower.",
   },
   {
+    title: "Value trend badge",
+    body: "Rising, Stable, and Dropping compare each token’s effective score to the previous stock refresh — green when scarcity is up, gray when unchanged, red when it’s easing.",
+  },
+  {
     title: "Utility, not gambling",
     body: "Tokens are collectibles tied to real keyboards and verified stock — not loot boxes, not wagers, and not pay-to-win mechanics.",
   },

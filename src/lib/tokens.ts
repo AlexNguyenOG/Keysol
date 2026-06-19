@@ -5,6 +5,7 @@ import {
   computeEffectiveTokenScore,
   stockScoreFromStatus,
 } from "@/lib/tokens/scoring";
+import { computeValueTrend } from "@/lib/tokens/trend";
 import type { Keyboard, KeyboardToken, TokenSnapshot } from "@/types";
 
 export function getKeyboardToken(keyboardId: string): KeyboardToken | undefined {
@@ -28,6 +29,7 @@ export function getKeyboardTokensByScarcity(): KeyboardToken[] {
 export function buildTokenSnapshots(
   availability: AvailabilityMap,
   snapshotAt = new Date().toISOString(),
+  previousScores: Record<string, number> = {},
 ): TokenSnapshot[] {
   return keyboardTokens
     .map((token) => {
@@ -38,6 +40,12 @@ export function buildTokenSnapshots(
         token.rarityScore,
         stockStatus,
       );
+      const previousEffectiveScore =
+        previousScores[token.keyboardId] ?? null;
+      const valueTrend = computeValueTrend(
+        effectiveScore,
+        previousEffectiveScore ?? undefined,
+      );
 
       return {
         keyboardId: token.keyboardId,
@@ -47,6 +55,8 @@ export function buildTokenSnapshots(
         stockStatus,
         stockScore,
         effectiveScore,
+        previousEffectiveScore,
+        valueTrend,
         checkedAt: record?.checkedAt ?? null,
         stockSource: record?.source ?? null,
         snapshotAt,

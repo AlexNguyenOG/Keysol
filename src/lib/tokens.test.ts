@@ -14,6 +14,7 @@ import {
   TOKEN_RARITY_WEIGHT,
   TOKEN_STOCK_WEIGHT,
 } from "@/lib/tokens/scoring";
+import { computeValueTrend } from "@/lib/tokens/trend";
 
 describe("keyboard tokens", () => {
   it("has unique token and keyboard ids", () => {
@@ -78,6 +79,13 @@ describe("token scoring", () => {
     expect(stockScoreFromStatus(undefined)).toBe(50);
   });
 
+  it("labels value trend from effective score delta", () => {
+    expect(computeValueTrend(80, 70)).toBe("rising");
+    expect(computeValueTrend(70, 70)).toBe("stable");
+    expect(computeValueTrend(60, 70)).toBe("dropping");
+    expect(computeValueTrend(80, undefined)).toBe("stable");
+  });
+
   it("blends rarity and stock with fixed weights", () => {
     const score = computeEffectiveTokenScore(100, "out_of_stock");
     expect(score).toBe(
@@ -89,24 +97,33 @@ describe("token scoring", () => {
   });
 
   it("builds server snapshots from availability map", () => {
-    const snapshots = buildTokenSnapshots({
-      "wooting-60he-plus": {
-        keyboardId: "wooting-60he-plus",
-        status: "out_of_stock",
-        checkedAt: "2026-06-17T12:00:00.000Z",
-        source: "https://wooting.io/wooting-60he",
+    const snapshots = buildTokenSnapshots(
+      {
+        "wooting-60he-plus": {
+          keyboardId: "wooting-60he-plus",
+          status: "out_of_stock",
+          checkedAt: "2026-06-17T12:00:00.000Z",
+          source: "https://wooting.io/wooting-60he",
+        },
+        "corsair-k70-rgb-mk2": {
+          keyboardId: "corsair-k70-rgb-mk2",
+          status: "in_stock",
+          checkedAt: "2026-06-17T12:00:00.000Z",
+          source: "https://www.corsair.com/example",
+        },
       },
-      "corsair-k70-rgb-mk2": {
-        keyboardId: "corsair-k70-rgb-mk2",
-        status: "in_stock",
-        checkedAt: "2026-06-17T12:00:00.000Z",
-        source: "https://www.corsair.com/example",
+      "2026-06-17T12:00:00.000Z",
+      {
+        "wooting-60he-plus": 66,
+        "corsair-k70-rgb-mk2": 61,
       },
-    });
+    );
 
     expect(snapshots).toHaveLength(keyboardTokens.length);
     expect(snapshots[0]?.keyboardId).toBe("wooting-60he-plus");
     expect(snapshots[0]?.stockStatus).toBe("out_of_stock");
+    expect(snapshots[0]?.valueTrend).toBe("rising");
     expect(snapshots.at(-1)?.keyboardId).toBe("corsair-k70-rgb-mk2");
+    expect(snapshots.at(-1)?.valueTrend).toBe("dropping");
   });
 });

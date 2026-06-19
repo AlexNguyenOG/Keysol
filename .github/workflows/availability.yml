@@ -18,6 +18,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Snapshot current token scores as baseline (before stock refresh)
+        run: npm run tokens:baseline
       - run: npm run availability:refresh
       - name: Update bundled snapshot for Vercel deploys
         run: cp .cache/availability.json src/data/availability.snapshot.json
@@ -25,7 +27,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/availability.snapshot.json
+          git add src/data/availability.snapshot.json src/data/token-value.baseline.json
           if git diff --staged --quiet; then
             echo "Snapshot unchanged."
             exit 0

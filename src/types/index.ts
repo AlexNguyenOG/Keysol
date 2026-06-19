@@ -1,4 +1,5 @@
 import type { AvailabilityStatus } from "@/lib/availability/types";
+import type { ValueTrend } from "@/lib/tokens/trend";
 
 export type BrandCategory = "gaming" | "enthusiast" | "productivity";
 
@@ -67,6 +68,10 @@ export interface TokenSnapshot {
   stockScore: number;
   /** Weighted blend of rarity + stock for ranking (see token scoring). */
   effectiveScore: number;
+  /** Effective score from the previous availability refresh cycle. */
+  previousEffectiveScore: number | null;
+  /** Direction of effective score vs the previous cycle. */
+  valueTrend: ValueTrend;
   checkedAt: string | null;
   stockSource: string | null;
   snapshotAt: string;
