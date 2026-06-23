@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import type { RankedKeyboard } from "@/lib/rankings";
+import { KeyboardShowcaseMedia } from "@/components/ui/KeyboardShowcaseMedia";
 import { getBrandName } from "@/lib/keyboards";
 import {
   formatPollingRate,
@@ -51,15 +51,14 @@ export function RankingRow({ keyboard }: RankingRowProps) {
         <div className="flex items-center gap-4">
           <RankBadge rank={keyboard.rank} />
 
-          <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-[#0a0b0f] sm:h-24 sm:w-32">
-            <Image
-              src={keyboard.image}
-              alt={`${keyboard.name} product photo`}
-              fill
-              className="object-contain p-0.5"
-              sizes="128px"
-            />
-          </div>
+          <KeyboardShowcaseMedia
+            keyboardId={keyboard.id}
+            imageSrc={keyboard.image}
+            alt={`${keyboard.name} product photo`}
+            className="h-20 w-28 shrink-0 rounded-lg sm:h-24 sm:w-32"
+            imageClassName="object-contain p-0.5"
+            sizes="128px"
+          />
 
           <div className="min-w-0 flex-1 lg:hidden">
             <p className="text-xs font-medium uppercase tracking-wider text-solana-purple">

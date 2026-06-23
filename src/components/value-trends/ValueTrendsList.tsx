@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { keyboards } from "@/data/keyboards";
+import { KeyboardShowcaseMedia } from "@/components/ui/KeyboardShowcaseMedia";
 import { getKeyboardTokensByRarity } from "@/lib/tokens";
 import { computeEffectiveTokenScore } from "@/lib/tokens/scoring";
 import type { ValueTrend } from "@/lib/tokens/trend";
@@ -221,15 +221,14 @@ export function ValueTrendsList() {
                   <RankBadge rank={index + 1} />
 
                   {keyboard && (
-                    <div className="relative hidden h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-[#0a0b0f] sm:block sm:h-24 sm:w-32">
-                      <Image
-                        src={keyboard.image}
-                        alt={`${keyboard.name} product photo`}
-                        fill
-                        className="object-contain p-0.5"
-                        sizes="128px"
-                      />
-                    </div>
+                    <KeyboardShowcaseMedia
+                      keyboardId={keyboard.id}
+                      imageSrc={keyboard.image}
+                      alt={`${keyboard.name} product photo`}
+                      className="hidden h-20 w-28 shrink-0 rounded-lg sm:block sm:h-24 sm:w-32"
+                      imageClassName="object-contain p-0.5"
+                      sizes="128px"
+                    />
                   )}
 
                   <div className="min-w-0 flex-1">

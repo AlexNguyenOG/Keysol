@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import type { Keyboard } from "@/types";
+import { KeyboardShowcaseMedia } from "./KeyboardShowcaseMedia";
 import {
   formatPollingRate,
   formatPrice,
@@ -44,15 +44,13 @@ export function KeyboardCard({ keyboard }: KeyboardCardProps) {
 
   return (
     <div className="overflow-hidden rounded-xl border border-white/10 bg-bg-primary/40">
-      <div className="relative aspect-[16/10] w-full bg-[#0a0b0f]">
-        <Image
-          src={keyboard.image}
-          alt={`${keyboard.name} product photo`}
-          fill
-          className="object-contain p-1.5"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-      </div>
+      <KeyboardShowcaseMedia
+        keyboardId={keyboard.id}
+        imageSrc={keyboard.image}
+        alt={`${keyboard.name} product photo`}
+        className="aspect-[16/10] w-full"
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
 
       <div className="p-4">
         <div className="mb-3 flex items-start justify-between gap-3">

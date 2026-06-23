@@ -14,6 +14,7 @@
     "availability:refresh": "tsx scripts/refresh-availability.ts",
     "availability:snapshot": "node scripts/update-availability-snapshot.mjs",
     "tokens:baseline": "tsx scripts/update-token-baseline.ts",
+    "showcase:fetch": "node scripts/fetch-keyboard-showcases.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

@@ -3,6 +3,7 @@ import path from "path";
 import { describe, expect, it } from "vitest";
 import { brands } from "@/data/brands";
 import { keyboards } from "@/data/keyboards";
+import { keyboardShowcases } from "@/data/keyboard-showcases";
 import { getSwitchTypeForKeyboard, switchTypes } from "@/data/switch-types";
 import { getKeyboardsByBrandId } from "@/lib/keyboards";
 
@@ -33,6 +34,18 @@ describe("keyboard data", () => {
     for (const keyboard of keyboards) {
       expect(keyboard.image.startsWith("/keyboards/")).toBe(true);
       const filePath = path.join(publicDir, keyboard.image);
+      expect(existsSync(filePath)).toBe(true);
+    }
+  });
+
+  it("has official showcase clips for registered keyboards", () => {
+    for (const entry of keyboardShowcases) {
+      const filePath = path.join(
+        publicDir,
+        "keyboards",
+        "showcases",
+        `${entry.keyboardId}.mp4`,
+      );
       expect(existsSync(filePath)).toBe(true);
     }
   });
