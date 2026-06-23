@@ -186,7 +186,7 @@ export const keyboardTokens: KeyboardToken[] = [
     id: "keysol-corsair-k70-rgb-pro",
     keyboardId: "corsair-k70-rgb-pro",
     symbol: "KSOL-K70PRO",
-    name: "KeySol Corsair K70 RGB PRO Token",
+    name: "KeySol Corsair K70 RGB Token",
     rarityTier: "uncommon",
     rarityScore: 48,
     maxSupply: 5000,

@@ -9,11 +9,13 @@ module.exports = {
       interpreter: "none",
       autorestart: true,
       watch: false,
-      max_restarts: 50,
-      min_uptime: "5s",
+      max_restarts: 100,
+      min_uptime: "10s",
       exp_backoff_restart_delay: 2000,
+      restart_delay: 3000,
       env: {
         NODE_ENV: "development",
+        PORT: "3000",
       },
     },
     {

@@ -3,6 +3,12 @@ import { loadEnvLocal } from "./load-env-local.mjs";
 
 loadEnvLocal();
 
+const APPS = ["keysol-dev", "keysol-availability-cron"];
+
+function pm2(args) {
+  execSync(`npx pm2 ${args}`, { stdio: "inherit" });
+}
+
 function pm2List() {
   try {
     const output = execSync("npx pm2 jlist", {
@@ -15,29 +21,48 @@ function pm2List() {
   }
 }
 
-function isOnline(processes, name) {
-  return processes.some(
-    (process) =>
-      process.name === name && process.pm2_env?.status === "online",
-  );
+function findProcess(processes, name) {
+  return processes.find((process) => process.name === name);
+}
+
+function isOnline(process) {
+  return process?.pm2_env?.status === "online";
+}
+
+function ensureApp(processes, name) {
+  const process = findProcess(processes, name);
+
+  if (isOnline(process)) {
+    return "online";
+  }
+
+  if (process) {
+    console.log(`Restarting ${name}…`);
+    pm2(`restart ${name}`);
+    return "restarted";
+  }
+
+  return "missing";
 }
 
 const processes = pm2List();
-const devRunning = isOnline(processes, "keysol-dev");
-const cronRegistered = processes.some(
-  (process) => process.name === "keysol-availability-cron",
-);
+const devState = ensureApp(processes, "keysol-dev");
+const cronState = ensureApp(processes, "keysol-availability-cron");
 
-if (devRunning && cronRegistered) {
-  console.log("KeySol dev server and availability cron are already managed by PM2.");
-  console.log("Use npm run dev:daemon:status to check them.");
-  process.exit(0);
+if (devState === "missing" || cronState === "missing") {
+  console.log("Starting KeySol under PM2 (dev server + scheduled stock refresh)…");
+  pm2("start ecosystem.config.cjs");
 }
 
-console.log("Starting KeySol under PM2 (dev server + scheduled stock refresh)…");
-execSync("npx pm2 start ecosystem.config.cjs", {
-  stdio: "inherit",
-});
+if (devState === "online" && cronState === "online") {
+  console.log("KeySol dev server and availability cron are already managed by PM2.");
+} else {
+  try {
+    pm2("save");
+  } catch {
+    console.warn("Could not persist PM2 process list (pm2 save).");
+  }
+}
 
 console.log("\nRunning initial stock refresh…");
 try {
@@ -47,6 +72,6 @@ try {
 }
 
 console.log("\nKeySol is managed by PM2.");
-console.log("Dev: http://localhost:3000 or http://localhost:3001");
+console.log("Dev: http://localhost:3000");
 console.log("Stock refresh: every 6 hours (keysol-availability-cron)");
 console.log("Commands: dev:daemon:status | dev:daemon:logs | dev:daemon:stop");

@@ -173,7 +173,7 @@ export const keyboards: Keyboard[] = [
   {
     id: "corsair-k70-rgb-pro",
     brandId: "corsair",
-    name: "K70 RGB PRO",
+    name: "K70 RGB",
     releaseDate: "2022-02-01",
     priceUsd: 170,
     tagline: "Classic K70 with Cherry MX Speed Silver and 8000 Hz AXON polling",

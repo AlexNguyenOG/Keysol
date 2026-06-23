@@ -32,7 +32,7 @@ test.describe("home page", () => {
       brands.getByRole("heading", { name: "Corsair K70 MAX" }),
     ).toBeVisible();
     await expect(
-      brands.getByRole("heading", { name: "K70 RGB PRO" }),
+      brands.getByRole("heading", { name: "K70 RGB", exact: true }),
     ).toBeVisible();
     await expect(
       brands.getByRole("heading", { name: "K70 RGB MK.2" }),
