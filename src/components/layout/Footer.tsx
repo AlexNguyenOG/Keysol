@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AUTHOR_NAME, AUTHOR_WEBSITE } from "@/lib/site";
 
 export function Footer() {
   return (
@@ -54,6 +55,18 @@ export function Footer() {
             <span className="gradient-text text-lg font-semibold sm:text-xl">
               Keyboard token collectibles coming soon
             </span>
+          </p>
+          <p className="mt-4 text-sm text-text-muted">
+            © 2026-present{" "}
+            <a
+              href={AUTHOR_WEBSITE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-solana-green underline-offset-2 transition-colors hover:text-text-primary hover:underline"
+            >
+              {AUTHOR_NAME}
+            </a>
+            . All Rights Reserved.
           </p>
         </div>
       </div>
