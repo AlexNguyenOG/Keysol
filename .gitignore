@@ -28,6 +28,11 @@
 .DS_Store
 *.pem
 .cache/
+data/users.json
+data/auth.db
+data/auth.db-shm
+data/auth.db-wal
+data/auth-audit.log
 
 # debug
 npm-debug.log*

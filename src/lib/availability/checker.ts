@@ -1,6 +1,6 @@
 import https from "node:https";
-import { keyboards } from "@/data/keyboards";
-import { isPublicHttpUrl } from "@/lib/security/url";
+import { getAllKeyboards } from "@/lib/catalog.server";
+import { isPublicHttpUrl, getPublicUrlGuardOptions } from "@/lib/security/url";
 import type { Keyboard } from "@/types";
 import {
   isStale,
@@ -38,7 +38,7 @@ function fetchWithHttpsLargeHeaders(
   url: string,
   redirectCount = 0,
 ): Promise<string> {
-  if (!isPublicHttpUrl(url)) {
+  if (!isPublicHttpUrl(url, getPublicUrlGuardOptions())) {
     return Promise.reject(new Error("Blocked URL"));
   }
 
@@ -129,7 +129,7 @@ async function fetchPurchasePage(
   url: string,
   redirectCount = 0,
 ): Promise<string> {
-  if (!isPublicHttpUrl(url)) {
+  if (!isPublicHttpUrl(url, getPublicUrlGuardOptions())) {
     throw new Error("Blocked URL");
   }
 
@@ -179,7 +179,7 @@ export async function checkKeyboardAvailability(
 ): Promise<AvailabilityRecord> {
   const checkedAt = new Date().toISOString();
 
-  if (!isPublicHttpUrl(keyboard.purchaseUrl)) {
+  if (!isPublicHttpUrl(keyboard.purchaseUrl, getPublicUrlGuardOptions())) {
     return {
       keyboardId: keyboard.id,
       status: "unknown",
@@ -217,9 +217,11 @@ export async function refreshAvailability(options?: {
   const force = options?.force ?? false;
   const cache = await readCache();
 
+  const catalog = getAllKeyboards();
+
   const targets = options?.keyboardIds
-    ? keyboards.filter((keyboard) => options.keyboardIds!.includes(keyboard.id))
-    : keyboards;
+    ? catalog.filter((keyboard) => options.keyboardIds!.includes(keyboard.id))
+    : catalog;
 
   const staleTargets = force
     ? targets
@@ -249,7 +251,8 @@ export async function getAvailability(options?: {
     return cache;
   }
 
-  const needsRefresh = keyboards.some((keyboard) => isStale(cache[keyboard.id]));
+  const catalog = getAllKeyboards();
+  const needsRefresh = catalog.some((keyboard) => isStale(cache[keyboard.id]));
 
   if (needsRefresh) {
     return refreshAvailability();
@@ -261,7 +264,7 @@ export async function getAvailability(options?: {
 export function seedUnknownAvailability(): AvailabilityMap {
   const checkedAt = new Date(0).toISOString();
   return Object.fromEntries(
-    keyboards.map((keyboard) => [
+    getAllKeyboards().map((keyboard) => [
       keyboard.id,
       {
         keyboardId: keyboard.id,

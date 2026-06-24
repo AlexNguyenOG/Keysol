@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateAssistantReply } from "@/lib/assistant/respond";
 import type { AssistantMessage } from "@/lib/assistant/types";
+import { isSuspiciousBot } from "@/lib/security/bot";
 import {
   enforceRateLimit,
   jsonResponse,
@@ -37,6 +38,13 @@ export async function POST(request: Request) {
   const rate = enforceRateLimit(request, "assistant");
   if (rate instanceof NextResponse) {
     return rate;
+  }
+
+  if (isSuspiciousBot(request)) {
+    return withRateLimitHeaders(
+      jsonResponse({ error: "Forbidden" }, { status: 403 }),
+      rate as RateLimitResult,
+    );
   }
 
   const parsed = await readJsonBody(request);

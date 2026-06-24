@@ -1,4 +1,5 @@
-import { keyboards } from "@/data/keyboards";
+import { keyboardTokens } from "@/data/keyboard-tokens";
+import { getAllKeyboards } from "@/lib/catalog.server";
 import { getBrandName } from "@/lib/keyboards";
 import {
   computeSpeedScore,
@@ -6,7 +7,12 @@ import {
   SCORE_CRITERIA,
 } from "@/lib/rankings";
 import type { Keyboard } from "@/types";
-import { findKeyboardsByQuery, formatKeyboardSummary } from "./knowledge";
+import {
+  findKeyboardsByQuery,
+  findSwitchTypesByQuery,
+  formatKeyboardSummary,
+} from "./knowledge";
+import { isOffTopicMessage, OFF_TOPIC_REPLY } from "./rules";
 
 function normalize(text: string): string {
   return text.toLowerCase().replace(/\s+/g, " ").trim();
@@ -29,8 +35,8 @@ function explainRapidTrigger(): string {
     "Rapid trigger is a hall-effect / magnetic keyboard feature that resets a key the moment you release it, without waiting for the switch to physically travel back up.",
     "That lets you spam movement keys faster in games because the keyboard re-arms sooner.",
     criterion?.description ?? "",
-    "In KeySol's speed score, keyboards with rapid trigger get a +10 point bonus.",
-    `Examples with rapid trigger: ${getRankedKeyboards(keyboards.filter((k) => k.stats.rapidTrigger)).slice(0, 3).map((k) => k.name).join(", ")}.`,
+    "In KeySol's speed score, getAllKeyboards() with rapid trigger get a +10 point bonus.",
+    `Examples with rapid trigger: ${getRankedKeyboards(getAllKeyboards().filter((k) => k.stats.rapidTrigger)).slice(0, 3).map((k) => k.name).join(", ")}.`,
   ]
     .filter(Boolean)
     .join(" ");
@@ -38,7 +44,7 @@ function explainRapidTrigger(): string {
 
 function explainPollingRate(): string {
   const criterion = SCORE_CRITERIA.find((item) => item.key === "polling");
-  const top = getRankedKeyboards(keyboards, "speed")[0];
+  const top = getRankedKeyboards(getAllKeyboards(), "speed")[0];
   return [
     "Polling rate is how often the keyboard reports key state to your PC, measured in Hz.",
     "Standard boards are 1,000 Hz. High-end gaming boards go up to 8,000 Hz for lower input latency.",
@@ -54,14 +60,14 @@ function explainActuation(): string {
     "Actuation point is how far you press a key before it registers.",
     "Lower actuation can feel faster because the key fires sooner in the travel.",
     "Magnetic and hall-effect boards often go down to about 0.1 mm with software tuning.",
-    `Lowest actuation in our catalog: ${[...keyboards].sort((a, b) => a.stats.actuationPointMm - b.stats.actuationPointMm)[0].name}.`,
+    `Lowest actuation in our catalog: ${[...getAllKeyboards()].sort((a, b) => a.stats.actuationPointMm - b.stats.actuationPointMm)[0].name}.`,
   ].join(" ");
 }
 
 function explainHallEffect(): string {
   const heBoards = findKeyboardsByQuery("hall magnetic lekker omnipoint mgx");
   return [
-    "Hall-effect and magnetic keyboards use sensors instead of metal contact leaves, so they can support adjustable actuation and rapid trigger.",
+    "Hall-effect and magnetic getAllKeyboards() use sensors instead of metal contact leaves, so they can support adjustable actuation and rapid trigger.",
     "They're popular for competitive FPS because you can tune sensitivity per key.",
     heBoards.length > 0
       ? `Magnetic / hall-effect options here:\n${listKeyboards(heBoards, 5)}`
@@ -72,7 +78,7 @@ function explainHallEffect(): string {
 }
 
 function answerFastest(): string {
-  const ranked = getRankedKeyboards(keyboards, "speed").slice(0, 5);
+  const ranked = getRankedKeyboards(getAllKeyboards(), "speed").slice(0, 5);
   return [
     "These are the top speed picks in KeySol's catalog, ranked by polling rate, response time, actuation, and rapid trigger:",
     listKeyboards(ranked, 5),
@@ -81,7 +87,7 @@ function answerFastest(): string {
 }
 
 function answerCheapest(): string {
-  const cheapest = [...keyboards].sort((a, b) => a.priceUsd - b.priceUsd).slice(0, 5);
+  const cheapest = [...getAllKeyboards()].sort((a, b) => a.priceUsd - b.priceUsd).slice(0, 5);
   return [
     "Best budget picks in the catalog:",
     listKeyboards(cheapest, 5),
@@ -89,7 +95,7 @@ function answerCheapest(): string {
 }
 
 function answerWireless(): string {
-  const wireless = keyboards.filter((keyboard) =>
+  const wireless = getAllKeyboards().filter((keyboard) =>
     keyboard.stats.connectivity.some((option) =>
       /wireless|lightspeed|bluetooth/i.test(option),
     ),
@@ -106,7 +112,7 @@ function answerWireless(): string {
 }
 
 function answerLayout(layout: string): string {
-  const matches = keyboards.filter((keyboard) =>
+  const matches = getAllKeyboards().filter((keyboard) =>
     keyboard.stats.layout.toLowerCase().includes(layout),
   );
 
@@ -121,7 +127,7 @@ function answerLayout(layout: string): string {
 }
 
 function answerBrand(text: string): string | null {
-  const brandMatch = keyboards.find((keyboard) =>
+  const brandMatch = getAllKeyboards().find((keyboard) =>
     includesAny(text, [
       keyboard.brandId,
       getBrandName(keyboard.brandId).toLowerCase(),
@@ -132,12 +138,12 @@ function answerBrand(text: string): string | null {
     return null;
   }
 
-  const brandBoards = keyboards.filter(
+  const brandBoards = getAllKeyboards().filter(
     (keyboard) => keyboard.brandId === brandMatch.brandId,
   );
 
   return [
-    `${getBrandName(brandMatch.brandId)} keyboards in KeySol:`,
+    `${getBrandName(brandMatch.brandId)} getAllKeyboards() in KeySol:`,
     listKeyboards(
       getRankedKeyboards(brandBoards, "speed"),
       Math.min(brandBoards.length, 5),
@@ -174,12 +180,12 @@ function answerBudget(text: string): string | null {
   }
 
   const budget = Number(budgetMatch[1]);
-  const affordable = keyboards
+  const affordable = getAllKeyboards()
     .filter((keyboard) => keyboard.priceUsd <= budget)
     .sort((a, b) => computeSpeedScore(b) - computeSpeedScore(a));
 
   if (affordable.length === 0) {
-    return `Nothing in the catalog is under $${budget} right now. The cheapest board is ${[...keyboards].sort((a, b) => a.priceUsd - b.priceUsd)[0].name}.`;
+    return `Nothing in the catalog is under $${budget} right now. The cheapest board is ${[...getAllKeyboards()].sort((a, b) => a.priceUsd - b.priceUsd)[0].name}.`;
   }
 
   return [
@@ -212,6 +218,47 @@ function answerSpecificKeyboard(text: string): string | null {
   ].join("\n");
 }
 
+function answerSwitchType(text: string): string | null {
+  const matches = findSwitchTypesByQuery(text);
+  if (matches.length === 0) {
+    return null;
+  }
+
+  const entry = matches[0];
+  const boards = entry.keyboardIds
+    .map((id) => getAllKeyboards().find((keyboard) => keyboard.id === id))
+    .filter(Boolean) as Keyboard[];
+
+  return [
+    `${entry.name} — ${entry.tagline}`,
+    entry.howItWorks,
+    `Actuation: ${entry.actuation}`,
+    `Feel: ${entry.feel}`,
+    `Sound: ${entry.sound}`,
+    `Best for: ${entry.bestFor}`,
+    entry.rapidTrigger ? "Supports rapid trigger." : "No rapid trigger.",
+    boards.length > 0
+      ? `Boards in our catalog:\n${listKeyboards(boards, 5)}`
+      : "No catalog boards linked yet.",
+  ].join("\n");
+}
+
+function answerTokens(): string {
+  const top = [...keyboardTokens]
+    .sort((a, b) => b.rarityScore - a.rarityScore)
+    .slice(0, 5);
+
+  return [
+    "KeySol keyboard tokens are collectible rarity tags tied to catalog boards — wallet minting is on the roadmap, not live yet.",
+    "Top rarity tokens in the guide:",
+    ...top.map(
+      (token, index) =>
+        `${index + 1}. ${token.symbol} — ${token.name} (${token.rarityTier}, score ${token.rarityScore})`,
+    ),
+    "See /tokens for the full guide and /value-trends for score movement.",
+  ].join("\n");
+}
+
 function defaultAnswer(text: string): string {
   const matches = findKeyboardsByQuery(text);
 
@@ -238,6 +285,34 @@ export function generateLocalAssistantReply(message: string): string {
 
   if (!text) {
     return "Ask me anything about keyboard hardware — rankings, switches, layouts, or a specific board in the catalog.";
+  }
+
+  if (isOffTopicMessage(text)) {
+    return OFF_TOPIC_REPLY;
+  }
+
+  if (includesAny(text, ["token", "keysol token", "collectible", "rarity"])) {
+    return answerTokens();
+  }
+
+  if (
+    includesAny(text, [
+      "switch type",
+      "switch types",
+      "what switch",
+      "cherry mx",
+      "gateron",
+      "lekker",
+      "omnipoint",
+      "mgx",
+      "magnetic switch",
+      "optical switch",
+    ])
+  ) {
+    const switchReply = answerSwitchType(text);
+    if (switchReply) {
+      return switchReply;
+    }
   }
 
   if (includesAny(text, ["rapid trigger", "rapid-trigger", "rapidtrigger"])) {
@@ -286,6 +361,14 @@ export function generateLocalAssistantReply(message: string): string {
 
   if (includesAny(text, ["wireless", "bluetooth", "lightspeed"])) {
     return answerWireless();
+  }
+
+  if (includesAny(text, ["75%", "75 percent"])) {
+    return answerLayout("75%");
+  }
+
+  if (includesAny(text, ["80%", "80 percent"])) {
+    return answerLayout("80%");
   }
 
   if (includesAny(text, ["tkl", "tenkeyless"])) {

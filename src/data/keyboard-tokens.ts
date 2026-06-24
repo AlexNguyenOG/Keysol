@@ -205,6 +205,17 @@ export const keyboardTokens: KeyboardToken[] = [
       "Enthusiast TKL sold through specialty retailers — available but not big-box omnipresent.",
   },
   {
+    id: "keysol-ducky-one-3-full",
+    keyboardId: "ducky-one-3-rgb-full",
+    symbol: "KSOL-D1FULL",
+    name: "KeySol Ducky One 3 RGB Full Token",
+    rarityTier: "uncommon",
+    rarityScore: 45,
+    maxSupply: 5000,
+    rationale:
+      "Full-size One 3 with specialty retailer distribution — steady stock, niche vs gaming brands.",
+  },
+  {
     id: "keysol-ducky-one-3-mini",
     keyboardId: "ducky-one-3-mini-sf",
     symbol: "KSOL-D1MINI",
@@ -258,6 +269,17 @@ export const keyboardTokens: KeyboardToken[] = [
     maxSupply: 2000,
     rationale:
       "Keychron's aluminum 8 kHz TKL magnetic board — strong enthusiast demand.",
+  },
+  {
+    id: "keysol-keychron-q6-he-8k",
+    keyboardId: "keychron-q6-he-8k",
+    symbol: "KSOL-Q6HE8K",
+    name: "KeySol Keychron Q6 HE 8K Token",
+    rarityTier: "rare",
+    rarityScore: 69,
+    maxSupply: 2000,
+    rationale:
+      "Full-size 8 kHz magnetic Q6 — pairs with Q3 HE 8K lineup, high enthusiast interest.",
   },
   {
     id: "keysol-nuphy-field75-he",

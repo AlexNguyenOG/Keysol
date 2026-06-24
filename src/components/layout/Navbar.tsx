@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBanner";
+import { AuthNavActions } from "@/components/layout/AuthNavActions";
 
 function SolanaLogo() {
   return (
@@ -42,7 +44,9 @@ function SolanaLogo() {
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-bg-primary/80 backdrop-blur-md">
+    <>
+      <EmailVerificationBanner />
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-bg-primary/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5">
           <SolanaLogo />
@@ -84,13 +88,9 @@ export function Navbar() {
           </Link>
         </div>
 
-        <Link
-          href="/rankings"
-          className="rounded-lg bg-gradient-to-r from-solana-purple to-solana-green px-4 py-2 text-sm font-semibold text-bg-primary transition-opacity hover:opacity-90"
-        >
-          View Rankings
-        </Link>
+        <AuthNavActions />
       </nav>
     </header>
+    </>
   );
 }

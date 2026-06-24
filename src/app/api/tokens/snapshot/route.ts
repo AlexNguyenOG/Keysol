@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAvailability } from "@/lib/availability/checker";
-import { buildTokenSnapshots } from "@/lib/tokens";
+import { buildMergedTokenSnapshots } from "@/lib/tokens.server";
 import { readTokenValueBaseline } from "@/lib/tokens/baseline";
 import {
   enforceRateLimit,
@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   const availability = await getAvailability({ refresh: wantsRefresh });
   const snapshotAt = new Date().toISOString();
   const previousScores = await readTokenValueBaseline();
-  const snapshots = buildTokenSnapshots(
+  const snapshots = buildMergedTokenSnapshots(
     availability,
     snapshotAt,
     previousScores,

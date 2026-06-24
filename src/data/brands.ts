@@ -62,18 +62,6 @@ export const brands: Brand[] = [
     website: "https://www.keychron.com",
   },
   {
-    id: "ducky",
-    name: "Ducky",
-    tagline: "No-nonsense premium builds",
-    category: "enthusiast",
-    highlights: [
-      "Thick PBT keycaps standard",
-      "Clean, distraction-free designs",
-      "Trusted by keyboard enthusiasts",
-    ],
-    website: "https://www.duckychannel.com",
-  },
-  {
     id: "steelseries",
     name: "SteelSeries",
     tagline: "Esports-focused engineering",
@@ -96,6 +84,18 @@ export const brands: Brand[] = [
       "Great entry-level to mid-range picks",
     ],
     website: "https://hyperx.com",
+  },
+  {
+    id: "ducky",
+    name: "Ducky",
+    tagline: "No-nonsense premium builds",
+    category: "enthusiast",
+    highlights: [
+      "Thick PBT keycaps standard",
+      "Clean, distraction-free designs",
+      "Trusted by keyboard enthusiasts",
+    ],
+    website: "https://www.duckychannel.com",
   },
   {
     id: "nuphy",

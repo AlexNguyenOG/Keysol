@@ -24,6 +24,13 @@ jobs:
 
       - run: npm run test
 
+      - run: npm run audit:ci
+
+      - name: Verify production env requirements
+        env:
+          AUTH_SECRET: ci-test-auth-secret
+        run: NODE_ENV=production node scripts/check-production-env.mjs
+
       - run: npm run build
 
       - run: npx playwright install --with-deps chromium

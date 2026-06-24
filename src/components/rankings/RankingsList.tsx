@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { keyboards } from "@/data/keyboards";
+import { keyboards as staticKeyboards } from "@/data/keyboards";
 import {
   getRankedKeyboards,
   type RankingSort,
 } from "@/lib/rankings";
+import type { Keyboard } from "@/types";
 import { RankingRow } from "./RankingRow";
 
 const sortOptions: { value: RankingSort; label: string }[] = [
@@ -15,12 +16,17 @@ const sortOptions: { value: RankingSort; label: string }[] = [
   { value: "newest", label: "Newest first" },
 ];
 
-export function RankingsList() {
+interface RankingsListProps {
+  catalogKeyboards?: Keyboard[];
+}
+
+export function RankingsList({ catalogKeyboards }: RankingsListProps) {
   const [sort, setSort] = useState<RankingSort>("speed");
+  const keyboards = catalogKeyboards ?? staticKeyboards;
 
   const ranked = useMemo(
     () => getRankedKeyboards(keyboards, sort),
-    [sort],
+    [keyboards, sort],
   );
 
   return (

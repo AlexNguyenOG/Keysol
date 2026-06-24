@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { buildContentSecurityPolicy } from "@/lib/security/headers";
 import { isCronAuthorized } from "@/lib/security/auth";
+import { getClientIp } from "@/lib/security/request";
 import {
   checkRateLimit,
   resetRateLimitsForTests,
 } from "@/lib/security/rate-limit";
+import { isSuspiciousBot } from "@/lib/security/bot";
 import { isPublicHttpUrl } from "@/lib/security/url";
 
 describe("security headers", () => {
@@ -12,20 +14,47 @@ describe("security headers", () => {
     expect(buildContentSecurityPolicy(true)).toContain("'unsafe-eval'");
     expect(buildContentSecurityPolicy(false)).not.toContain("'unsafe-eval'");
   });
+
+  it("adds upgrade-insecure-requests in production CSP", () => {
+    expect(buildContentSecurityPolicy(false)).toContain(
+      "upgrade-insecure-requests",
+    );
+    expect(buildContentSecurityPolicy(true)).not.toContain(
+      "upgrade-insecure-requests",
+    );
+  });
 });
 
 describe("security url guard", () => {
   it("allows public https retailer urls", () => {
     expect(isPublicHttpUrl("https://wooting.io/wooting-60he")).toBe(true);
-    expect(isPublicHttpUrl("https://www.corsair.com/us/en/p/keyboards")).toBe(true);
+    expect(isPublicHttpUrl("https://www.corsair.com/us/en/p/keyboards")).toBe(
+      true,
+    );
   });
 
   it("blocks private and non-http urls", () => {
     expect(isPublicHttpUrl("http://127.0.0.1/admin")).toBe(false);
     expect(isPublicHttpUrl("http://localhost:3000")).toBe(false);
     expect(isPublicHttpUrl("http://192.168.1.1")).toBe(false);
+    expect(isPublicHttpUrl("http://172.16.0.1")).toBe(false);
+    expect(isPublicHttpUrl("http://172.31.255.255")).toBe(false);
+    expect(isPublicHttpUrl("http://10.0.0.5")).toBe(false);
+    expect(isPublicHttpUrl("http://100.64.0.1")).toBe(false);
+    expect(isPublicHttpUrl("http://169.254.169.254/latest/meta-data/")).toBe(
+      false,
+    );
     expect(isPublicHttpUrl("file:///etc/passwd")).toBe(false);
     expect(isPublicHttpUrl("not-a-url")).toBe(false);
+  });
+
+  it("can require https only", () => {
+    expect(isPublicHttpUrl("http://wooting.io/wooting-60he", { httpsOnly: true })).toBe(
+      false,
+    );
+    expect(
+      isPublicHttpUrl("https://wooting.io/wooting-60he", { httpsOnly: true }),
+    ).toBe(true);
   });
 });
 
@@ -38,6 +67,57 @@ describe("security rate limit", () => {
     expect(checkRateLimit("test-ip", options).allowed).toBe(true);
     expect(checkRateLimit("test-ip", options).allowed).toBe(true);
     expect(checkRateLimit("test-ip", options).allowed).toBe(false);
+  });
+});
+
+describe("security client ip", () => {
+  it("does not trust proxy headers by default", () => {
+    const request = new Request("http://localhost/api/auth/login", {
+      headers: { "x-forwarded-for": "203.0.113.10" },
+    });
+
+    const originalVercel = process.env.VERCEL;
+    const originalTrust = process.env.TRUST_PROXY_HEADERS;
+    delete process.env.VERCEL;
+    delete process.env.TRUST_PROXY_HEADERS;
+
+    expect(getClientIp(request)).toBe("untrusted");
+
+    process.env.VERCEL = originalVercel;
+    process.env.TRUST_PROXY_HEADERS = originalTrust;
+  });
+
+  it("trusts proxy headers on vercel", () => {
+    const request = new Request("http://localhost/api/auth/login", {
+      headers: { "x-forwarded-for": "203.0.113.10, 10.0.0.1" },
+    });
+
+    const originalVercel = process.env.VERCEL;
+    process.env.VERCEL = "1";
+
+    expect(getClientIp(request)).toBe("203.0.113.10");
+
+    process.env.VERCEL = originalVercel;
+  });
+});
+
+describe("security bot heuristics", () => {
+  it("blocks missing and script user agents", () => {
+    const missing = new Request("http://localhost/api/auth/login");
+    expect(isSuspiciousBot(missing)).toBe(true);
+
+    const curl = new Request("http://localhost/api/auth/login", {
+      headers: { "user-agent": "curl/8.0" },
+    });
+    expect(isSuspiciousBot(curl)).toBe(true);
+
+    const browser = new Request("http://localhost/api/auth/login", {
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+      },
+    });
+    expect(isSuspiciousBot(browser)).toBe(false);
   });
 });
 
@@ -60,6 +140,27 @@ describe("security cron auth", () => {
       headers: { authorization: "Bearer test-secret" },
     });
     expect(isCronAuthorized(authorized)).toBe(true);
+
+    process.env = originalEnv;
+  });
+
+  it("requires explicit dev opt-in when cron secret is missing", () => {
+    const originalEnv = process.env;
+    process.env = {
+      ...originalEnv,
+      NODE_ENV: "development",
+    };
+    delete process.env.AVAILABILITY_CRON_SECRET;
+    delete process.env.CRON_SECRET;
+    delete process.env.ALLOW_INSECURE_CRON;
+
+    const request = new Request("http://localhost/api/availability/refresh", {
+      method: "POST",
+    });
+    expect(isCronAuthorized(request)).toBe(false);
+
+    process.env.ALLOW_INSECURE_CRON = "true";
+    expect(isCronAuthorized(request)).toBe(true);
 
     process.env = originalEnv;
   });

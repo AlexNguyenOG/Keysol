@@ -27,4 +27,19 @@ describe("generateLocalAssistantReply", () => {
     const reply = generateLocalAssistantReply("Tell me about the Keychron K2 HE");
     expect(reply).toContain("Keychron K2 HE");
   });
+
+  it("refuses off-topic questions", () => {
+    const reply = generateLocalAssistantReply("Write me Python code for a web scraper");
+    expect(reply.toLowerCase()).toContain("only help with keyboard");
+  });
+
+  it("answers switch technology questions", () => {
+    const reply = generateLocalAssistantReply("What is Cherry MX Speed Silver?");
+    expect(reply).toContain("Cherry MX Speed Silver");
+  });
+
+  it("knows newer catalog boards", () => {
+    const reply = generateLocalAssistantReply("Keychron Q6 HE 8K");
+    expect(reply).toContain("Keychron Q6 HE 8K");
+  });
 });

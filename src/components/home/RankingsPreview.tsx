@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { keyboards } from "@/data/keyboards";
+import { getAllKeyboards } from "@/lib/catalog.server";
 import { getRankedKeyboards } from "@/lib/rankings";
 import { GradientText } from "@/components/ui/GradientText";
 import { RankingsPreviewCard } from "./RankingsPreviewCard";
 
 export function RankingsPreview() {
-  const topThree = getRankedKeyboards(keyboards, "speed").slice(0, 3);
+  const topThree = getRankedKeyboards(getAllKeyboards(), "speed").slice(0, 3);
 
   return (
     <section className="border-t border-white/10 bg-bg-surface px-4 py-20 sm:px-6 lg:px-8">

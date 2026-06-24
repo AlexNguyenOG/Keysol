@@ -14,18 +14,25 @@ export function buildContentSecurityPolicy(isDevelopment: boolean): string {
     ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
     : "script-src 'self' 'unsafe-inline'";
 
-  return [
+  const directives = [
     "default-src 'self'",
     scriptSrc,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
     "connect-src 'self' ws: wss:",
+    "worker-src 'self' blob:",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
     "object-src 'none'",
-  ].join("; ");
+  ];
+
+  if (!isDevelopment) {
+    directives.push("upgrade-insecure-requests");
+  }
+
+  return directives.join("; ");
 }
 
 export function getSecurityHeaders(

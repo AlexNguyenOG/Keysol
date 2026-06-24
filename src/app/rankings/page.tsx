@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { RankingsList } from "@/components/rankings/RankingsList";
 import { SpeedScoreExplainer } from "@/components/rankings/SpeedScoreExplainer";
 import { GradientText } from "@/components/ui/GradientText";
+import { getAllKeyboards } from "@/lib/catalog.server";
 
 export const metadata: Metadata = {
   title: "Keyboard Rankings — KeySol",
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function RankingsPage() {
+  const catalogKeyboards = getAllKeyboards();
+
   return (
     <>
       <Navbar />
@@ -32,7 +35,7 @@ export default function RankingsPage() {
           </div>
 
           <SpeedScoreExplainer />
-          <RankingsList />
+          <RankingsList catalogKeyboards={catalogKeyboards} />
         </div>
       </main>
       <Footer />

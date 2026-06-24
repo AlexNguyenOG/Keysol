@@ -123,6 +123,13 @@ export const keyboardShowcases: KeyboardShowcase[] = [
     credit: "Keychron",
   },
   {
+    keyboardId: "keychron-q6-he-8k",
+    youtubeId: "zd-NOkWjABQ",
+    clipStartSec: 30,
+    clipEndSec: 42,
+    credit: "Keychron",
+  },
+  {
     keyboardId: "steelseries-apex-pro-gen3",
     youtubeId: "MfjUpteMEHc",
     clipStartSec: 1,
@@ -131,9 +138,9 @@ export const keyboardShowcases: KeyboardShowcase[] = [
   },
   {
     keyboardId: "steelseries-apex-pro-gen3-tkl",
-    youtubeId: "MfjUpteMEHc",
-    clipStartSec: 14,
-    clipEndSec: 26,
+    youtubeId: "oJPnSXQZchA",
+    clipStartSec: 8,
+    clipEndSec: 20,
     credit: "SteelSeries",
   },
   {
@@ -177,6 +184,34 @@ export const keyboardShowcases: KeyboardShowcase[] = [
     clipStartSec: 28,
     clipEndSec: 40,
     credit: "HyperX",
+  },
+  {
+    keyboardId: "ducky-one-3-rgb-tkl",
+    youtubeId: "DPk5BJrexl4",
+    clipStartSec: 0,
+    clipEndSec: 12,
+    credit: "Ducky",
+  },
+  {
+    keyboardId: "ducky-one-3-rgb-full",
+    youtubeId: "DPk5BJrexl4",
+    clipStartSec: 28,
+    clipEndSec: 40,
+    credit: "Ducky",
+  },
+  {
+    keyboardId: "ducky-one-3-mini-sf",
+    youtubeId: "DPk5BJrexl4",
+    clipStartSec: 14,
+    clipEndSec: 26,
+    credit: "Ducky",
+  },
+  {
+    keyboardId: "nuphy-field75-he",
+    youtubeId: "esZyXpwxg-w",
+    clipStartSec: 24,
+    clipEndSec: 36,
+    credit: "NuPhy",
   },
 ];
 

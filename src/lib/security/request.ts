@@ -1,6 +1,17 @@
 const DEFAULT_MAX_JSON_BYTES = 16_384;
 
+function shouldTrustProxyHeaders(): boolean {
+  return (
+    process.env.VERCEL === "1" ||
+    process.env.TRUST_PROXY_HEADERS === "true"
+  );
+}
+
 export function getClientIp(request: Request): string {
+  if (!shouldTrustProxyHeaders()) {
+    return "untrusted";
+  }
+
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
     return forwarded.split(",")[0]?.trim() || "unknown";

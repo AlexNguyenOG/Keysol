@@ -95,6 +95,12 @@
     "checkedAt": "2026-06-18T23:23:40.338Z",
     "source": "https://mechanicalkeyboards.com/products/ducky-one-3-tkl-classic"
   },
+  "ducky-one-3-rgb-full": {
+    "keyboardId": "ducky-one-3-rgb-full",
+    "status": "in_stock",
+    "checkedAt": "2026-06-23T00:00:00.000Z",
+    "source": "https://mechanicalkeyboards.com/products/ducky-one-3-full-classic"
+  },
   "steelseries-apex-pro-gen3": {
     "keyboardId": "steelseries-apex-pro-gen3",
     "status": "in_stock",
@@ -136,6 +142,12 @@
     "status": "in_stock",
     "checkedAt": "2026-06-18T23:23:40.338Z",
     "source": "https://www.keychron.com/products/keychron-q3-he-8k-magnetic-switch-keyboard"
+  },
+  "keychron-q6-he-8k": {
+    "keyboardId": "keychron-q6-he-8k",
+    "status": "in_stock",
+    "checkedAt": "2026-06-23T00:00:00.000Z",
+    "source": "https://www.keychron.com/products/keychron-q6-he-8k-magnetic-switch-keyboard"
   },
   "steelseries-apex-pro-tkl-v2": {
     "keyboardId": "steelseries-apex-pro-tkl-v2",

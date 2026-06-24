@@ -1,18 +1,9 @@
 import type { AssistantMessage } from "./types";
-import { buildCatalogContext } from "./knowledge";
-
-const SYSTEM_PROMPT = `You are KeySol Guide, a helpful assistant for keyboard hardware questions on the KeySol keyboard finder website.
-
-Rules:
-- Answer only about keyboards, switches, layouts, gaming input, and related hardware.
-- Use the catalog data below when recommending specific products.
-- Be concise, practical, and friendly.
-- If asked about something outside keyboards/peripherals, politely redirect.
-- Mention KeySol speed scores when comparing boards in the catalog.
-- Do not invent keyboards that are not in the catalog.
-
-CATALOG DATA:
-`;
+import {
+  sanitizeAssistantOutput,
+  wrapUserPrompt,
+} from "./guard";
+import { buildSystemPrompt } from "./prompt";
 
 export async function generateOpenAiReply(
   message: string,
@@ -32,15 +23,15 @@ export async function generateOpenAiReply(
     },
     body: JSON.stringify({
       model,
-      temperature: 0.3,
+      temperature: 0.2,
       max_tokens: 500,
       messages: [
-        { role: "system", content: SYSTEM_PROMPT + buildCatalogContext() },
+        { role: "system", content: buildSystemPrompt() },
         ...history.slice(-6).map((entry) => ({
           role: entry.role,
           content: entry.content,
         })),
-        { role: "user", content: message },
+        { role: "user", content: wrapUserPrompt(message) },
       ],
     }),
   });
@@ -54,5 +45,5 @@ export async function generateOpenAiReply(
   };
 
   const reply = data.choices?.[0]?.message?.content?.trim();
-  return reply || null;
+  return reply ? sanitizeAssistantOutput(reply) : null;
 }

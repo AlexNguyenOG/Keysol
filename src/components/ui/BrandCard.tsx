@@ -1,5 +1,5 @@
 import type { Brand } from "@/types";
-import { getKeyboardsByBrandId } from "@/lib/keyboards";
+import { getAllKeyboards } from "@/lib/catalog.server";
 import { Badge } from "./Badge";
 import { BrandIcon } from "./BrandIcon";
 import { KeyboardCard } from "./KeyboardCard";
@@ -9,7 +9,9 @@ interface BrandCardProps {
 }
 
 export function BrandCard({ brand }: BrandCardProps) {
-  const brandKeyboards = getKeyboardsByBrandId(brand.id);
+  const brandKeyboards = getAllKeyboards().filter(
+    (keyboard) => keyboard.brandId === brand.id,
+  );
 
   return (
     <article className="gradient-border group flex flex-col rounded-2xl p-6 transition-transform hover:-translate-y-1">

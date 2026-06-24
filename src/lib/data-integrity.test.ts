@@ -38,13 +38,19 @@ describe("keyboard data", () => {
     }
   });
 
-  it("has official showcase clips for registered keyboards", () => {
-    for (const entry of keyboardShowcases) {
+  it("has official showcase clips for every keyboard", () => {
+    const showcaseIds = new Set(
+      keyboardShowcases.map((entry) => entry.keyboardId),
+    );
+
+    for (const keyboard of keyboards) {
+      expect(showcaseIds.has(keyboard.id)).toBe(true);
+
       const filePath = path.join(
         publicDir,
         "keyboards",
         "showcases",
-        `${entry.keyboardId}.mp4`,
+        `${keyboard.id}.mp4`,
       );
       expect(existsSync(filePath)).toBe(true);
     }

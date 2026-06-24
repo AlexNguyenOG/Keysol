@@ -1,0 +1,9 @@
+Contact: mailto:security@keysol.app
+Expires: 2027-06-30T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://keysol.app/.well-known/security.txt
+Policy: https://keysol.app/security
+
+# KeySol security disclosure
+# Please report vulnerabilities responsibly. Do not test against production
+# without permission.

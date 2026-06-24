@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="border-t border-white/10 bg-bg-surface">
@@ -12,31 +14,37 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex gap-6">
-            <a
+          <div className="flex flex-wrap justify-center gap-6">
+            <Link
               href="/value-trends"
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >
               Value Trends
-            </a>
-            <a
+            </Link>
+            <Link
               href="/tokens"
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >
               Token Guide
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/privacy"
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >
               Privacy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/security"
+              className="text-sm text-text-muted transition-colors hover:text-text-primary"
+            >
+              Security
+            </Link>
+            <Link
+              href="/contact"
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >
               Contact
-            </a>
+            </Link>
           </div>
         </div>
 

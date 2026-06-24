@@ -6,8 +6,8 @@ import type { AssistantMessage } from "@/lib/assistant/types";
 const STARTER_PROMPTS = [
   "What's the fastest keyboard?",
   "Explain rapid trigger",
+  "Cherry MX vs magnetic switches",
   "Best keyboard under $200",
-  "Wireless options?",
 ];
 
 export function KeyboardAssistant() {
@@ -18,7 +18,7 @@ export function KeyboardAssistant() {
     {
       role: "assistant",
       content:
-        "Hi — I'm KeySol Guide. Ask me about switches, speed rankings, layouts, wireless picks, or any keyboard in our catalog.",
+        "Hi — I'm KeySol Guide. Ask me about switches, speed rankings, layouts, wireless picks, tokens, or any keyboard in our catalog.",
     },
   ]);
   const panelRef = useRef<HTMLDivElement>(null);

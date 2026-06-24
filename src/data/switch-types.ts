@@ -198,7 +198,7 @@ export const switchTypes: SwitchTypeEntry[] = [
     tradeoffs: ["Switch ecosystem still growing vs Cherry MX"],
     bestFor: "Custom board fans who want magnetic switches in a premium chassis",
     rapidTrigger: true,
-    keyboardIds: ["keychron-q1-he", "keychron-q3-he-8k"],
+    keyboardIds: ["keychron-q1-he", "keychron-q3-he-8k", "keychron-q6-he-8k"],
   },
   {
     id: "hyperx-magnetic",
@@ -268,6 +268,7 @@ export const switchTypes: SwitchTypeEntry[] = [
     rapidTrigger: false,
     keyboardIds: [
       "ducky-one-3-rgb-tkl",
+      "ducky-one-3-rgb-full",
       "ducky-one-3-mini-sf",
       "corsair-k70-rgb-mk2",
       "corsair-k70-rgb-pro",

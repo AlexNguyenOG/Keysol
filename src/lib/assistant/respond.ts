@@ -1,12 +1,29 @@
 import { generateLocalAssistantReply } from "./local";
 import { generateOpenAiReply } from "./openai";
+import {
+  INJECTION_BLOCKED_REPLY,
+  isOffTopicMessage,
+  OFF_TOPIC_REPLY,
+  validateAssistantReply,
+} from "./rules";
+import {
+  sanitizeAssistantHistory,
+  sanitizeAssistantInput,
+  shouldBlockAssistantRequest,
+} from "./guard";
 import type { AssistantMessage, AssistantResponse } from "./types";
+
+function finalizeReply(reply: string): string {
+  const validated = validateAssistantReply(reply);
+  return validated.valid ? validated.reply : validated.reply;
+}
 
 export async function generateAssistantReply(
   message: string,
   history: AssistantMessage[] = [],
 ): Promise<AssistantResponse> {
-  const trimmed = message.trim();
+  const trimmed = sanitizeAssistantInput(message);
+  const safeHistory = sanitizeAssistantHistory(history);
 
   if (!trimmed) {
     return {
@@ -16,11 +33,33 @@ export async function generateAssistantReply(
     };
   }
 
+  if (shouldBlockAssistantRequest(trimmed, safeHistory)) {
+    return {
+      reply: INJECTION_BLOCKED_REPLY,
+      source: "local",
+    };
+  }
+
+  if (isOffTopicMessage(trimmed)) {
+    return {
+      reply: OFF_TOPIC_REPLY,
+      source: "local",
+    };
+  }
+
   if (process.env.OPENAI_API_KEY) {
     try {
-      const aiReply = await generateOpenAiReply(trimmed, history);
+      const aiReply = await generateOpenAiReply(trimmed, safeHistory);
       if (aiReply) {
-        return { reply: aiReply, source: "openai" };
+        const validated = validateAssistantReply(aiReply);
+        if (validated.valid) {
+          return { reply: validated.reply, source: "openai" };
+        }
+
+        const localFallback = finalizeReply(
+          generateLocalAssistantReply(trimmed),
+        );
+        return { reply: localFallback, source: "local" };
       }
     } catch {
       // Fall back to the local catalog assistant.
@@ -28,7 +67,7 @@ export async function generateAssistantReply(
   }
 
   return {
-    reply: generateLocalAssistantReply(trimmed),
+    reply: finalizeReply(generateLocalAssistantReply(trimmed)),
     source: "local",
   };
 }

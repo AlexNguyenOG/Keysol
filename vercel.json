@@ -3,6 +3,10 @@
     {
       "path": "/api/availability/refresh",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/drops/detect",
+      "schedule": "0 7 * * *"
     }
   ],
   "functions": {
@@ -11,6 +15,9 @@
     },
     "src/app/api/availability/route.ts": {
       "maxDuration": 30
+    },
+    "src/app/api/drops/detect/route.ts": {
+      "maxDuration": 300
     }
   }
 }
