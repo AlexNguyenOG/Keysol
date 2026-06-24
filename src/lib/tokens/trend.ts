@@ -1,7 +1,7 @@
 export type ValueTrend = "rising" | "stable" | "dropping";
 
 /** Minimum effective-score delta before a token is labeled rising or dropping. */
-export const VALUE_TREND_THRESHOLD = 0;
+export const VALUE_TREND_THRESHOLD = 3;
 
 export function computeValueTrend(
   currentScore: number,

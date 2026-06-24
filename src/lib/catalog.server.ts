@@ -4,6 +4,7 @@ import { keyboards as staticKeyboards } from "@/data/keyboards";
 import { keyboardTokens as staticTokens } from "@/data/keyboard-tokens";
 import { listPublishedDrops } from "@/lib/drops/store";
 import type { PublishedDrop } from "@/lib/drops/types";
+import { computeSpeedScore } from "@/lib/rankings";
 import type { Keyboard, KeyboardToken } from "@/types";
 
 export function getPublishedDropKeyboards(): Keyboard[] {
@@ -38,4 +39,11 @@ export function getKeyboardById(id: string): Keyboard | undefined {
 
 export function isDropKeyboard(id: string): boolean {
   return listPublishedDrops().some((drop) => drop.keyboardId === id);
+}
+
+/** Brand keyboards ordered by speed score (highest first). */
+export function getKeyboardsByBrandIdSorted(brandId: string): Keyboard[] {
+  return getAllKeyboards()
+    .filter((keyboard) => keyboard.brandId === brandId)
+    .sort((a, b) => computeSpeedScore(b) - computeSpeedScore(a));
 }

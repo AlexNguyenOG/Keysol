@@ -19,8 +19,8 @@ const TREND_RANK: Record<ValueTrend, number> = {
 };
 
 const sortOptions: { value: TrendSort; label: string }[] = [
-  { value: "trend", label: "Trend (rising first)" },
   { value: "effective", label: "Effective score" },
+  { value: "trend", label: "Effective score + trend" },
   { value: "delta", label: "Biggest movers" },
 ];
 
@@ -103,7 +103,7 @@ export function ValueTrendsList() {
   const [snapshots, setSnapshots] = useState<TokenSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sort, setSort] = useState<TrendSort>("trend");
+  const [sort, setSort] = useState<TrendSort>("effective");
 
   useEffect(() => {
     let cancelled = false;
@@ -149,14 +149,18 @@ export function ValueTrendsList() {
       return list.sort((a, b) => Math.abs(scoreDelta(b)) - Math.abs(scoreDelta(a)));
     }
 
-    return list.sort((a, b) => {
-      const trendDiff = TREND_RANK[a.valueTrend] - TREND_RANK[b.valueTrend];
-      if (trendDiff !== 0) {
-        return trendDiff;
-      }
+    if (sort === "trend") {
+      return list.sort((a, b) => {
+        const scoreDiff = b.effectiveScore - a.effectiveScore;
+        if (scoreDiff !== 0) {
+          return scoreDiff;
+        }
 
-      return b.effectiveScore - a.effectiveScore;
-    });
+        return TREND_RANK[a.valueTrend] - TREND_RANK[b.valueTrend];
+      });
+    }
+
+    return list.sort((a, b) => b.effectiveScore - a.effectiveScore);
   }, [snapshots, sort]);
 
   const risingCount = snapshots.filter((s) => s.valueTrend === "rising").length;
