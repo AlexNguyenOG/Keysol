@@ -20,9 +20,8 @@ export function BrandGrid() {
             Top Keyboard Brands
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-text-muted">
-            From hall-effect pioneers to esports legends — explore each
-            brand&apos;s fastest keyboard with pricing, release dates, and
-            performance stats.
+            From hall-effect pioneers to esports legends — each brand&apos;s
+            fastest boards with pricing, release dates, and performance stats.
           </p>
         </div>
 

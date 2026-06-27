@@ -28,15 +28,11 @@ test.describe("home page", () => {
 
     const brands = page.locator("#brands");
     await expect(brands.getByRole("heading", { name: "Wooting", exact: true })).toBeVisible();
+    await expect(brands.getByRole("heading", { name: "Corsair", exact: true })).toBeVisible();
     await expect(
       brands.getByRole("heading", { name: "Corsair K70 MAX" }),
     ).toBeVisible();
-    await expect(
-      brands.getByRole("heading", { name: "K70 RGB", exact: true }),
-    ).toBeVisible();
-    await expect(
-      brands.getByRole("heading", { name: "K70 RGB MK.2" }),
-    ).toBeVisible();
+    await expect(brands.getByText(/more Corsair keyboard/i)).toBeVisible();
   });
 
   test("navigates to rankings from hero", async ({ page }) => {
