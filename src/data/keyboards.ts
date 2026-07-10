@@ -179,7 +179,7 @@ export const keyboards: Keyboard[] = [
     tagline: "Classic K70 with Cherry MX Speed Silver and 8000 Hz AXON polling",
     image: "/keyboards/corsair-k70-rgb-pro.png",
     purchaseUrl:
-      "https://www.walmart.com/ip/Corsair-K70-Gaming-Keyboard-Cable-Connectivity-USB-3-1-Type-A-Interface-RGB-LED-104-Key-Windows-Lock-Key-Volume-Control-Hot-Key-s-English-North-Ameri/1679341503",
+      "https://www.corsair.com/us/en/p/keyboards/CH-9109414-NA/k70-rgb-pro-mechanical-gaming-keyboard-with-pbt-double-shot-pro-keycaps-cherry-mx-speed-ch-9109414-na",
     badge: "Speed Silver",
     stats: {
       switchType: "Cherry MX Speed Silver",
