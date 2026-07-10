@@ -9,12 +9,12 @@ import {
 import { computeValueTrend } from "@/lib/tokens/trend";
 import type { Keyboard, KeyboardToken, TokenSnapshot } from "@/types";
 
-export function buildMergedTokenSnapshots(
+export async function buildMergedTokenSnapshots(
   availability: AvailabilityMap,
   snapshotAt = new Date().toISOString(),
   previousScores: Record<string, number> = {},
-): TokenSnapshot[] {
-  return getAllKeyboardTokens()
+): Promise<TokenSnapshot[]> {
+  return (await getAllKeyboardTokens())
     .map((token) => {
       const record = availability[token.keyboardId];
       const stockStatus = record?.status ?? "unknown";
@@ -53,10 +53,12 @@ export interface KeyboardWithToken {
   token: KeyboardToken;
 }
 
-export function getMergedKeyboardsWithTokens(): KeyboardWithToken[] {
-  const keyboards = getAllKeyboards();
+export async function getMergedKeyboardsWithTokens(): Promise<
+  KeyboardWithToken[]
+> {
+  const keyboards = await getAllKeyboards();
 
-  return getAllKeyboardTokens()
+  return (await getAllKeyboardTokens())
     .map((token) => {
       const keyboard = keyboards.find((entry) => entry.id === token.keyboardId);
       if (!keyboard) {

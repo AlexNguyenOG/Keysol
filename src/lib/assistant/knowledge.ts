@@ -1,5 +1,5 @@
 import { brands } from "@/data/brands";
-import { getAllKeyboards } from "@/lib/catalog.server";
+import { keyboards as catalogKeyboards } from "@/data/keyboards";
 import { switchCategories, switchTypes } from "@/data/switch-types";
 import { keyboardTokens } from "@/data/keyboard-tokens";
 import { getBrandName } from "@/lib/keyboards";
@@ -24,7 +24,7 @@ export function formatKeyboardSummary(keyboard: Keyboard): string {
 
 function formatSwitchSummary(entry: (typeof switchTypes)[number]): string {
   const linkedKeyboards = entry.keyboardIds
-    .map((id) => getAllKeyboards().find((keyboard) => keyboard.id === id)?.name)
+    .map((id) => catalogKeyboards.find((keyboard) => keyboard.id === id)?.name)
     .filter(Boolean);
 
   return [
@@ -89,7 +89,7 @@ export function buildCatalogContext(): string {
       `${brand.name}: ${brand.tagline}. Highlights: ${brand.highlights.join("; ")}`,
   );
 
-  const keyboardLines = getAllKeyboards().map((keyboard) =>
+  const keyboardLines = catalogKeyboards.map((keyboard) =>
     formatKeyboardSummary(keyboard),
   );
 
@@ -125,7 +125,7 @@ export function findKeyboardsByQuery(query: string): Keyboard[] {
     return [];
   }
 
-  return getAllKeyboards()
+  return catalogKeyboards
     .map((keyboard) => {
       const haystack = [
         keyboard.name,

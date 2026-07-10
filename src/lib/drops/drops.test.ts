@@ -14,18 +14,18 @@ import { DROP_TOKEN_DEFAULTS } from "@/lib/drops/types";
 describe("drop approval pipeline", () => {
   let dbPath: string;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     dbPath = path.join(mkdtempSync(path.join(tmpdir(), "keysol-drops-")), "app.db");
-    resetAppDbForTests(dbPath);
-    resetDropsForTests();
+    await resetAppDbForTests(dbPath);
+    await resetDropsForTests();
   });
 
   afterEach(() => {
     closeAppDbForTests();
   });
 
-  it("approves a candidate into the merged catalog with low max supply", () => {
-    const candidate = upsertDropCandidate({
+  it("approves a candidate into the merged catalog with low max supply", async () => {
+    const candidate = await upsertDropCandidate({
       brandId: "wooting",
       name: "Wooting 60HE LE Frost",
       sourceUrl: "https://wooting.io/wooting-60he-le-frost",
@@ -36,7 +36,7 @@ describe("drop approval pipeline", () => {
       rawSnippet: "Only 500 units made.",
     });
 
-    const result = approveDropCandidate({
+    const result = await approveDropCandidate({
       candidateId: candidate.id,
       approvedBy: "admin",
     });
@@ -50,17 +50,17 @@ describe("drop approval pipeline", () => {
     expect(result.drop.token.rarityTier).toBe("legendary");
     expect(result.drop.keyboard.badge).toBe("Limited Drop");
 
-    const merged = getAllKeyboards();
+    const merged = await getAllKeyboards();
     expect(merged.some((keyboard) => keyboard.id === result.drop.keyboardId)).toBe(
       true,
     );
 
-    const featured = getFeaturedDrops();
+    const featured = await getFeaturedDrops();
     expect(featured).toHaveLength(1);
   });
 
-  it("rejects a candidate without publishing", () => {
-    const candidate = upsertDropCandidate({
+  it("rejects a candidate without publishing", async () => {
+    const candidate = await upsertDropCandidate({
       brandId: "razer",
       name: "Razer Test LE",
       sourceUrl: "https://www.razer.com/test-le-keyboard",
@@ -69,8 +69,8 @@ describe("drop approval pipeline", () => {
       confidence: 0.7,
     });
 
-    const result = rejectDropCandidate(candidate.id, "admin");
+    const result = await rejectDropCandidate(candidate.id, "admin");
     expect(result.ok).toBe(true);
-    expect(getFeaturedDrops()).toHaveLength(0);
+    expect(await getFeaturedDrops()).toHaveLength(0);
   });
 });

@@ -3,8 +3,8 @@ import { getBrandName } from "@/lib/keyboards";
 import { GradientText } from "@/components/ui/GradientText";
 import { KeyboardCard } from "@/components/ui/KeyboardCard";
 
-export function FeaturedDropSection() {
-  const drops = getFeaturedDrops();
+export async function FeaturedDropSection() {
+  const drops = await getFeaturedDrops();
 
   if (drops.length === 0) {
     return null;

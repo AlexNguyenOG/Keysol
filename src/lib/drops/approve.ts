@@ -8,6 +8,8 @@ import {
 import {
   DROP_TOKEN_DEFAULTS,
   type ApproveDropInput,
+  type DropCandidate,
+  type PublishedDrop,
 } from "@/lib/drops/types";
 import type { Keyboard, KeyboardToken } from "@/types";
 
@@ -34,11 +36,14 @@ function buildTokenSymbol(name: string): string {
   return `KSOL-${parts.join("") || "DROP"}`.slice(0, 12);
 }
 
-export function approveDropCandidate(input: ApproveDropInput): {
-  ok: true;
-  drop: ReturnType<typeof publishDrop>;
-} | { ok: false; error: string } {
-  const candidate = getDropCandidate(input.candidateId);
+export async function approveDropCandidate(input: ApproveDropInput): Promise<
+  | {
+      ok: true;
+      drop: PublishedDrop;
+    }
+  | { ok: false; error: string }
+> {
+  const candidate = await getDropCandidate(input.candidateId);
   if (!candidate) {
     return { ok: false, error: "Drop candidate not found." };
   }
@@ -100,38 +105,38 @@ export function approveDropCandidate(input: ApproveDropInput): {
     rationale: `Admin-approved limited drop (${candidate.signals.join(", ")}). Low max supply reflects batch scarcity.`,
   };
 
-  const published = publishDrop({
+  const published = await publishDrop({
     keyboard,
     token,
     candidateId: candidate.id,
     approvedBy: input.approvedBy,
   });
 
-  setDropCandidateStatus(candidate.id, "approved", input.approvedBy);
+  await setDropCandidateStatus(candidate.id, "approved", input.approvedBy);
 
   return { ok: true, drop: published };
 }
 
-export function rejectDropCandidate(
+export async function rejectDropCandidate(
   candidateId: string,
   reviewedBy: string,
-): { ok: true } | { ok: false; error: string } {
-  const candidate = getDropCandidate(candidateId);
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const candidate = await getDropCandidate(candidateId);
   if (!candidate) {
     return { ok: false, error: "Drop candidate not found." };
   }
 
-  setDropCandidateStatus(candidateId, "rejected", reviewedBy);
+  await setDropCandidateStatus(candidateId, "rejected", reviewedBy);
   return { ok: true };
 }
 
-export function createManualDropCandidate(input: {
+export async function createManualDropCandidate(input: {
   brandId: string;
   name: string;
   sourceUrl: string;
   purchaseUrl?: string;
   signals?: string[];
-}): ReturnType<typeof upsertDropCandidate> {
+}): Promise<DropCandidate> {
   return upsertDropCandidate({
     brandId: input.brandId,
     name: input.name,

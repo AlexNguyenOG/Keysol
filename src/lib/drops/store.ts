@@ -1,11 +1,23 @@
 import { randomUUID } from "node:crypto";
-import { getAppDb } from "@/lib/db/app";
+import { getAppDb, getAppDbUnavailableReason } from "@/lib/db/app";
 import type {
   DropCandidate,
   DropCandidateStatus,
   PublishedDrop,
 } from "@/lib/drops/types";
 import type { Keyboard, KeyboardToken } from "@/types";
+
+function requireDb() {
+  return getAppDb().then((db) => {
+    if (!db) {
+      throw new Error(
+        getAppDbUnavailableReason() ??
+          "App database is not configured.",
+      );
+    }
+    return db;
+  });
+}
 
 interface DropCandidateRow {
   id: string;
@@ -63,7 +75,11 @@ function mapPublished(row: PublishedDropRow): PublishedDrop {
   };
 }
 
-export function upsertDropCandidate(input: {
+function asRows<T>(rows: unknown[]): T[] {
+  return rows as T[];
+}
+
+export async function upsertDropCandidate(input: {
   brandId: string;
   name: string;
   sourceUrl: string;
@@ -72,187 +88,212 @@ export function upsertDropCandidate(input: {
   signals: string[];
   confidence: number;
   rawSnippet?: string | null;
-}): DropCandidate {
-  const db = getAppDb();
-  const existing = db
-    .prepare("SELECT id FROM drop_candidates WHERE source_url = ?")
-    .get(input.sourceUrl) as { id: string } | undefined;
+}): Promise<DropCandidate> {
+  const db = await requireDb();
+  const existing = await db.execute({
+    sql: "SELECT id FROM drop_candidates WHERE source_url = ?",
+    args: [input.sourceUrl],
+  });
 
   const now = Date.now();
   const signalsJson = JSON.stringify(input.signals);
+  const purchaseUrl = input.purchaseUrl ?? null;
+  const rawSnippet = input.rawSnippet ?? null;
 
-  if (existing) {
-    db.prepare(
-      `
-      UPDATE drop_candidates
-      SET
-        brand_id = @brandId,
-        name = @name,
-        purchase_url = @purchaseUrl,
-        detection_source = @detectionSource,
-        signals = @signals,
-        confidence = @confidence,
-        raw_snippet = @rawSnippet,
-        detected_at = @detectedAt,
-        status = CASE WHEN status = 'approved' THEN status ELSE 'pending' END
-      WHERE source_url = @sourceUrl
-    `,
-    ).run({
-      brandId: input.brandId,
-      name: input.name,
-      purchaseUrl: input.purchaseUrl ?? null,
-      detectionSource: input.detectionSource,
-      signals: signalsJson,
-      confidence: input.confidence,
-      rawSnippet: input.rawSnippet ?? null,
-      detectedAt: now,
-      sourceUrl: input.sourceUrl,
+  if (existing.rows.length > 0) {
+    await db.execute({
+      sql: `
+        UPDATE drop_candidates
+        SET
+          brand_id = ?,
+          name = ?,
+          purchase_url = ?,
+          detection_source = ?,
+          signals = ?,
+          confidence = ?,
+          raw_snippet = ?,
+          detected_at = ?,
+          status = CASE WHEN status = 'approved' THEN status ELSE 'pending' END
+        WHERE source_url = ?
+      `,
+      args: [
+        input.brandId,
+        input.name,
+        purchaseUrl,
+        input.detectionSource,
+        signalsJson,
+        input.confidence,
+        rawSnippet,
+        now,
+        input.sourceUrl,
+      ],
     });
 
-    const row = db
-      .prepare("SELECT * FROM drop_candidates WHERE source_url = ?")
-      .get(input.sourceUrl) as DropCandidateRow;
+    const row = await db.execute({
+      sql: "SELECT * FROM drop_candidates WHERE source_url = ?",
+      args: [input.sourceUrl],
+    });
 
-    return mapCandidate(row);
+    return mapCandidate(row.rows[0] as unknown as DropCandidateRow);
   }
 
   const id = randomUUID();
-  db.prepare(
-    `
-    INSERT INTO drop_candidates (
-      id, brand_id, name, source_url, purchase_url, detection_source,
-      signals, confidence, status, raw_snippet, detected_at
-    ) VALUES (
-      @id, @brandId, @name, @sourceUrl, @purchaseUrl, @detectionSource,
-      @signals, @confidence, 'pending', @rawSnippet, @detectedAt
-    )
-  `,
-  ).run({
-    id,
-    brandId: input.brandId,
-    name: input.name,
-    sourceUrl: input.sourceUrl,
-    purchaseUrl: input.purchaseUrl ?? null,
-    detectionSource: input.detectionSource,
-    signals: signalsJson,
-    confidence: input.confidence,
-    rawSnippet: input.rawSnippet ?? null,
-    detectedAt: now,
+  await db.execute({
+    sql: `
+      INSERT INTO drop_candidates (
+        id, brand_id, name, source_url, purchase_url, detection_source,
+        signals, confidence, status, raw_snippet, detected_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
+    `,
+    args: [
+      id,
+      input.brandId,
+      input.name,
+      input.sourceUrl,
+      purchaseUrl,
+      input.detectionSource,
+      signalsJson,
+      input.confidence,
+      rawSnippet,
+      now,
+    ],
   });
 
-  const row = db
-    .prepare("SELECT * FROM drop_candidates WHERE id = ?")
-    .get(id) as DropCandidateRow;
+  const row = await db.execute({
+    sql: "SELECT * FROM drop_candidates WHERE id = ?",
+    args: [id],
+  });
 
-  return mapCandidate(row);
+  return mapCandidate(row.rows[0] as unknown as DropCandidateRow);
 }
 
-export function listDropCandidates(
+export async function listDropCandidates(
   status?: DropCandidateStatus,
-): DropCandidate[] {
-  const db = getAppDb();
-  const rows = status
-    ? (db
-        .prepare(
-          "SELECT * FROM drop_candidates WHERE status = ? ORDER BY detected_at DESC",
-        )
-        .all(status) as DropCandidateRow[])
-    : (db
-        .prepare("SELECT * FROM drop_candidates ORDER BY detected_at DESC")
-        .all() as DropCandidateRow[]);
+): Promise<DropCandidate[]> {
+  const db = await getAppDb();
+  if (!db) {
+    return [];
+  }
 
-  return rows.map(mapCandidate);
+  const result = status
+    ? await db.execute({
+        sql: "SELECT * FROM drop_candidates WHERE status = ? ORDER BY detected_at DESC",
+        args: [status],
+      })
+    : await db.execute(
+        "SELECT * FROM drop_candidates ORDER BY detected_at DESC",
+      );
+
+  return asRows<DropCandidateRow>(result.rows as unknown as DropCandidateRow[]).map(
+    mapCandidate,
+  );
 }
 
-export function getDropCandidate(id: string): DropCandidate | undefined {
-  const row = getAppDb()
-    .prepare("SELECT * FROM drop_candidates WHERE id = ?")
-    .get(id) as DropCandidateRow | undefined;
+export async function getDropCandidate(
+  id: string,
+): Promise<DropCandidate | undefined> {
+  const db = await getAppDb();
+  if (!db) {
+    return undefined;
+  }
 
+  const result = await db.execute({
+    sql: "SELECT * FROM drop_candidates WHERE id = ?",
+    args: [id],
+  });
+
+  const row = result.rows[0] as unknown as DropCandidateRow | undefined;
   return row ? mapCandidate(row) : undefined;
 }
 
-export function setDropCandidateStatus(
+export async function setDropCandidateStatus(
   id: string,
   status: DropCandidateStatus,
   reviewedBy: string,
-): DropCandidate | undefined {
+): Promise<DropCandidate | undefined> {
+  const db = await requireDb();
   const now = Date.now();
-  getAppDb()
-    .prepare(
-      `
+  await db.execute({
+    sql: `
       UPDATE drop_candidates
       SET status = ?, reviewed_at = ?, reviewed_by = ?
       WHERE id = ?
     `,
-    )
-    .run(status, now, reviewedBy, id);
+    args: [status, now, reviewedBy, id],
+  });
 
   return getDropCandidate(id);
 }
 
-export function publishDrop(input: {
+export async function publishDrop(input: {
   keyboard: Keyboard;
   token: KeyboardToken;
   candidateId: string | null;
   approvedBy: string;
   featuredOrder?: number;
-}): PublishedDrop {
-  const db = getAppDb();
+}): Promise<PublishedDrop> {
+  const db = await requireDb();
   const now = Date.now();
-  const featuredOrder =
-    input.featuredOrder ??
-    ((db
-      .prepare("SELECT COALESCE(MAX(featured_order), 0) + 1 AS next FROM published_drops")
-      .get() as { next: number }).next ?? 1);
 
-  db.prepare(
-    `
-    INSERT INTO published_drops (
-      keyboard_id, candidate_id, keyboard_json, token_json,
-      featured_order, featured_at, approved_by
-    ) VALUES (
-      @keyboardId, @candidateId, @keyboardJson, @tokenJson,
-      @featuredOrder, @featuredAt, @approvedBy
-    )
-    ON CONFLICT(keyboard_id) DO UPDATE SET
-      candidate_id = excluded.candidate_id,
-      keyboard_json = excluded.keyboard_json,
-      token_json = excluded.token_json,
-      featured_order = excluded.featured_order,
-      featured_at = excluded.featured_at,
-      approved_by = excluded.approved_by
-  `,
-  ).run({
-    keyboardId: input.keyboard.id,
-    candidateId: input.candidateId,
-    keyboardJson: JSON.stringify(input.keyboard),
-    tokenJson: JSON.stringify(input.token),
-    featuredOrder,
-    featuredAt: now,
-    approvedBy: input.approvedBy,
+  let featuredOrder = input.featuredOrder;
+  if (featuredOrder === undefined) {
+    const next = await db.execute(
+      "SELECT COALESCE(MAX(featured_order), 0) + 1 AS next FROM published_drops",
+    );
+    featuredOrder = Number(next.rows[0]?.next ?? 1);
+  }
+
+  await db.execute({
+    sql: `
+      INSERT INTO published_drops (
+        keyboard_id, candidate_id, keyboard_json, token_json,
+        featured_order, featured_at, approved_by
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(keyboard_id) DO UPDATE SET
+        candidate_id = excluded.candidate_id,
+        keyboard_json = excluded.keyboard_json,
+        token_json = excluded.token_json,
+        featured_order = excluded.featured_order,
+        featured_at = excluded.featured_at,
+        approved_by = excluded.approved_by
+    `,
+    args: [
+      input.keyboard.id,
+      input.candidateId,
+      JSON.stringify(input.keyboard),
+      JSON.stringify(input.token),
+      featuredOrder,
+      now,
+      input.approvedBy,
+    ],
   });
 
-  const row = db
-    .prepare("SELECT * FROM published_drops WHERE keyboard_id = ?")
-    .get(input.keyboard.id) as PublishedDropRow;
+  const row = await db.execute({
+    sql: "SELECT * FROM published_drops WHERE keyboard_id = ?",
+    args: [input.keyboard.id],
+  });
 
-  return mapPublished(row);
+  return mapPublished(row.rows[0] as unknown as PublishedDropRow);
 }
 
-export function listPublishedDrops(): PublishedDrop[] {
-  const rows = getAppDb()
-    .prepare(
-      "SELECT * FROM published_drops ORDER BY featured_order DESC, featured_at DESC",
-    )
-    .all() as PublishedDropRow[];
+export async function listPublishedDrops(): Promise<PublishedDrop[]> {
+  const db = await getAppDb();
+  if (!db) {
+    return [];
+  }
 
-  return rows.map(mapPublished);
+  const result = await db.execute(
+    "SELECT * FROM published_drops ORDER BY featured_order DESC, featured_at DESC",
+  );
+
+  return asRows<PublishedDropRow>(
+    result.rows as unknown as PublishedDropRow[],
+  ).map(mapPublished);
 }
 
 /** @internal Test helper */
-export function resetDropsForTests(): void {
-  const db = getAppDb();
-  db.prepare("DELETE FROM published_drops").run();
-  db.prepare("DELETE FROM drop_candidates").run();
+export async function resetDropsForTests(): Promise<void> {
+  const db = await requireDb();
+  await db.execute("DELETE FROM published_drops");
+  await db.execute("DELETE FROM drop_candidates");
 }

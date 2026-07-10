@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     | "rejected"
     | null;
 
-  const candidates = listDropCandidates(status ?? undefined);
+  const candidates = await listDropCandidates(status ?? undefined);
 
   return jsonResponse({ candidates });
 }

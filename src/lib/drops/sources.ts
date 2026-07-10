@@ -19,7 +19,7 @@ export const DROP_SCAN_SOURCES: DropScanSource[] = [
   {
     brandId: "razer",
     label: "Razer keyboards",
-    url: "https://www.razer.com/pc/gaming-keyboards",
+    url: "https://www.razer.com/pc/gaming-keyboards-and-keypads",
   },
   {
     brandId: "corsair",
@@ -39,7 +39,7 @@ export const DROP_SCAN_SOURCES: DropScanSource[] = [
   {
     brandId: "ducky",
     label: "Ducky shop",
-    url: "https://ducky.global/collections/keyboards",
+    url: "https://ducky.global/collections/all",
   },
   {
     brandId: "nuphy",
@@ -53,10 +53,19 @@ export const DROP_SIGNAL_PATTERNS = [
   { pattern: /\bLE\b/, signal: "LE badge", weight: 0.25 },
   { pattern: /special edition/i, signal: "special edition", weight: 0.3 },
   { pattern: /exclusive/i, signal: "exclusive", weight: 0.2 },
-  { pattern: /collab/i, signal: "collaboration", weight: 0.25 },
-  { pattern: /#\/?\s*\d+\s*(?:units|made|pcs)?/i, signal: "numbered run", weight: 0.35 },
-  { pattern: /only\s+\d+\s+(?:units|available)/i, signal: "unit cap", weight: 0.4 },
+  { pattern: /collab(?:oration)?/i, signal: "collaboration", weight: 0.25 },
+  { pattern: /#\s*\d+\s*(?:\/\s*\d+\s*)?(?:units|made|pcs|pieces)\b/i, signal: "numbered run", weight: 0.35 },
+  { pattern: /limited\s+(?:to\s+)?\d+\s*(?:units|made|pcs|pieces)\b/i, signal: "numbered run", weight: 0.35 },
+  { pattern: /only\s+\d+\s+(?:units|available|made)/i, signal: "unit cap", weight: 0.4 },
   { pattern: /special switch/i, signal: "special switches", weight: 0.25 },
   { pattern: /keycap set/i, signal: "special keycaps", weight: 0.2 },
-  { pattern: /drop/i, signal: "drop language", weight: 0.15 },
+  { pattern: /\bdrop\b/i, signal: "drop language", weight: 0.15 },
+  { pattern: /signature edition/i, signal: "signature edition", weight: 0.3 },
+  { pattern: /collector(?:'?s)? edition/i, signal: "collector edition", weight: 0.3 },
+  { pattern: /takeover/i, signal: "takeover collab", weight: 0.3 },
+  {
+    pattern: /(?:special|limited|signature|collector)[_-]edition/i,
+    signal: "edition slug",
+    weight: 0.35,
+  },
 ];

@@ -4,6 +4,10 @@
  */
 const required = ["AVAILABILITY_CRON_SECRET"];
 
+if (process.env.VERCEL === "1" || process.env.REQUIRE_TURSO === "true") {
+  required.push("TURSO_DATABASE_URL", "TURSO_AUTH_TOKEN");
+}
+
 const missing = required.filter((name) => !process.env[name]?.trim());
 
 if (missing.length > 0) {

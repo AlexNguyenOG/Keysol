@@ -4,8 +4,8 @@ import { getRankedKeyboards } from "@/lib/rankings";
 import { GradientText } from "@/components/ui/GradientText";
 import { RankingsPreviewCard } from "./RankingsPreviewCard";
 
-export function RankingsPreview() {
-  const topThree = getRankedKeyboards(getAllKeyboards(), "speed").slice(0, 3);
+export async function RankingsPreview() {
+  const topThree = getRankedKeyboards(await getAllKeyboards(), "speed").slice(0, 3);
 
   return (
     <section className="border-t border-white/10 bg-bg-surface px-4 py-20 sm:px-6 lg:px-8">

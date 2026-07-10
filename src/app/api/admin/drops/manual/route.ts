@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const candidate = createManualDropCandidate(body);
+  const candidate = await createManualDropCandidate(body);
 
   return jsonResponse({ candidate });
 }

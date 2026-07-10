@@ -1,5 +1,5 @@
 import { keyboardTokens } from "@/data/keyboard-tokens";
-import { getAllKeyboards } from "@/lib/catalog.server";
+import { keyboards as catalogKeyboards } from "@/data/keyboards";
 import { getBrandName } from "@/lib/keyboards";
 import {
   computeSpeedScore,
@@ -35,8 +35,8 @@ function explainRapidTrigger(): string {
     "Rapid trigger is a hall-effect / magnetic keyboard feature that resets a key the moment you release it, without waiting for the switch to physically travel back up.",
     "That lets you spam movement keys faster in games because the keyboard re-arms sooner.",
     criterion?.description ?? "",
-    "In KeySol's speed score, getAllKeyboards() with rapid trigger get a +10 point bonus.",
-    `Examples with rapid trigger: ${getRankedKeyboards(getAllKeyboards().filter((k) => k.stats.rapidTrigger)).slice(0, 3).map((k) => k.name).join(", ")}.`,
+    "In KeySol's speed score, keyboards with rapid trigger get a +10 point bonus.",
+    `Examples with rapid trigger: ${getRankedKeyboards(catalogKeyboards.filter((k) => k.stats.rapidTrigger)).slice(0, 3).map((k) => k.name).join(", ")}.`,
   ]
     .filter(Boolean)
     .join(" ");
@@ -44,7 +44,7 @@ function explainRapidTrigger(): string {
 
 function explainPollingRate(): string {
   const criterion = SCORE_CRITERIA.find((item) => item.key === "polling");
-  const top = getRankedKeyboards(getAllKeyboards(), "speed")[0];
+  const top = getRankedKeyboards(catalogKeyboards, "speed")[0];
   return [
     "Polling rate is how often the keyboard reports key state to your PC, measured in Hz.",
     "Standard boards are 1,000 Hz. High-end gaming boards go up to 8,000 Hz for lower input latency.",
@@ -60,14 +60,14 @@ function explainActuation(): string {
     "Actuation point is how far you press a key before it registers.",
     "Lower actuation can feel faster because the key fires sooner in the travel.",
     "Magnetic and hall-effect boards often go down to about 0.1 mm with software tuning.",
-    `Lowest actuation in our catalog: ${[...getAllKeyboards()].sort((a, b) => a.stats.actuationPointMm - b.stats.actuationPointMm)[0].name}.`,
+    `Lowest actuation in our catalog: ${[...catalogKeyboards].sort((a, b) => a.stats.actuationPointMm - b.stats.actuationPointMm)[0].name}.`,
   ].join(" ");
 }
 
 function explainHallEffect(): string {
   const heBoards = findKeyboardsByQuery("hall magnetic lekker omnipoint mgx");
   return [
-    "Hall-effect and magnetic getAllKeyboards() use sensors instead of metal contact leaves, so they can support adjustable actuation and rapid trigger.",
+    "Hall-effect and magnetic keyboards use sensors instead of metal contact leaves, so they can support adjustable actuation and rapid trigger.",
     "They're popular for competitive FPS because you can tune sensitivity per key.",
     heBoards.length > 0
       ? `Magnetic / hall-effect options here:\n${listKeyboards(heBoards, 5)}`
@@ -78,7 +78,7 @@ function explainHallEffect(): string {
 }
 
 function answerFastest(): string {
-  const ranked = getRankedKeyboards(getAllKeyboards(), "speed").slice(0, 5);
+  const ranked = getRankedKeyboards(catalogKeyboards, "speed").slice(0, 5);
   return [
     "These are the top speed picks in KeySol's catalog, ranked by polling rate, response time, actuation, and rapid trigger:",
     listKeyboards(ranked, 5),
@@ -87,7 +87,7 @@ function answerFastest(): string {
 }
 
 function answerCheapest(): string {
-  const cheapest = [...getAllKeyboards()].sort((a, b) => a.priceUsd - b.priceUsd).slice(0, 5);
+  const cheapest = [...catalogKeyboards].sort((a, b) => a.priceUsd - b.priceUsd).slice(0, 5);
   return [
     "Best budget picks in the catalog:",
     listKeyboards(cheapest, 5),
@@ -95,7 +95,7 @@ function answerCheapest(): string {
 }
 
 function answerWireless(): string {
-  const wireless = getAllKeyboards().filter((keyboard) =>
+  const wireless = catalogKeyboards.filter((keyboard) =>
     keyboard.stats.connectivity.some((option) =>
       /wireless|lightspeed|bluetooth/i.test(option),
     ),
@@ -112,7 +112,7 @@ function answerWireless(): string {
 }
 
 function answerLayout(layout: string): string {
-  const matches = getAllKeyboards().filter((keyboard) =>
+  const matches = catalogKeyboards.filter((keyboard) =>
     keyboard.stats.layout.toLowerCase().includes(layout),
   );
 
@@ -127,7 +127,7 @@ function answerLayout(layout: string): string {
 }
 
 function answerBrand(text: string): string | null {
-  const brandMatch = getAllKeyboards().find((keyboard) =>
+  const brandMatch = catalogKeyboards.find((keyboard) =>
     includesAny(text, [
       keyboard.brandId,
       getBrandName(keyboard.brandId).toLowerCase(),
@@ -138,12 +138,12 @@ function answerBrand(text: string): string | null {
     return null;
   }
 
-  const brandBoards = getAllKeyboards().filter(
+  const brandBoards = catalogKeyboards.filter(
     (keyboard) => keyboard.brandId === brandMatch.brandId,
   );
 
   return [
-    `${getBrandName(brandMatch.brandId)} getAllKeyboards() in KeySol:`,
+    `${getBrandName(brandMatch.brandId)} keyboards in KeySol:`,
     listKeyboards(
       getRankedKeyboards(brandBoards, "speed"),
       Math.min(brandBoards.length, 5),
@@ -180,12 +180,12 @@ function answerBudget(text: string): string | null {
   }
 
   const budget = Number(budgetMatch[1]);
-  const affordable = getAllKeyboards()
+  const affordable = catalogKeyboards
     .filter((keyboard) => keyboard.priceUsd <= budget)
     .sort((a, b) => computeSpeedScore(b) - computeSpeedScore(a));
 
   if (affordable.length === 0) {
-    return `Nothing in the catalog is under $${budget} right now. The cheapest board is ${[...getAllKeyboards()].sort((a, b) => a.priceUsd - b.priceUsd)[0].name}.`;
+    return `Nothing in the catalog is under $${budget} right now. The cheapest board is ${[...catalogKeyboards].sort((a, b) => a.priceUsd - b.priceUsd)[0].name}.`;
   }
 
   return [
@@ -226,7 +226,7 @@ function answerSwitchType(text: string): string | null {
 
   const entry = matches[0];
   const boards = entry.keyboardIds
-    .map((id) => getAllKeyboards().find((keyboard) => keyboard.id === id))
+    .map((id) => catalogKeyboards.find((keyboard) => keyboard.id === id))
     .filter(Boolean) as Keyboard[];
 
   return [

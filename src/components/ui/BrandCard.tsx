@@ -10,8 +10,8 @@ interface BrandCardProps {
 
 const MAX_VISIBLE_KEYBOARDS = 3;
 
-export function BrandCard({ brand }: BrandCardProps) {
-  const brandKeyboards = getKeyboardsByBrandIdSorted(brand.id);
+export async function BrandCard({ brand }: BrandCardProps) {
+  const brandKeyboards = await getKeyboardsByBrandIdSorted(brand.id);
   const visible = brandKeyboards.slice(0, MAX_VISIBLE_KEYBOARDS);
   const remaining = brandKeyboards.length - visible.length;
 

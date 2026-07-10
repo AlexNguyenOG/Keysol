@@ -1,4 +1,5 @@
 import { scanForDropCandidates } from "@/lib/drops/detect";
+import { getAppDb, getAppDbUnavailableReason } from "@/lib/db/app";
 import { jsonResponse } from "@/lib/security/api";
 import { isCronAuthorized } from "@/lib/security/auth";
 
@@ -8,6 +9,18 @@ export const maxDuration = 300;
 async function handleDetect(request: Request) {
   if (!isCronAuthorized(request)) {
     return jsonResponse({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const db = await getAppDb();
+  if (!db) {
+    return jsonResponse(
+      {
+        error:
+          getAppDbUnavailableReason() ??
+          "App database is not configured.",
+      },
+      { status: 503 },
+    );
   }
 
   const result = await scanForDropCandidates();

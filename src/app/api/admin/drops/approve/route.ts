@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     return jsonResponse({ error: "candidateId is required." }, { status: 400 });
   }
 
-  const result = approveDropCandidate({
+  const result = await approveDropCandidate({
     candidateId: body.candidateId,
     approvedBy: "admin",
     maxSupply: body.maxSupply,

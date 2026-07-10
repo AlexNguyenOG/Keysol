@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     "Ranked list of the fastest gaming and enthusiast keyboards by speed score, price, and release date.",
 };
 
-export default function RankingsPage() {
-  const catalogKeyboards = getAllKeyboards();
+export default async function RankingsPage() {
+  const catalogKeyboards = await getAllKeyboards();
 
   return (
     <>

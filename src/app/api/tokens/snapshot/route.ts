@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   const availability = await getAvailability({ refresh: wantsRefresh });
   const snapshotAt = new Date().toISOString();
   const previousScores = await readTokenValueBaseline();
-  const snapshots = buildMergedTokenSnapshots(
+  const snapshots = await buildMergedTokenSnapshots(
     availability,
     snapshotAt,
     previousScores,

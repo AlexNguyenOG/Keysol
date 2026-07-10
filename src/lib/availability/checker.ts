@@ -217,7 +217,7 @@ export async function refreshAvailability(options?: {
   const force = options?.force ?? false;
   const cache = await readCache();
 
-  const catalog = getAllKeyboards();
+  const catalog = await getAllKeyboards();
 
   const targets = options?.keyboardIds
     ? catalog.filter((keyboard) => options.keyboardIds!.includes(keyboard.id))
@@ -251,7 +251,7 @@ export async function getAvailability(options?: {
     return cache;
   }
 
-  const catalog = getAllKeyboards();
+  const catalog = await getAllKeyboards();
   const needsRefresh = catalog.some((keyboard) => isStale(cache[keyboard.id]));
 
   if (needsRefresh) {
@@ -261,10 +261,10 @@ export async function getAvailability(options?: {
   return cache;
 }
 
-export function seedUnknownAvailability(): AvailabilityMap {
+export async function seedUnknownAvailability(): Promise<AvailabilityMap> {
   const checkedAt = new Date(0).toISOString();
   return Object.fromEntries(
-    getAllKeyboards().map((keyboard) => [
+    (await getAllKeyboards()).map((keyboard) => [
       keyboard.id,
       {
         keyboardId: keyboard.id,

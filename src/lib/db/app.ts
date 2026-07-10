@@ -1,17 +1,34 @@
 import { existsSync, mkdirSync, unlinkSync } from "node:fs";
 import path from "node:path";
-import Database from "better-sqlite3";
+import { createClient, type Client } from "@libsql/client";
 
 const DEFAULT_DB_PATH = path.join(process.cwd(), "data", "app.db");
 
-let database: Database.Database | null = null;
+let client: Client | null = null;
+let schemaReady: Promise<void> | null = null;
+let unavailableReason: string | null = null;
 
-function getDatabasePath(): string {
-  return process.env.APP_DATABASE_PATH ?? DEFAULT_DB_PATH;
+function resolveDatabaseUrl(): { url: string; authToken?: string } | null {
+  const tursoUrl = process.env.TURSO_DATABASE_URL?.trim();
+  const tursoToken = process.env.TURSO_AUTH_TOKEN?.trim();
+
+  if (tursoUrl) {
+    return { url: tursoUrl, authToken: tursoToken };
+  }
+
+  if (process.env.VERCEL === "1") {
+    unavailableReason =
+      "TURSO_DATABASE_URL is required on Vercel so drop candidates and published drops persist across serverless instances.";
+    return null;
+  }
+
+  const filePath = process.env.APP_DATABASE_PATH ?? DEFAULT_DB_PATH;
+  mkdirSync(path.dirname(filePath), { recursive: true });
+  return { url: `file:${filePath}` };
 }
 
-function initializeSchema(db: Database.Database): void {
-  db.exec(`
+async function initializeSchema(db: Client): Promise<void> {
+  await db.executeMultiple(`
     CREATE TABLE IF NOT EXISTS drop_candidates (
       id TEXT PRIMARY KEY,
       brand_id TEXT NOT NULL,
@@ -42,38 +59,60 @@ function initializeSchema(db: Database.Database): void {
   `);
 }
 
-export function getAppDb(): Database.Database {
-  if (!database) {
-    const dbPath = getDatabasePath();
-    mkdirSync(path.dirname(dbPath), { recursive: true });
-    database = new Database(dbPath);
-    database.pragma("journal_mode = WAL");
-    database.pragma("foreign_keys = ON");
-    initializeSchema(database);
+/** Returns null when no durable DB is configured (e.g. Vercel without Turso). */
+export async function getAppDb(): Promise<Client | null> {
+  if (unavailableReason && !process.env.TURSO_DATABASE_URL?.trim()) {
+    return null;
   }
 
-  return database;
+  if (!client) {
+    const config = resolveDatabaseUrl();
+    if (!config) {
+      return null;
+    }
+
+    client = createClient(config);
+    schemaReady = initializeSchema(client);
+  }
+
+  await schemaReady;
+  return client;
+}
+
+export function getAppDbUnavailableReason(): string | null {
+  if (process.env.TURSO_DATABASE_URL?.trim()) {
+    return null;
+  }
+  return unavailableReason;
 }
 
 /** @internal Test helper */
-export function resetAppDbForTests(dbPath: string): void {
-  if (database) {
-    database.close();
-    database = null;
+export async function resetAppDbForTests(dbPath: string): Promise<void> {
+  if (client) {
+    client.close();
+    client = null;
+    schemaReady = null;
   }
 
+  unavailableReason = null;
   process.env.APP_DATABASE_PATH = dbPath;
+  delete process.env.TURSO_DATABASE_URL;
+  delete process.env.TURSO_AUTH_TOKEN;
+  delete process.env.VERCEL;
+
   if (existsSync(dbPath)) {
     unlinkSync(dbPath);
   }
 
-  getAppDb();
+  await getAppDb();
 }
 
 /** @internal Test helper */
 export function closeAppDbForTests(): void {
-  if (database) {
-    database.close();
-    database = null;
+  if (client) {
+    client.close();
+    client = null;
+    schemaReady = null;
   }
+  unavailableReason = null;
 }
