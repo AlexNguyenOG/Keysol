@@ -28,7 +28,7 @@ jobs:
 
       - name: Verify production env requirements
         env:
-          AUTH_SECRET: ci-test-auth-secret
+          AVAILABILITY_CRON_SECRET: ci-test-cron-secret
         run: NODE_ENV=production node scripts/check-production-env.mjs
 
       - run: npm run build

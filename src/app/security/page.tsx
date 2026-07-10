@@ -45,9 +45,9 @@ export default function SecurityPage() {
         </h2>
         <ul className="list-disc space-y-2 pl-5">
           <li>HTTP security headers and strict transport security in production</li>
-          <li>Rate limiting on public APIs and auth endpoints</li>
+          <li>Rate limiting on public APIs</li>
           <li>SSRF guards on server-side retailer fetches</li>
-          <li>Hashed passwords, revocable sessions, and auth audit logging</li>
+          <li>Bearer-secret protection for admin and cron endpoints</li>
           <li>Dependency scanning in CI and weekly Dependabot updates</li>
         </ul>
       </section>
@@ -57,8 +57,8 @@ export default function SecurityPage() {
         <p>
           Social engineering, physical attacks, denial-of-service against
           third-party retailers, and issues in user-controlled environments are
-          generally out of scope unless they directly compromise KeySol user
-          data.
+          generally out of scope unless they directly compromise KeySol
+          infrastructure or visitor data.
         </p>
       </section>
     </LegalPageShell>

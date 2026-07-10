@@ -2,8 +2,7 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { closeAuthDbForTests, resetAuthDbForTests } from "@/lib/auth/db";
-import { isAdminEmail } from "@/lib/admin";
+import { closeAppDbForTests, resetAppDbForTests } from "@/lib/db/app";
 import { getAllKeyboards, getFeaturedDrops } from "@/lib/catalog.server";
 import {
   approveDropCandidate,
@@ -16,14 +15,13 @@ describe("drop approval pipeline", () => {
   let dbPath: string;
 
   beforeEach(() => {
-    dbPath = path.join(mkdtempSync(path.join(tmpdir(), "keysol-drops-")), "auth.db");
-    resetAuthDbForTests(dbPath);
+    dbPath = path.join(mkdtempSync(path.join(tmpdir(), "keysol-drops-")), "app.db");
+    resetAppDbForTests(dbPath);
     resetDropsForTests();
   });
 
   afterEach(() => {
-    closeAuthDbForTests();
-    delete process.env.ADMIN_EMAILS;
+    closeAppDbForTests();
   });
 
   it("approves a candidate into the merged catalog with low max supply", () => {
@@ -40,7 +38,7 @@ describe("drop approval pipeline", () => {
 
     const result = approveDropCandidate({
       candidateId: candidate.id,
-      approvedBy: "admin@keysol.app",
+      approvedBy: "admin",
     });
 
     expect(result.ok).toBe(true);
@@ -71,17 +69,8 @@ describe("drop approval pipeline", () => {
       confidence: 0.7,
     });
 
-    const result = rejectDropCandidate(candidate.id, "admin@keysol.app");
+    const result = rejectDropCandidate(candidate.id, "admin");
     expect(result.ok).toBe(true);
     expect(getFeaturedDrops()).toHaveLength(0);
-  });
-});
-
-describe("admin allowlist", () => {
-  it("matches configured admin emails case-insensitively", () => {
-    process.env.ADMIN_EMAILS = "Admin@KeySol.app, other@example.com";
-    expect(isAdminEmail("admin@keysol.app")).toBe(true);
-    expect(isAdminEmail("other@example.com")).toBe(true);
-    expect(isAdminEmail("not-admin@keysol.app")).toBe(false);
   });
 });

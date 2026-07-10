@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { KeyboardAssistant } from "@/components/assistant/KeyboardAssistant";
-import { AuthProvider } from "@/components/providers/AuthProvider";
 import { AvailabilityProvider } from "@/components/providers/AvailabilityProvider";
 import "./globals.css";
 
@@ -24,12 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-bg-primary text-text-primary">
-        <AuthProvider>
-          <AvailabilityProvider>
-            {children}
-            <KeyboardAssistant />
-          </AvailabilityProvider>
-        </AuthProvider>
+        <AvailabilityProvider>
+          {children}
+          <KeyboardAssistant />
+        </AvailabilityProvider>
       </body>
     </html>
   );

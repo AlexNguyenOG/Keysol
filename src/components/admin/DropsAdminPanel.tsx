@@ -6,85 +6,98 @@ import type { DropCandidate } from "@/lib/drops/types";
 import { DROP_TOKEN_DEFAULTS } from "@/lib/drops/types";
 
 interface DropsAdminPanelProps {
-  adminEmail: string;
+  adminSecret: string;
   initialCandidates: DropCandidate[];
-  initialStatus?: "pending" | "approved" | "rejected";
+  onUnauthorized: () => void;
+}
+
+function adminHeaders(secret: string, json = false): HeadersInit {
+  const headers: Record<string, string> = {
+    authorization: `Bearer ${secret}`,
+  };
+
+  if (json) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  return headers;
 }
 
 export function DropsAdminPanel({
-  adminEmail,
+  adminSecret,
   initialCandidates,
-  initialStatus = "pending",
+  onUnauthorized,
 }: DropsAdminPanelProps) {
   const [candidates, setCandidates] = useState<DropCandidate[]>(initialCandidates);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<
     "pending" | "approved" | "rejected"
-  >(initialStatus);
+  >("pending");
   const [actionId, setActionId] = useState<string | null>(null);
 
   const [manualBrandId, setManualBrandId] = useState(brands[0]?.id ?? "");
   const [manualName, setManualName] = useState("");
   const [manualUrl, setManualUrl] = useState("");
 
-  const loadCandidates = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `/api/admin/drops/candidates?status=${statusFilter}`,
-        { cache: "no-store" },
-      );
-      const data = (await response.json()) as {
-        candidates?: DropCandidate[];
-        error?: string;
-      };
-
-      if (!response.ok) {
-        throw new Error(data.error ?? "Failed to load candidates.");
+  const handleUnauthorized = useCallback(
+    (response: Response) => {
+      if (response.status === 401) {
+        onUnauthorized();
+        return true;
       }
 
-      setCandidates(data.candidates ?? []);
-    } catch (loadError) {
-      setError(
-        loadError instanceof Error ? loadError.message : "Failed to load candidates.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [statusFilter]);
+      return false;
+    },
+    [onUnauthorized],
+  );
+
+  const loadCandidates = useCallback(
+    async (status: "pending" | "approved" | "rejected") => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(
+          `/api/admin/drops/candidates?status=${status}`,
+          {
+            cache: "no-store",
+            headers: adminHeaders(adminSecret),
+          },
+        );
+
+        if (handleUnauthorized(response)) {
+          return;
+        }
+
+        const data = (await response.json()) as {
+          candidates?: DropCandidate[];
+          error?: string;
+        };
+
+        if (!response.ok) {
+          throw new Error(data.error ?? "Failed to load candidates.");
+        }
+
+        setCandidates(data.candidates ?? []);
+      } catch (loadError) {
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Failed to load candidates.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [adminSecret, handleUnauthorized],
+  );
 
   async function changeStatusFilter(
     status: "pending" | "approved" | "rejected",
   ) {
     setStatusFilter(status);
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `/api/admin/drops/candidates?status=${status}`,
-        { cache: "no-store" },
-      );
-      const data = (await response.json()) as {
-        candidates?: DropCandidate[];
-        error?: string;
-      };
-
-      if (!response.ok) {
-        throw new Error(data.error ?? "Failed to load candidates.");
-      }
-
-      setCandidates(data.candidates ?? []);
-    } catch (loadError) {
-      setError(
-        loadError instanceof Error ? loadError.message : "Failed to load candidates.",
-      );
-    } finally {
-      setLoading(false);
-    }
+    await loadCandidates(status);
   }
 
   async function approveCandidate(candidate: DropCandidate) {
@@ -94,20 +107,25 @@ export function DropsAdminPanel({
     try {
       const response = await fetch("/api/admin/drops/approve", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: adminHeaders(adminSecret, true),
         body: JSON.stringify({
           candidateId: candidate.id,
           maxSupply: DROP_TOKEN_DEFAULTS.maxSupply,
           rarityScore: DROP_TOKEN_DEFAULTS.rarityScore,
         }),
       });
+
+      if (handleUnauthorized(response)) {
+        return;
+      }
+
       const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
         throw new Error(data.error ?? "Approval failed.");
       }
 
-      await loadCandidates();
+      await loadCandidates(statusFilter);
     } catch (approveError) {
       setError(
         approveError instanceof Error ? approveError.message : "Approval failed.",
@@ -124,16 +142,21 @@ export function DropsAdminPanel({
     try {
       const response = await fetch("/api/admin/drops/reject", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: adminHeaders(adminSecret, true),
         body: JSON.stringify({ candidateId }),
       });
+
+      if (handleUnauthorized(response)) {
+        return;
+      }
+
       const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
         throw new Error(data.error ?? "Reject failed.");
       }
 
-      await loadCandidates();
+      await loadCandidates(statusFilter);
     } catch (rejectError) {
       setError(
         rejectError instanceof Error ? rejectError.message : "Reject failed.",
@@ -150,7 +173,7 @@ export function DropsAdminPanel({
     try {
       const response = await fetch("/api/admin/drops/manual", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: adminHeaders(adminSecret, true),
         body: JSON.stringify({
           brandId: manualBrandId,
           name: manualName,
@@ -158,6 +181,11 @@ export function DropsAdminPanel({
           purchaseUrl: manualUrl,
         }),
       });
+
+      if (handleUnauthorized(response)) {
+        return;
+      }
+
       const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
@@ -167,7 +195,6 @@ export function DropsAdminPanel({
       setManualName("");
       setManualUrl("");
       setStatusFilter("pending");
-      await loadCandidates();
     } catch (submitError) {
       setError(
         submitError instanceof Error ? submitError.message : "Manual submit failed.",
@@ -179,9 +206,6 @@ export function DropsAdminPanel({
     <div className="space-y-8">
       <div className="rounded-2xl border border-white/10 bg-bg-surface p-6">
         <p className="text-sm text-text-muted">
-          Signed in as <span className="text-text-primary">{adminEmail}</span>
-        </p>
-        <p className="mt-2 text-sm text-text-muted">
           Approve candidates to publish them at the top of the home page with a
           legendary token (default max supply {DROP_TOKEN_DEFAULTS.maxSupply}).
         </p>

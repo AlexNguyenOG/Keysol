@@ -1,13 +1,13 @@
-import { requireAdminSession } from "@/lib/admin";
+import { requireAdminAuthorization } from "@/lib/admin";
 import { listDropCandidates } from "@/lib/drops/store";
 import { jsonResponse } from "@/lib/security/api";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const session = await requireAdminSession();
-  if (session instanceof Response) {
-    return session;
+  const unauthorized = requireAdminAuthorization(request);
+  if (unauthorized) {
+    return unauthorized;
   }
 
   const { searchParams } = new URL(request.url);

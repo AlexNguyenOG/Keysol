@@ -1,5 +1,5 @@
 import { brands } from "@/data/brands";
-import { requireAdminSession } from "@/lib/admin";
+import { requireAdminAuthorization } from "@/lib/admin";
 import { createManualDropCandidate } from "@/lib/drops/approve";
 import { jsonResponse } from "@/lib/security/api";
 
@@ -14,9 +14,9 @@ interface ManualBody {
 }
 
 export async function POST(request: Request) {
-  const session = await requireAdminSession();
-  if (session instanceof Response) {
-    return session;
+  const unauthorized = requireAdminAuthorization(request);
+  if (unauthorized) {
+    return unauthorized;
   }
 
   let body: ManualBody;

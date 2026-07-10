@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/lib/admin";
+import { requireAdminAuthorization } from "@/lib/admin";
 import { rejectDropCandidate } from "@/lib/drops/approve";
 import { jsonResponse } from "@/lib/security/api";
 
@@ -9,9 +9,9 @@ interface RejectBody {
 }
 
 export async function POST(request: Request) {
-  const session = await requireAdminSession();
-  if (session instanceof Response) {
-    return session;
+  const unauthorized = requireAdminAuthorization(request);
+  if (unauthorized) {
+    return unauthorized;
   }
 
   let body: RejectBody;
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     return jsonResponse({ error: "candidateId is required." }, { status: 400 });
   }
 
-  const result = rejectDropCandidate(body.candidateId, session.email);
+  const result = rejectDropCandidate(body.candidateId, "admin");
   if (!result.ok) {
     return jsonResponse({ error: result.error }, { status: 400 });
   }

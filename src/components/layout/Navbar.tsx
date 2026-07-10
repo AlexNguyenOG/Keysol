@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBanner";
-import { AuthNavActions } from "@/components/layout/AuthNavActions";
+import { MobileNav } from "@/components/layout/MobileNav";
+import { NAV_LINKS } from "@/components/layout/nav-links";
 
 function SolanaLogo() {
   return (
@@ -44,53 +44,33 @@ function SolanaLogo() {
 
 export function Navbar() {
   return (
-    <>
-      <EmailVerificationBanner />
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-bg-primary/80 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2.5">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-bg-primary/80 backdrop-blur-md">
+      <nav className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <SolanaLogo />
           <span className="text-lg font-semibold tracking-tight">
             Key<span className="gradient-text">Sol</span>
           </span>
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
-          <Link
-            href="/#brands"
-            className="text-sm text-text-muted transition-colors hover:text-text-primary"
-          >
-            Brands and Shopping
-          </Link>
-          <Link
-            href="/rankings"
-            className="text-sm text-text-muted transition-colors hover:text-text-primary"
-          >
-            Rankings
-          </Link>
-          <Link
-            href="/value-trends"
-            className="text-sm text-text-muted transition-colors hover:text-text-primary"
-          >
-            Value Trends
-          </Link>
-          <Link
-            href="/tokens"
-            className="text-sm text-text-muted transition-colors hover:text-text-primary"
-          >
-            Token Guide
-          </Link>
-          <Link
-            href="/#about"
-            className="text-sm text-text-muted transition-colors hover:text-text-primary"
-          >
-            About
-          </Link>
+        <div className="hidden min-w-0 w-full justify-self-stretch md:flex md:px-6 lg:px-10 xl:px-16">
+          <div className="flex w-full items-center justify-between gap-4">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="whitespace-nowrap px-1 text-sm text-text-muted transition-colors hover:text-text-primary lg:text-[0.9375rem]"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
-        <AuthNavActions />
+        <div className="flex justify-end">
+          <MobileNav />
+        </div>
       </nav>
     </header>
-    </>
   );
 }

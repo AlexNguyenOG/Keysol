@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { DropsAdminPanel } from "@/components/admin/DropsAdminPanel";
-import { isAdminEmail } from "@/lib/admin";
-import { getSessionFromCookies } from "@/lib/auth/session";
-import { listDropCandidates } from "@/lib/drops/store";
+import { DropsAdminClient } from "@/components/admin/DropsAdminClient";
 import { GradientText } from "@/components/ui/GradientText";
 
 export const metadata: Metadata = {
@@ -14,35 +9,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function AdminDropsPage() {
-  const session = await getSessionFromCookies();
-
-  if (!session) {
-    redirect("/login?callbackUrl=/admin/drops");
-  }
-
-  if (!isAdminEmail(session.email)) {
-    return (
-      <>
-        <Navbar />
-        <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-2xl font-bold text-text-primary">Access denied</h1>
-            <p className="mt-3 text-text-muted">
-              Your account is not on the admin allowlist. Set{" "}
-              <code className="text-solana-green">ADMIN_EMAILS</code> to include
-              your email.
-            </p>
-            <Link href="/" className="mt-6 inline-block text-solana-green hover:underline">
-              Back to home
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
+export default function AdminDropsPage() {
   return (
     <>
       <Navbar />
@@ -61,10 +28,7 @@ export default async function AdminDropsPage() {
             </p>
           </div>
 
-          <DropsAdminPanel
-            adminEmail={session.email}
-            initialCandidates={listDropCandidates("pending")}
-          />
+          <DropsAdminClient />
         </div>
       </main>
       <Footer />

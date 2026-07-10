@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/lib/admin";
+import { requireAdminAuthorization } from "@/lib/admin";
 import { approveDropCandidate } from "@/lib/drops/approve";
 import { refreshAvailability } from "@/lib/availability/checker";
 import { jsonResponse } from "@/lib/security/api";
@@ -19,9 +19,9 @@ interface ApproveBody {
 }
 
 export async function POST(request: Request) {
-  const session = await requireAdminSession();
-  if (session instanceof Response) {
-    return session;
+  const unauthorized = requireAdminAuthorization(request);
+  if (unauthorized) {
+    return unauthorized;
   }
 
   let body: ApproveBody;
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
   const result = approveDropCandidate({
     candidateId: body.candidateId,
-    approvedBy: session.email,
+    approvedBy: "admin",
     maxSupply: body.maxSupply,
     rarityScore: body.rarityScore,
     keyboard: body.keyboard,

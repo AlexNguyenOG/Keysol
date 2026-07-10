@@ -2,7 +2,7 @@
 /**
  * Fails CI when required production secrets are missing.
  */
-const required = ["AUTH_SECRET"];
+const required = ["AVAILABILITY_CRON_SECRET"];
 
 const missing = required.filter((name) => !process.env[name]?.trim());
 

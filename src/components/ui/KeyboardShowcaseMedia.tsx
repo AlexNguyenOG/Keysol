@@ -4,12 +4,21 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getKeyboardShowcase, getShowcaseVideoSrc, keyboardHasShowcase } from "@/lib/keyboards/showcase";
 
+export type KeyboardMediaInset = "sm" | "md" | "lg";
+
+const INSET_CLASS: Record<KeyboardMediaInset, string> = {
+  sm: "p-[8%]",
+  md: "p-[12%]",
+  lg: "p-[18%]",
+};
+
 interface KeyboardShowcaseMediaProps {
   keyboardId: string;
   imageSrc: string;
   alt: string;
   className?: string;
-  imageClassName?: string;
+  /** Breathing room inside the frame — larger values zoom out tight product crops. */
+  mediaInset?: KeyboardMediaInset;
   sizes?: string;
 }
 
@@ -18,11 +27,12 @@ export function KeyboardShowcaseMedia({
   imageSrc,
   alt,
   className = "",
-  imageClassName = "object-contain p-1.5",
+  mediaInset = "md",
   sizes = "(max-width: 768px) 100vw, 50vw",
 }: KeyboardShowcaseMediaProps) {
   const showcase = getKeyboardShowcase(keyboardId);
   const hasShowcase = keyboardHasShowcase(keyboardId) && showcase !== undefined;
+  const insetClass = INSET_CLASS[mediaInset];
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canPlayListenerRef = useRef<(() => void) | null>(null);
@@ -140,7 +150,7 @@ export function KeyboardShowcaseMedia({
         src={imageSrc}
         alt={alt}
         fill
-        className={`transition-opacity duration-300 ${imageClassName} ${
+        className={`object-contain transition-opacity duration-300 ${insetClass} ${
           showVideo ? "opacity-0" : "opacity-100"
         }`}
         sizes={sizes}
@@ -149,7 +159,7 @@ export function KeyboardShowcaseMedia({
       {hasShowcase && !reducedMotion && !videoFailed && videoSrc && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+          className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-300 ${insetClass} ${
             showVideo ? "opacity-100" : "opacity-0"
           }`}
           muted

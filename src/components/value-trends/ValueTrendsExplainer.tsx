@@ -19,8 +19,8 @@ export function ValueTrendsExplainer() {
         (±3 points or more).
       </p>
 
-      <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <li className="rounded-xl border border-solana-green/30 bg-solana-green/10 px-4 py-3">
+      <ul className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3">
+        <li className="min-w-0 rounded-xl border border-solana-green/30 bg-solana-green/10 px-4 py-3">
           <p className="text-sm font-semibold text-solana-green">
             {VALUE_TREND_LABELS.rising}
           </p>
@@ -28,7 +28,7 @@ export function ValueTrendsExplainer() {
             Effective score went up — usually because stock got scarcer.
           </p>
         </li>
-        <li className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
+        <li className="min-w-0 rounded-xl border border-white/15 bg-white/5 px-4 py-3">
           <p className="text-sm font-semibold text-text-muted">
             {VALUE_TREND_LABELS.stable}
           </p>
@@ -36,7 +36,7 @@ export function ValueTrendsExplainer() {
             Score unchanged since the last refresh.
           </p>
         </li>
-        <li className="rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3">
+        <li className="min-w-0 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3">
           <p className="text-sm font-semibold text-red-400">
             {VALUE_TREND_LABELS.dropping}
           </p>

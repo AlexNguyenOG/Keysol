@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { getAuthDb } from "@/lib/auth/db";
+import { getAppDb } from "@/lib/db/app";
 import type {
   DropCandidate,
   DropCandidateStatus,
@@ -73,7 +73,7 @@ export function upsertDropCandidate(input: {
   confidence: number;
   rawSnippet?: string | null;
 }): DropCandidate {
-  const db = getAuthDb();
+  const db = getAppDb();
   const existing = db
     .prepare("SELECT id FROM drop_candidates WHERE source_url = ?")
     .get(input.sourceUrl) as { id: string } | undefined;
@@ -150,7 +150,7 @@ export function upsertDropCandidate(input: {
 export function listDropCandidates(
   status?: DropCandidateStatus,
 ): DropCandidate[] {
-  const db = getAuthDb();
+  const db = getAppDb();
   const rows = status
     ? (db
         .prepare(
@@ -165,7 +165,7 @@ export function listDropCandidates(
 }
 
 export function getDropCandidate(id: string): DropCandidate | undefined {
-  const row = getAuthDb()
+  const row = getAppDb()
     .prepare("SELECT * FROM drop_candidates WHERE id = ?")
     .get(id) as DropCandidateRow | undefined;
 
@@ -178,7 +178,7 @@ export function setDropCandidateStatus(
   reviewedBy: string,
 ): DropCandidate | undefined {
   const now = Date.now();
-  getAuthDb()
+  getAppDb()
     .prepare(
       `
       UPDATE drop_candidates
@@ -198,7 +198,7 @@ export function publishDrop(input: {
   approvedBy: string;
   featuredOrder?: number;
 }): PublishedDrop {
-  const db = getAuthDb();
+  const db = getAppDb();
   const now = Date.now();
   const featuredOrder =
     input.featuredOrder ??
@@ -241,7 +241,7 @@ export function publishDrop(input: {
 }
 
 export function listPublishedDrops(): PublishedDrop[] {
-  const rows = getAuthDb()
+  const rows = getAppDb()
     .prepare(
       "SELECT * FROM published_drops ORDER BY featured_order DESC, featured_at DESC",
     )
@@ -252,7 +252,7 @@ export function listPublishedDrops(): PublishedDrop[] {
 
 /** @internal Test helper */
 export function resetDropsForTests(): void {
-  const db = getAuthDb();
+  const db = getAppDb();
   db.prepare("DELETE FROM published_drops").run();
   db.prepare("DELETE FROM drop_candidates").run();
 }

@@ -1,29 +1,11 @@
-import type { SessionClaims } from "@/lib/auth/session";
-import { getSessionFromCookies } from "@/lib/auth/session";
+import { isCronAuthorized } from "@/lib/security/auth";
 import { jsonResponse } from "@/lib/security/api";
 
-export function getAdminEmails(): string[] {
-  return (process.env.ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-}
-
-export function isAdminEmail(email: string): boolean {
-  return getAdminEmails().includes(email.trim().toLowerCase());
-}
-
-export async function requireAdminSession(): Promise<
-  SessionClaims | Response
-> {
-  const session = await getSessionFromCookies();
-  if (!session) {
+/** Guard admin drop APIs with the same bearer secret as availability cron. */
+export function requireAdminAuthorization(request: Request): Response | null {
+  if (!isCronAuthorized(request)) {
     return jsonResponse({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!isAdminEmail(session.email)) {
-    return jsonResponse({ error: "Forbidden" }, { status: 403 });
-  }
-
-  return session;
+  return null;
 }

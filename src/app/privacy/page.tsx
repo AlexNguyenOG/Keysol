@@ -3,7 +3,7 @@ import { LegalPageShell } from "@/components/legal/LegalPageShell";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — KeySol",
-  description: "How KeySol handles account data, cookies, and third-party services.",
+  description: "How KeySol handles cookies and third-party services.",
 };
 
 export default function PrivacyPage() {
@@ -13,23 +13,6 @@ export default function PrivacyPage() {
         KeySol is a keyboard discovery site. This policy explains what we collect
         and why.
       </p>
-
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-text-primary">Account data</h2>
-        <p>
-          If you create an account, we store your name, email address, and a
-          bcrypt-hashed password in our auth database. We do not store plaintext
-          passwords.
-        </p>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-text-primary">Sessions</h2>
-        <p>
-          Signed-in sessions use HTTP-only cookies with signed tokens. Logout
-          revokes the server-side session immediately.
-        </p>
-      </section>
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-text-primary">
@@ -51,15 +34,6 @@ export default function PrivacyPage() {
           KeySol periodically fetches public retailer product pages listed in
           the catalog to estimate stock status. No personal data is sent in those
           requests.
-        </p>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-text-primary">Security logs</h2>
-        <p>
-          Authentication events such as sign-in, sign-up, logout, and password
-          resets are recorded in server audit logs for abuse detection. Logs
-          include timestamps, event type, and client IP when available.
         </p>
       </section>
 

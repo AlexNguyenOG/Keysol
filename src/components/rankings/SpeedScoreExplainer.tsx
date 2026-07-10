@@ -15,11 +15,11 @@ export function SpeedScoreExplainer() {
         trigger is a flat bonus for esports-oriented features.
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {SCORE_CRITERIA.map((criterion) => (
           <div
             key={criterion.key}
-            className="rounded-xl border border-white/10 bg-bg-primary/50 p-4"
+            className="min-w-0 rounded-xl border border-white/10 bg-bg-primary/50 p-4"
           >
             <div className="mb-2 flex items-center justify-between gap-3">
               <h3 className="font-medium text-text-primary">{criterion.label}</h3>
