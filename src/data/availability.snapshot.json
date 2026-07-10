@@ -33,13 +33,13 @@
     "keyboardId": "keychron-q1-he",
     "status": "in_stock",
     "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://www.keychron.com/products/keychron-q1-he-qmk-via-wireless-custom-keyboard"
+    "source": "https://www.keychron.com/products/keychron-q1-he-qmk-wireless-custom-keyboard"
   },
   "ducky-one-3-mini-sf": {
     "keyboardId": "ducky-one-3-mini-sf",
     "status": "in_stock",
     "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://mechanicalkeyboards.com/products/ducky-one-3-mini-classic"
+    "source": "https://ducky.global/products/one-3-rgb"
   },
   "steelseries-apex-pro-gen3-tkl": {
     "keyboardId": "steelseries-apex-pro-gen3-tkl",
@@ -93,13 +93,13 @@
     "keyboardId": "ducky-one-3-rgb-tkl",
     "status": "in_stock",
     "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://mechanicalkeyboards.com/products/ducky-one-3-tkl-classic"
+    "source": "https://ducky.global/products/one-3-rgb"
   },
   "ducky-one-3-rgb-full": {
     "keyboardId": "ducky-one-3-rgb-full",
     "status": "in_stock",
     "checkedAt": "2026-06-23T00:00:00.000Z",
-    "source": "https://mechanicalkeyboards.com/products/ducky-one-3-full-classic"
+    "source": "https://ducky.global/products/one-3-rgb"
   },
   "steelseries-apex-pro-gen3": {
     "keyboardId": "steelseries-apex-pro-gen3",
@@ -151,16 +151,15 @@
   },
   "steelseries-apex-pro-tkl-v2": {
     "keyboardId": "steelseries-apex-pro-tkl-v2",
-    "status": "unknown",
-    "checkedAt": "2026-06-18T23:23:40.339Z",
-    "source": "https://steelseries.com/gaming-keyboards/apex-pro-tkl-gaming-keyboard",
-    "error": "HTTP 404"
+    "status": "in_stock",
+    "checkedAt": "2026-07-10T13:45:00.000Z",
+    "source": "https://steelseries.com/gaming-keyboards/apex-pro-2023"
   },
   "steelseries-apex-pro-mini": {
     "keyboardId": "steelseries-apex-pro-mini",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.339Z",
-    "source": "https://steelseries.com/gaming-keyboards/apex-pro-mini"
+    "checkedAt": "2026-07-10T13:45:00.000Z",
+    "source": "https://steelseries.com/gaming-keyboards/apex-pro?keyboardSize=mini"
   },
   "nuphy-field75-he": {
     "keyboardId": "nuphy-field75-he",

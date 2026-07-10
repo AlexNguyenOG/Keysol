@@ -95,7 +95,7 @@ export const brands: Brand[] = [
       "Clean, distraction-free designs",
       "Trusted by keyboard enthusiasts",
     ],
-    website: "https://www.duckychannel.com",
+    website: "https://ducky.global",
   },
   {
     id: "nuphy",

@@ -285,7 +285,7 @@ export const keyboards: Keyboard[] = [
     tagline: "Premium aluminum hall-effect with rapid trigger",
     image: "/keyboards/keychron-q1-he.jpg",
     purchaseUrl:
-      "https://www.keychron.com/products/keychron-q1-he-qmk-via-wireless-custom-keyboard",
+      "https://www.keychron.com/products/keychron-q1-he-qmk-wireless-custom-keyboard",
     stats: {
       switchType: "Gateron Jupiter (Hall-effect)",
       layout: "75%",
@@ -349,7 +349,7 @@ export const keyboards: Keyboard[] = [
     priceUsd: 149,
     tagline: "Hot-swappable TKL with PBT keycaps and RGB",
     image: "/keyboards/ducky-one-3-rgb-tkl.jpg",
-    purchaseUrl: "https://mechanicalkeyboards.com/products/ducky-one-3-tkl-classic",
+    purchaseUrl: "https://ducky.global/products/one-3-rgb",
     stats: {
       switchType: "Cherry MX Speed Silver",
       layout: "TKL",
@@ -369,7 +369,7 @@ export const keyboards: Keyboard[] = [
     priceUsd: 159,
     tagline: "Full-size hot-swap with thick PBT and per-key RGB",
     image: "/keyboards/ducky-one-3-rgb-full.jpg",
-    purchaseUrl: "https://mechanicalkeyboards.com/products/ducky-one-3-full-classic",
+    purchaseUrl: "https://ducky.global/products/one-3-rgb",
     stats: {
       switchType: "Cherry MX Speed Silver",
       layout: "Full-size",
@@ -389,7 +389,7 @@ export const keyboards: Keyboard[] = [
     priceUsd: 139,
     tagline: "Compact speed build with Cherry MX Speed Silver",
     image: "/keyboards/ducky-one-3-mini-sf.jpg",
-    purchaseUrl: "https://mechanicalkeyboards.com/products/ducky-one-3-mini-classic",
+    purchaseUrl: "https://ducky.global/products/one-3-rgb",
     stats: {
       switchType: "Cherry MX Speed Silver",
       layout: "60%",
@@ -452,7 +452,7 @@ export const keyboards: Keyboard[] = [
     badge: "OmniPoint 2.0",
     image: "/keyboards/steelseries-apex-pro-tkl-v2.jpg",
     purchaseUrl:
-      "https://steelseries.com/gaming-keyboards/apex-pro-tkl-gaming-keyboard",
+      "https://steelseries.com/gaming-keyboards/apex-pro-2023",
     stats: {
       switchType: "OmniPoint 2.0 (Magnetic)",
       layout: "TKL",
@@ -473,7 +473,8 @@ export const keyboards: Keyboard[] = [
     tagline: "60% OmniPoint 2.0 with rapid trigger and adjustable actuation",
     badge: "OmniPoint 2.0",
     image: "/keyboards/steelseries-apex-pro-mini.jpg",
-    purchaseUrl: "https://steelseries.com/gaming-keyboards/apex-pro-mini",
+    purchaseUrl:
+      "https://steelseries.com/gaming-keyboards/apex-pro?keyboardSize=mini",
     stats: {
       switchType: "OmniPoint 2.0 (Magnetic)",
       layout: "60%",
