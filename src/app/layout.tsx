@@ -13,6 +13,13 @@ export const metadata: Metadata = {
   title: "KeySol — Find the World's Best Keyboards",
   description:
     "Discover top keyboard brands including Wooting, Razer, Corsair, and more. Your unbiased guide to gaming, productivity, and enthusiast keyboards.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
