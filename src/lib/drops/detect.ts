@@ -1,4 +1,5 @@
-import { isPublicHttpUrl, getPublicUrlGuardOptions } from "@/lib/security/url";
+import { getPublicUrlGuardOptions, isPublicHttpUrl } from "@/lib/security/url";
+import { fetchPublicHtml } from "@/lib/security/safe-fetch";
 import {
   DROP_SCAN_SOURCES,
   DROP_SIGNAL_PATTERNS,
@@ -242,34 +243,14 @@ function collectProductFollowUps(
 }
 
 async function fetchHtml(url: string): Promise<string | null> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-  try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        "User-Agent": USER_AGENT,
-        Accept: "text/html,application/xhtml+xml",
-      },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const buffer = await response.arrayBuffer();
-    const slice = buffer.byteLength > MAX_HTML_BYTES
-      ? buffer.slice(0, MAX_HTML_BYTES)
-      : buffer;
-
-    return new TextDecoder().decode(slice);
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timeout);
-  }
+  return fetchPublicHtml(url, {
+    timeoutMs: FETCH_TIMEOUT_MS,
+    maxBytes: MAX_HTML_BYTES,
+    headers: {
+      "User-Agent": USER_AGENT,
+      Accept: "text/html,application/xhtml+xml",
+    },
+  });
 }
 
 async function upsertFromDetection(input: {

@@ -28,7 +28,9 @@ jobs:
 
       - name: Verify production env requirements
         env:
-          AVAILABILITY_CRON_SECRET: ci-test-cron-secret
+          AVAILABILITY_CRON_SECRET: ci-test-cron-secret-at-least-32-chars
+          TURSO_DATABASE_URL: libsql://ci-placeholder.turso.io
+          TURSO_AUTH_TOKEN: ci-placeholder-token
         run: NODE_ENV=production node scripts/check-production-env.mjs
 
       - run: npm run build

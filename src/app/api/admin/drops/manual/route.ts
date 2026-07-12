@@ -2,6 +2,7 @@ import { brands } from "@/data/brands";
 import { requireAdminAuthorization } from "@/lib/admin";
 import { createManualDropCandidate } from "@/lib/drops/approve";
 import { jsonResponse } from "@/lib/security/api";
+import { readJsonBody } from "@/lib/security/request";
 
 export const dynamic = "force-dynamic";
 
@@ -19,12 +20,12 @@ export async function POST(request: Request) {
     return unauthorized;
   }
 
-  let body: ManualBody;
-  try {
-    body = (await request.json()) as ManualBody;
-  } catch {
-    return jsonResponse({ error: "Invalid JSON body." }, { status: 400 });
+  const parsed = await readJsonBody(request);
+  if (!parsed.ok) {
+    return jsonResponse({ error: parsed.error }, { status: 400 });
   }
+
+  const body = parsed.data as ManualBody;
 
   if (!body.brandId || !body.name || !body.sourceUrl) {
     return jsonResponse(
@@ -37,14 +38,10 @@ export async function POST(request: Request) {
     return jsonResponse({ error: "Unknown brandId." }, { status: 400 });
   }
 
-  if (!body.sourceUrl.startsWith("https://")) {
-    return jsonResponse(
-      { error: "sourceUrl must be a valid HTTPS URL." },
-      { status: 400 },
-    );
-  }
-
   const candidate = await createManualDropCandidate(body);
+  if ("ok" in candidate && candidate.ok === false) {
+    return jsonResponse({ error: candidate.error }, { status: 400 });
+  }
 
   return jsonResponse({ candidate });
 }

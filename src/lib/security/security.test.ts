@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildContentSecurityPolicy } from "@/lib/security/headers";
-import { isCronAuthorized } from "@/lib/security/auth";
+import { isAdminAuthorized, isCronAuthorized } from "@/lib/security/auth";
 import { getClientIp } from "@/lib/security/request";
 import {
   checkRateLimit,
@@ -35,6 +35,8 @@ describe("security url guard", () => {
 
   it("blocks private and non-http urls", () => {
     expect(isPublicHttpUrl("http://127.0.0.1/admin")).toBe(false);
+    expect(isPublicHttpUrl("http://127.1/admin")).toBe(false);
+    expect(isPublicHttpUrl("http://2130706433/admin")).toBe(false);
     expect(isPublicHttpUrl("http://localhost:3000")).toBe(false);
     expect(isPublicHttpUrl("http://192.168.1.1")).toBe(false);
     expect(isPublicHttpUrl("http://172.16.0.1")).toBe(false);
@@ -44,6 +46,8 @@ describe("security url guard", () => {
     expect(isPublicHttpUrl("http://169.254.169.254/latest/meta-data/")).toBe(
       false,
     );
+    expect(isPublicHttpUrl("http://[::1]/admin")).toBe(false);
+    expect(isPublicHttpUrl("http://[::ffff:127.0.0.1]/admin")).toBe(false);
     expect(isPublicHttpUrl("file:///etc/passwd")).toBe(false);
     expect(isPublicHttpUrl("not-a-url")).toBe(false);
   });
@@ -161,6 +165,29 @@ describe("security cron auth", () => {
 
     process.env.ALLOW_INSECURE_CRON = "true";
     expect(isCronAuthorized(request)).toBe(true);
+
+    process.env = originalEnv;
+  });
+
+  it("prefers ADMIN_API_SECRET for admin routes", () => {
+    const originalEnv = process.env;
+    process.env = {
+      ...originalEnv,
+      NODE_ENV: "production",
+      AVAILABILITY_CRON_SECRET: "cron-secret-value-for-tests-32c",
+      ADMIN_API_SECRET: "admin-secret-value-for-tests-32c",
+    };
+
+    const cronOnly = new Request("http://localhost/api/admin/drops/candidates", {
+      headers: { authorization: "Bearer cron-secret-value-for-tests-32c" },
+    });
+    expect(isAdminAuthorized(cronOnly)).toBe(false);
+    expect(isCronAuthorized(cronOnly)).toBe(true);
+
+    const adminOk = new Request("http://localhost/api/admin/drops/candidates", {
+      headers: { authorization: "Bearer admin-secret-value-for-tests-32c" },
+    });
+    expect(isAdminAuthorized(adminOk)).toBe(true);
 
     process.env = originalEnv;
   });

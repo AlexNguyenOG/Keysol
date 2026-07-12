@@ -11,6 +11,7 @@ import {
   type DropCandidate,
   type PublishedDrop,
 } from "@/lib/drops/types";
+import { assertPublicHttpUrl } from "@/lib/security/url";
 import type { Keyboard, KeyboardToken } from "@/types";
 
 function slugify(value: string): string {
@@ -63,8 +64,11 @@ export async function approveDropCandidate(input: ApproveDropInput): Promise<
     candidate.purchaseUrl ??
     candidate.sourceUrl;
 
-  if (!purchaseUrl.startsWith("https://")) {
-    return { ok: false, error: "A valid HTTPS purchase URL is required." };
+  if (!(await assertPublicHttpUrl(purchaseUrl, { httpsOnly: true }))) {
+    return {
+      ok: false,
+      error: "A valid public HTTPS purchase URL is required.",
+    };
   }
 
   const keyboard: Keyboard = {
@@ -136,12 +140,21 @@ export async function createManualDropCandidate(input: {
   sourceUrl: string;
   purchaseUrl?: string;
   signals?: string[];
-}): Promise<DropCandidate> {
+}): Promise<DropCandidate | { ok: false; error: string }> {
+  if (!(await assertPublicHttpUrl(input.sourceUrl, { httpsOnly: true }))) {
+    return { ok: false, error: "sourceUrl must be a valid public HTTPS URL." };
+  }
+
+  const purchaseUrl = input.purchaseUrl ?? input.sourceUrl;
+  if (!(await assertPublicHttpUrl(purchaseUrl, { httpsOnly: true }))) {
+    return { ok: false, error: "purchaseUrl must be a valid public HTTPS URL." };
+  }
+
   return upsertDropCandidate({
     brandId: input.brandId,
     name: input.name,
     sourceUrl: input.sourceUrl,
-    purchaseUrl: input.purchaseUrl ?? input.sourceUrl,
+    purchaseUrl,
     detectionSource: "manual",
     signals: input.signals ?? ["manual submission"],
     confidence: 1,

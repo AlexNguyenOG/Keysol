@@ -54,8 +54,9 @@ export function DropsAdminClient() {
       >
         <h2 className="text-lg font-semibold text-text-primary">Admin access</h2>
         <p className="mt-2 text-sm text-text-muted">
-          Enter your KeySol admin key to review keyboard drops. This is the same
-          bearer secret used for availability cron jobs.
+          Enter your KeySol admin key to review keyboard drops. Prefer{" "}
+          <code className="text-text-primary">ADMIN_API_SECRET</code>; the cron
+          secret still works as a fallback.
         </p>
         <label className="mt-4 block text-sm">
           <span className="text-text-muted">Admin key</span>
