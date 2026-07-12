@@ -55,9 +55,9 @@ export function RankingRow({ keyboard }: RankingRowProps) {
             keyboardId={keyboard.id}
             imageSrc={keyboard.image}
             alt={`${keyboard.name} product photo`}
-            className="h-20 w-32 shrink-0 rounded-lg sm:h-24 sm:w-36"
-            mediaInset="lg"
-            sizes="144px"
+            className="h-24 w-40 shrink-0 rounded-lg sm:h-28 sm:w-44"
+            mediaInset="md"
+            sizes="176px"
           />
 
           <div className="min-w-0 flex-1 lg:hidden">

@@ -94,9 +94,9 @@ export function KeyboardCard({ keyboard, variant = "full" }: KeyboardCardProps) 
           keyboardId={keyboard.id}
           imageSrc={keyboard.image}
           alt={`${keyboard.name} product photo`}
-          className="aspect-[16/10] w-full shrink-0 rounded-lg sm:aspect-auto sm:h-20 sm:w-32"
-          mediaInset="lg"
-          sizes="112px"
+          className="aspect-[16/10] w-full shrink-0 rounded-lg sm:aspect-auto sm:h-24 sm:w-40"
+          mediaInset="md"
+          sizes="160px"
         />
 
         <div className="min-w-0 flex-1 space-y-2">
@@ -157,8 +157,8 @@ export function KeyboardCard({ keyboard, variant = "full" }: KeyboardCardProps) 
         keyboardId={keyboard.id}
         imageSrc={keyboard.image}
         alt={`${keyboard.name} product photo`}
-        className="aspect-video w-full"
-        mediaInset="md"
+        className="aspect-[16/9] min-h-[220px] w-full sm:min-h-[280px]"
+        mediaInset="sm"
         sizes="(max-width: 768px) 100vw, 50vw"
       />
 

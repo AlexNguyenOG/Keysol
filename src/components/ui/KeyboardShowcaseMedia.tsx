@@ -7,9 +7,16 @@ import { getKeyboardShowcase, getShowcaseVideoSrc, keyboardHasShowcase } from "@
 export type KeyboardMediaInset = "sm" | "md" | "lg";
 
 const INSET_CLASS: Record<KeyboardMediaInset, string> = {
-  sm: "p-[8%]",
-  md: "p-[12%]",
-  lg: "p-[18%]",
+  sm: "p-[4%]",
+  md: "p-[6%]",
+  lg: "p-[10%]",
+};
+
+/** Videos (commercial clips) fill more of the frame than product stills. */
+const VIDEO_INSET_CLASS: Record<KeyboardMediaInset, string> = {
+  sm: "p-[1%]",
+  md: "p-[2%]",
+  lg: "p-[4%]",
 };
 
 interface KeyboardShowcaseMediaProps {
@@ -33,6 +40,7 @@ export function KeyboardShowcaseMedia({
   const showcase = getKeyboardShowcase(keyboardId);
   const hasShowcase = keyboardHasShowcase(keyboardId) && showcase !== undefined;
   const insetClass = INSET_CLASS[mediaInset];
+  const videoInsetClass = VIDEO_INSET_CLASS[mediaInset];
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canPlayListenerRef = useRef<(() => void) | null>(null);
@@ -159,7 +167,7 @@ export function KeyboardShowcaseMedia({
       {hasShowcase && !reducedMotion && !videoFailed && videoSrc && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-300 ${insetClass} ${
+          className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-300 ${videoInsetClass} ${
             showVideo ? "opacity-100" : "opacity-0"
           }`}
           muted
