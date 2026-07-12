@@ -14,6 +14,11 @@ export interface KeyboardShowcase {
   /** Exclusive end of the cinematic segment (seconds). */
   clipEndSec: number;
   credit: string;
+  /**
+   * Zoom commercial footage so the keyboard fills the media frame.
+   * Useful for wide cinematic ads where the board is small in-shot (e.g. Razer).
+   */
+  videoZoom?: number;
 }
 
 export const keyboardShowcases: KeyboardShowcase[] = [
@@ -44,6 +49,7 @@ export const keyboardShowcases: KeyboardShowcase[] = [
     clipStartSec: 0,
     clipEndSec: 12,
     credit: "Razer",
+    videoZoom: 1.55,
   },
   {
     keyboardId: "razer-huntsman-v3-pro-mini",
@@ -51,6 +57,7 @@ export const keyboardShowcases: KeyboardShowcase[] = [
     clipStartSec: 2,
     clipEndSec: 14,
     credit: "Razer",
+    videoZoom: 1.55,
   },
   {
     keyboardId: "razer-huntsman-v3-pro-8khz",
@@ -58,6 +65,7 @@ export const keyboardShowcases: KeyboardShowcase[] = [
     clipStartSec: 5,
     clipEndSec: 17,
     credit: "Razer",
+    videoZoom: 1.55,
   },
   {
     keyboardId: "corsair-k70-max",

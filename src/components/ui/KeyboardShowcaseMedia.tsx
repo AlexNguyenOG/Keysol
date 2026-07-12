@@ -40,7 +40,10 @@ export function KeyboardShowcaseMedia({
   const showcase = getKeyboardShowcase(keyboardId);
   const hasShowcase = keyboardHasShowcase(keyboardId) && showcase !== undefined;
   const insetClass = INSET_CLASS[mediaInset];
-  const videoInsetClass = VIDEO_INSET_CLASS[mediaInset];
+  const videoZoom = showcase?.videoZoom ?? 1;
+  const videoZoomed = videoZoom > 1;
+  const videoInsetClass = videoZoomed ? "p-0" : VIDEO_INSET_CLASS[mediaInset];
+  const videoFitClass = videoZoomed ? "object-cover" : "object-contain";
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canPlayListenerRef = useRef<(() => void) | null>(null);
@@ -167,9 +170,12 @@ export function KeyboardShowcaseMedia({
       {hasShowcase && !reducedMotion && !videoFailed && videoSrc && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-300 ${videoInsetClass} ${
+          className={`absolute inset-0 h-full w-full origin-center transition-opacity duration-300 ${videoFitClass} ${videoInsetClass} ${
             showVideo ? "opacity-100" : "opacity-0"
           }`}
+          style={
+            videoZoomed ? { transform: `scale(${videoZoom})` } : undefined
+          }
           muted
           playsInline
           preload="auto"
