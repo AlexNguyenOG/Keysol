@@ -291,6 +291,45 @@ export async function listPublishedDrops(): Promise<PublishedDrop[]> {
   ).map(mapPublished);
 }
 
+/** Patch keyboard image on an already-published drop without changing order. */
+export async function updatePublishedDropImage(
+  keyboardId: string,
+  image: string,
+): Promise<PublishedDrop | undefined> {
+  const db = await getAppDb();
+  if (!db) {
+    return undefined;
+  }
+
+  const existing = await db.execute({
+    sql: "SELECT * FROM published_drops WHERE keyboard_id = ?",
+    args: [keyboardId],
+  });
+  const row = existing.rows[0] as unknown as PublishedDropRow | undefined;
+  if (!row) {
+    return undefined;
+  }
+
+  const keyboard = {
+    ...(JSON.parse(row.keyboard_json) as Keyboard),
+    image,
+  };
+
+  await db.execute({
+    sql: `
+      UPDATE published_drops
+      SET keyboard_json = ?
+      WHERE keyboard_id = ?
+    `,
+    args: [JSON.stringify(keyboard), keyboardId],
+  });
+
+  return mapPublished({
+    ...row,
+    keyboard_json: JSON.stringify(keyboard),
+  });
+}
+
 /** @internal Test helper */
 export async function resetDropsForTests(): Promise<void> {
   const db = await requireDb();

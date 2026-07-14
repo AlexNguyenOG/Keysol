@@ -11,8 +11,11 @@ import {
   type DropCandidate,
   type PublishedDrop,
 } from "@/lib/drops/types";
+import { resolveProductImageUrl } from "@/lib/drops/product-image";
 import { assertPublicHttpUrl } from "@/lib/security/url";
 import type { Keyboard, KeyboardToken } from "@/types";
+
+const DROP_IMAGE_PLACEHOLDER = "/keyboards/drop-placeholder.svg";
 
 function slugify(value: string): string {
   return value
@@ -71,6 +74,14 @@ export async function approveDropCandidate(input: ApproveDropInput): Promise<
     };
   }
 
+  let image = input.keyboard?.image ?? DROP_IMAGE_PLACEHOLDER;
+  if (!input.keyboard?.image) {
+    const resolved = await resolveProductImageUrl(purchaseUrl);
+    if (resolved) {
+      image = resolved;
+    }
+  }
+
   const keyboard: Keyboard = {
     id: keyboardId,
     brandId: candidate.brandId,
@@ -81,7 +92,7 @@ export async function approveDropCandidate(input: ApproveDropInput): Promise<
       input.keyboard?.tagline ??
       `Limited drop detected with ${candidate.signals.join(", ")}.`,
     badge: input.keyboard?.badge ?? "Limited Drop",
-    image: input.keyboard?.image ?? "/keyboards/drop-placeholder.svg",
+    image,
     purchaseUrl,
     stats: input.keyboard?.stats ?? {
       switchType: "Limited edition / special run",

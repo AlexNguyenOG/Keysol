@@ -150,6 +150,7 @@ export function KeyboardShowcaseMedia({
 
   const showVideo =
     hasShowcase && !reducedMotion && !videoFailed && hovering && videoReady;
+  const isRemoteImage = /^https?:\/\//i.test(imageSrc);
 
   return (
     <div
@@ -161,6 +162,7 @@ export function KeyboardShowcaseMedia({
         src={imageSrc}
         alt={alt}
         fill
+        unoptimized={isRemoteImage}
         className={`object-contain transition-opacity duration-300 ${insetClass} ${
           showVideo ? "opacity-0" : "opacity-100"
         }`}

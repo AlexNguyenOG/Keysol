@@ -8,6 +8,18 @@ const securityHeaderEntries = Object.entries(getSecurityHeaders(isDevelopment)).
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "www.keychron.com" },
+      { protocol: "https", hostname: "cdn.shopify.com" },
+      { protocol: "https", hostname: "ducky.global" },
+      { protocol: "https", hostname: "assets2.razerzone.com" },
+      { protocol: "https", hostname: "assets3.razerzone.com" },
+      { protocol: "https", hostname: "medias-p1.phoenix.razer.com" },
+      { protocol: "https", hostname: "wooting.io" },
+      { protocol: "https", hostname: "www.wooting.io" },
+    ],
+  },
   async headers() {
     return [
       {
