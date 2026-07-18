@@ -42,7 +42,6 @@ function buildStaticSnapshots(): TokenSnapshot[] {
       keyboardId: token.keyboardId,
       token,
       rarityScore: token.rarityScore,
-      rarityTier: token.rarityTier,
       stockStatus,
       stockScore: 50,
       effectiveScore,

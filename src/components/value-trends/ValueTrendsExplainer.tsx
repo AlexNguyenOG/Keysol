@@ -13,7 +13,7 @@ export function ValueTrendsExplainer() {
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-text-muted sm:text-base">
         Each keyboard token has an{" "}
         <span className="text-text-primary">effective score</span> —{" "}
-        {TOKEN_RARITY_WEIGHT * 100}% catalog rarity plus {TOKEN_STOCK_WEIGHT * 100}%
+        {TOKEN_RARITY_WEIGHT * 100}% catalog score plus {TOKEN_STOCK_WEIGHT * 100}%
         live retailer stock. The list defaults to highest effective scores first.
         Trends compare today&apos;s score to the previous stock refresh cycle
         (±3 points or more).

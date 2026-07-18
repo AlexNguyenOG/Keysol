@@ -47,7 +47,7 @@ describe("drop approval pipeline", () => {
     }
 
     expect(result.drop.token.maxSupply).toBe(DROP_TOKEN_DEFAULTS.maxSupply);
-    expect(result.drop.token.rarityTier).toBe("legendary");
+    expect(result.drop.token.rarityScore).toBe(DROP_TOKEN_DEFAULTS.rarityScore);
     expect(result.drop.keyboard.badge).toBe("Limited Drop");
 
     const merged = await getAllKeyboards();

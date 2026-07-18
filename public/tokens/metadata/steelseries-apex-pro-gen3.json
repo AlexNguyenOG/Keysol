@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Apex Pro Gen 3 Token",
+  "symbol": "KSOL-AP3FS",
+  "description": "OmniPoint 3.0 full-size flagship with OLED — premium tier with tighter stock than mainstream boards.",
+  "image": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-gen3-full.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "steelseries-apex-pro-gen3"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 76
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 1500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-gen3-full.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

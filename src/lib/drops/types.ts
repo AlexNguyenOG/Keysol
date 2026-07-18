@@ -37,7 +37,6 @@ export interface ApproveDropInput {
 }
 
 export const DROP_TOKEN_DEFAULTS = {
-  rarityTier: "legendary" as const,
   rarityScore: 99,
   maxSupply: 250,
 };

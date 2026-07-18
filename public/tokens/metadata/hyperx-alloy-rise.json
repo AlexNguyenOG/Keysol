@@ -1,0 +1,30 @@
+{
+  "name": "KeySol HyperX Alloy Rise Token",
+  "symbol": "KSOL-ALRISE",
+  "description": "HyperX's first magnetic full-size — early run with strong competitive demand.",
+  "image": "https://keysol.vercel.app/keyboards/hyperx-alloy-rise.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "hyperx-alloy-rise"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 82
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 1000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/hyperx-alloy-rise.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

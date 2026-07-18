@@ -20,11 +20,6 @@ const STOCK_SCORE: Record<AvailabilityStatus, number> = {
 /** Stock score lookup for docs and UI (mirrors internal scoring). */
 export const TOKEN_STOCK_SCORES = STOCK_SCORE;
 
-export const TOKEN_EFFECTIVE_TIER_THRESHOLDS = {
-  legendary: 85,
-  rare: 65,
-} as const;
-
 export function stockScoreFromStatus(
   status: AvailabilityStatus | undefined,
 ): number {
@@ -44,18 +39,4 @@ export function computeEffectiveTokenScore(
     rarityScore * TOKEN_RARITY_WEIGHT + stockScore * TOKEN_STOCK_WEIGHT;
 
   return Math.round(Math.min(100, Math.max(0, blended)));
-}
-
-export function effectiveTierFromScore(
-  effectiveScore: number,
-): "legendary" | "rare" | "uncommon" {
-  if (effectiveScore >= 85) {
-    return "legendary";
-  }
-
-  if (effectiveScore >= 65) {
-    return "rare";
-  }
-
-  return "uncommon";
 }

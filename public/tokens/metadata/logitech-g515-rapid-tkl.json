@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Logitech G515 RAPID TKL Token",
+  "symbol": "KSOL-G515",
+  "description": "New low-profile magnetic analog line — growing demand as Logitech's rapid-trigger entry.",
+  "image": "https://keysol.vercel.app/keyboards/logitech-g515-rapid-tkl.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "logitech-g515-rapid-tkl"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 62
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 3000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/logitech-g515-rapid-tkl.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

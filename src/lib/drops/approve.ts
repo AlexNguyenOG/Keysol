@@ -114,7 +114,6 @@ export async function approveDropCandidate(input: ApproveDropInput): Promise<
     keyboardId: keyboard.id,
     symbol: buildTokenSymbol(keyboard.name),
     name: `KeySol ${keyboard.name} Drop Token`,
-    rarityTier: DROP_TOKEN_DEFAULTS.rarityTier,
     rarityScore,
     maxSupply,
     rationale: `Admin-approved limited drop (${candidate.signals.join(", ")}). Low max supply reflects batch scarcity.`,

@@ -1,0 +1,31 @@
+{
+  "cluster": "localnet",
+  "updatedAt": "2026-07-18T15:28:19.185Z",
+  "mintAuthority": "327sCnm49wg1dq7jLZHfRwmzw3rEPAW5fC4X8CzUDeEm",
+  "mints": [
+    {
+      "keyboardId": "wooting-60he-plus",
+      "tokenId": "keysol-wooting-60he",
+      "symbol": "KSOL-W60HE",
+      "mintAddress": "E7KbDbW8rdYAHCik32aTZiqLCMXcwKkkNeovxGaD9bW9",
+      "decimals": 0,
+      "createdAt": "2026-07-18T15:28:18.384Z"
+    },
+    {
+      "keyboardId": "wooting-two-he",
+      "tokenId": "keysol-wooting-two-he",
+      "symbol": "KSOL-W2HE",
+      "mintAddress": "92bm8tM5MduaDrNyGD6mKu8p2So8ZxrpbHpwPD9hKQc3",
+      "decimals": 0,
+      "createdAt": "2026-07-18T15:28:18.812Z"
+    },
+    {
+      "keyboardId": "steelseries-apex-pro-gen3-tkl",
+      "tokenId": "keysol-apex-pro-gen3-tkl",
+      "symbol": "KSOL-AP3TKL",
+      "mintAddress": "9J1ePzauWMxsqAUDrU4nW9bGbfHYVSnuzMuxVJB8DXzX",
+      "decimals": 0,
+      "createdAt": "2026-07-18T15:28:19.185Z"
+    }
+  ]
+}

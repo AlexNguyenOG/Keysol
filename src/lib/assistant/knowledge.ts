@@ -73,13 +73,13 @@ export function buildTokenContext(): string {
     .slice(0, 8)
     .map(
       (token) =>
-        `${token.symbol}: ${token.name} (${token.rarityTier}, score ${token.rarityScore})`,
+        `${token.symbol}: ${token.name} (catalog score ${token.rarityScore})`,
     );
 
   return [
     "KEYSOL TOKEN GUIDE (roadmap — not live wallet minting yet):",
     ...topTokens,
-    "Full token list and rarity tiers: /tokens",
+    "Full token list and catalog scores: /tokens",
   ].join("\n");
 }
 

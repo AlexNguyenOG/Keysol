@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Corsair K70 RGB MK.2 Token",
+  "symbol": "KSOL-K70MK2",
+  "description": "Legacy full-size K70 with long production history — easiest board in the catalog to source.",
+  "image": "https://keysol.vercel.app/keyboards/corsair-k70-rgb.webp",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "corsair-k70-rgb-mk2"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 35
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 10000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/corsair-k70-rgb.webp",
+        "type": "image/png"
+      }
+    ]
+  }
+}

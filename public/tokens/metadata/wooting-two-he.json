@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Wooting Two HE Token",
+  "symbol": "KSOL-W2HE",
+  "description": "Full-size Wooting HE shares the same limited production runs as the 60HE+ line.",
+  "image": "https://keysol.vercel.app/keyboards/wooting-two-he.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "wooting-two-he"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 98
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/wooting-two-he.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

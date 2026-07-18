@@ -46,7 +46,7 @@ const mintSteps = [
 ];
 
 const checklist = [
-  "SPL mint metadata matches catalog: symbol, name, rarity tier, max supply, keyboard id",
+  "SPL mint metadata matches catalog: symbol, name, max supply, keyboard id",
   "Max supply enforced on-chain; mint authority revoked at / after cap",
   "Freeze authority: none, or fully disclosed before mint",
   "Update authority: minimal and documented (or revoked after metadata is final)",

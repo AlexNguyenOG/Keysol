@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Apex Pro Mini Token",
+  "symbol": "KSOL-APMINI",
+  "description": "Compact OmniPoint 2.0 board with steady retail availability.",
+  "image": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-mini.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "steelseries-apex-pro-mini"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 65
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 3500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-mini.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "KeySol G Pro X TKL Lightspeed Token",
+  "symbol": "KSOL-GPROX",
+  "description": "Pro wireless TKL with steady retail presence — less scarce than magnetic flagships.",
+  "image": "https://keysol.vercel.app/keyboards/logitech-g-pro-x-tkl-lightspeed.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "logitech-g-pro-x-tkl-lightspeed"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 54
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 4000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/logitech-g-pro-x-tkl-lightspeed.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

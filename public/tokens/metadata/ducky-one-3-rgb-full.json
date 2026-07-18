@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Ducky One 3 RGB Full Token",
+  "symbol": "KSOL-D1FULL",
+  "description": "Full-size One 3 with specialty retailer distribution — steady stock, niche vs gaming brands.",
+  "image": "https://keysol.vercel.app/keyboards/ducky-one-3-rgb-full.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "ducky-one-3-rgb-full"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 45
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 5000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/ducky-one-3-rgb-full.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

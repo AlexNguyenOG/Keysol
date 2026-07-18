@@ -68,6 +68,9 @@ export const API_RATE_LIMITS = {
   assistant: { limit: 20, windowMs: 60_000 },
   availability: { limit: 60, windowMs: 60_000 },
   tokensSnapshot: { limit: 30, windowMs: 60_000 },
+  tokenClaim: { limit: 10, windowMs: 60_000 },
+  tokenChallenge: { limit: 30, windowMs: 60_000 },
+  tokenHoldings: { limit: 30, windowMs: 60_000 },
 } as const;
 
 /** @internal Test helper */

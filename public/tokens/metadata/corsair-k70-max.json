@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Corsair K70 MAX Token",
+  "symbol": "KSOL-K70MAX",
+  "description": "Magnetic MGX flagship that frequently sells through at major retailers.",
+  "image": "https://keysol.vercel.app/keyboards/corsair-k70-max.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "corsair-k70-max"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 85
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 1000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/corsair-k70-max.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

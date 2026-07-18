@@ -37,6 +37,9 @@ data/app.db-shm
 data/app.db-wal
 data/auth-audit.log
 
+# Solana local keypairs (never commit)
+.keys/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

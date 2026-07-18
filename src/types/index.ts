@@ -36,37 +36,29 @@ export interface Keyboard {
   badge?: string;
 }
 
-export type TokenRarityTier = "legendary" | "rare" | "uncommon";
-
-/** @deprecated Use TokenRarityTier */
-export type TokenScarcityTier = TokenRarityTier;
-
-/** Off-chain token metadata. Rarity is catalog baseline; stock is live server data. */
+/** Off-chain token metadata. Catalog score is a stable baseline; stock is live server data. */
 export interface KeyboardToken {
   id: string;
   keyboardId: string;
   symbol: string;
   name: string;
-  /** Catalog rarity bucket — how hard this board is to obtain in general. */
-  rarityTier: TokenRarityTier;
-  /** Catalog rarity score (0–100). Stable; never derived from live stock. */
+  /** Catalog baseline score (0–100). Stable; never derived from live stock. */
   rarityScore: number;
-  /** Planned max token supply when minted on-chain (tied to catalog rarity). */
+  /** Planned max token supply when minted on-chain. */
   maxSupply: number;
   rationale: string;
   /** Populated after devnet/mainnet mint — not wired to the site yet. */
   mintAddress?: string;
 }
 
-/** Server-built view combining catalog rarity with verified retailer stock. */
+/** Server-built view combining catalog baseline with verified retailer stock. */
 export interface TokenSnapshot {
   keyboardId: string;
   token: KeyboardToken;
   rarityScore: number;
-  rarityTier: TokenRarityTier;
   stockStatus: AvailabilityStatus;
   stockScore: number;
-  /** Weighted blend of rarity + stock for ranking (see token scoring). */
+  /** Weighted blend of catalog baseline + stock for ranking (see token scoring). */
   effectiveScore: number;
   /** Effective score from the previous availability refresh cycle. */
   previousEffectiveScore: number | null;

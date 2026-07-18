@@ -7,20 +7,13 @@ import { computeEffectiveTokenScore } from "@/lib/tokens/scoring";
 import { AVAILABILITY_LABELS, AVAILABILITY_STYLES } from "@/lib/availability/labels";
 import type { TokenSnapshot } from "@/types";
 
-type TokenSort = "effective" | "rarity" | "symbol";
+type TokenSort = "effective" | "catalog" | "symbol";
 
 const sortOptions: { value: TokenSort; label: string }[] = [
   { value: "effective", label: "Effective score" },
-  { value: "rarity", label: "Catalog rarity" },
+  { value: "catalog", label: "Catalog score" },
   { value: "symbol", label: "Symbol (A–Z)" },
 ];
-
-const tierStyles = {
-  legendary:
-    "border-solana-purple/40 bg-solana-purple/15 text-solana-purple",
-  rare: "border-solana-green/40 bg-solana-green/10 text-solana-green",
-  uncommon: "border-white/20 bg-white/5 text-text-muted",
-} as const;
 
 function keyboardName(id: string): string {
   return keyboards.find((keyboard) => keyboard.id === id)?.name ?? id;
@@ -41,7 +34,6 @@ function buildStaticSnapshots(): TokenSnapshot[] {
       keyboardId: token.keyboardId,
       token,
       rarityScore: token.rarityScore,
-      rarityTier: token.rarityTier,
       stockStatus,
       stockScore,
       effectiveScore,
@@ -116,7 +108,7 @@ export function TokenCatalogList() {
       .catch(() => {
         if (!cancelled) {
           setSnapshots(buildStaticSnapshots());
-          setError("Could not load live stock data. Showing catalog rarity only.");
+          setError("Could not load live stock data. Showing catalog scores only.");
         }
       })
       .finally(() => {
@@ -133,7 +125,7 @@ export function TokenCatalogList() {
   const sorted = useMemo(() => {
     const list = [...snapshots];
 
-    if (sort === "rarity") {
+    if (sort === "catalog") {
       return list.sort((a, b) => b.rarityScore - a.rarityScore);
     }
 
@@ -199,16 +191,9 @@ export function TokenCatalogList() {
               <div className="flex items-start gap-4">
                 <RankBadge rank={index + 1} />
                 <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-sm font-semibold text-solana-purple sm:text-base">
-                      {snapshot.token.symbol}
-                    </span>
-                    <span
-                      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${tierStyles[snapshot.token.rarityTier]}`}
-                    >
-                      {snapshot.token.rarityTier}
-                    </span>
-                  </div>
+                  <p className="font-mono text-sm font-semibold text-solana-purple sm:text-base">
+                    {snapshot.token.symbol}
+                  </p>
                   <h3 className="mt-1 text-lg font-semibold text-text-primary">
                     {keyboardName(snapshot.keyboardId)}
                   </h3>
@@ -229,7 +214,7 @@ export function TokenCatalogList() {
                 </div>
                 <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">
                   <dt className="text-[11px] uppercase tracking-wide text-text-muted">
-                    Rarity
+                    Catalog
                   </dt>
                   <dd className="mt-0.5 font-semibold text-text-primary">
                     {snapshot.rarityScore}

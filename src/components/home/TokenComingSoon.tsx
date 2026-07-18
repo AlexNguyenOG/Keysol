@@ -23,8 +23,8 @@ export function TokenComingSoon() {
               <GradientText as="span">token collectibles</GradientText>
             </h2>
             <p className="mt-4 text-base leading-relaxed text-text-muted sm:text-lg">
-              One token per catalog keyboard — rarity from the board itself, scarcity
-              from live stock checks. Utility and collectibles, not gambling.
+              One token per catalog keyboard — catalog score from the board itself,
+              scarcity from live stock checks. Utility and collectibles, not gambling.
             </p>
           </div>
 

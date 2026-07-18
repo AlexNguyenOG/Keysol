@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Huntsman V3 Pro Mini Token",
+  "symbol": "KSOL-HV3MINI",
+  "description": "Compact 60% analog optical board — smaller run than standard Huntsman variants.",
+  "image": "https://keysol.vercel.app/keyboards/razer-huntsman-v3-pro-mini.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "razer-huntsman-v3-pro-mini"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 72
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 1500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/razer-huntsman-v3-pro-mini.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

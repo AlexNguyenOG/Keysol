@@ -1,0 +1,30 @@
+{
+  "name": "KeySol NuPhy Field75 HE Token",
+  "symbol": "KSOL-F75HE",
+  "description": "Popular value 75% magnetic board with 8 kHz — often restocks quickly but high interest.",
+  "image": "https://keysol.vercel.app/keyboards/nuphy-field75-he.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "nuphy-field75-he"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 69
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 2500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/nuphy-field75-he.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

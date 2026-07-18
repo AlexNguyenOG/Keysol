@@ -8,7 +8,7 @@ import { GradientText } from "@/components/ui/GradientText";
 export const metadata: Metadata = {
   title: "Value Trends — KeySol",
   description:
-    "Track which keyboard tokens are rising, stable, or dropping based on live retailer stock and catalog rarity.",
+    "Track which keyboard tokens are rising, stable, or dropping based on live retailer stock and catalog scores.",
 };
 
 export default function ValueTrendsPage() {

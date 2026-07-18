@@ -249,11 +249,11 @@ function answerTokens(): string {
     .slice(0, 5);
 
   return [
-    "KeySol keyboard tokens are collectible rarity tags tied to catalog boards — wallet minting is on the roadmap, not live yet.",
-    "Top rarity tokens in the guide:",
+    "KeySol keyboard tokens are collectible tags tied to catalog boards — wallet minting is on the roadmap, not live yet.",
+    "Top catalog-score tokens in the guide:",
     ...top.map(
       (token, index) =>
-        `${index + 1}. ${token.symbol} — ${token.name} (${token.rarityTier}, score ${token.rarityScore})`,
+        `${index + 1}. ${token.symbol} — ${token.name} (catalog score ${token.rarityScore})`,
     ),
     "See /tokens for the full guide and /value-trends for score movement.",
   ].join("\n");

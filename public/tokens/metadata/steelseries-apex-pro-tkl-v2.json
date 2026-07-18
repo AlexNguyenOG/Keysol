@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Apex Pro TKL Token",
+  "symbol": "KSOL-APTKL2",
+  "description": "OmniPoint 2.0 TKL — still widely available but superseded by Gen 3 for 8 kHz.",
+  "image": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-tkl-v2.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "steelseries-apex-pro-tkl-v2"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 67
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 3000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-tkl-v2.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Origins 2 1800 Token",
+  "symbol": "KSOL-O2180",
+  "description": "1800 compact layout with 8 kHz polling — fresh SKU with moderate early-run availability.",
+  "image": "https://keysol.vercel.app/keyboards/hyperx-origins-2-1800.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "hyperx-origins-2-1800"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 56
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 3500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/hyperx-origins-2-1800.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

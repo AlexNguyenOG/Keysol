@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Origins 2 65 Token",
+  "symbol": "KSOL-O265",
+  "description": "8 kHz hot-swap Origins 2 compact — widely stocked but newer than legacy Alloy boards.",
+  "image": "https://keysol.vercel.app/keyboards/hyperx-origins-2-65.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "hyperx-origins-2-65"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 58
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 3500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/hyperx-origins-2-65.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

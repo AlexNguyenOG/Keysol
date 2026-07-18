@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Wooting 80HE Token",
+  "symbol": "KSOL-W80HE",
+  "description": "Flagship 80% Wooting with true 8 kHz — high demand and frequent restock sellouts.",
+  "image": "https://keysol.vercel.app/keyboards/wooting-80he.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "wooting-80he"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 97
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/wooting-80he.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

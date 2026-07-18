@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Origins 2 Pro 65 Token",
+  "symbol": "KSOL-O2P65",
+  "description": "New magnetic 65% with rapid trigger — limited early availability in the Origins 2 line.",
+  "image": "https://keysol.vercel.app/keyboards/hyperx-origins-2-pro-65.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "hyperx-origins-2-pro-65"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 80
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 1200
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/hyperx-origins-2-pro-65.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

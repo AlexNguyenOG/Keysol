@@ -51,7 +51,6 @@ export function buildTokenSnapshots(
         keyboardId: token.keyboardId,
         token,
         rarityScore: token.rarityScore,
-        rarityTier: token.rarityTier,
         stockStatus,
         stockScore,
         effectiveScore,

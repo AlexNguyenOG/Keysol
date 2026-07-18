@@ -3,13 +3,15 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { TokenGuideExplainer } from "@/components/tokens/TokenGuideExplainer";
 import { TokenPolicy } from "@/components/tokens/TokenPolicy";
+import { TokenClaimLab } from "@/components/tokens/TokenClaimLab";
 import { TokenCatalogList } from "@/components/tokens/TokenCatalogList";
 import { GradientText } from "@/components/ui/GradientText";
+import { isTokenizationEnabled } from "@/lib/tokens";
 
 export const metadata: Metadata = {
   title: "Token Guide — KeySol",
   description:
-    "How KeySol keyboard tokens work: catalog rarity, live stock scarcity, token policy, and the full token registry.",
+    "How KeySol keyboard tokens work: catalog scores, live stock scarcity, token policy, and the full token registry.",
 };
 
 export default function TokensPage() {
@@ -26,12 +28,13 @@ export default function TokensPage() {
               Token <GradientText as="span">Guide</GradientText>
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-text-muted">
-              One token per keyboard — rarity from the catalog, scarcity from
+              One token per keyboard — catalog score plus scarcity from
               verified stock. Utility and collectibles, not gambling.
             </p>
           </div>
 
           <TokenGuideExplainer />
+          {isTokenizationEnabled() ? <TokenClaimLab /> : null}
           <TokenPolicy />
           <TokenCatalogList />
         </div>

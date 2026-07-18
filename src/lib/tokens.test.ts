@@ -37,16 +37,15 @@ describe("keyboard tokens", () => {
     expect(keyboardTokens).toHaveLength(keyboards.length);
   });
 
-  it("uses valid rarity tiers and positive supply", () => {
+  it("uses positive catalog scores and supply", () => {
     for (const token of keyboardTokens) {
-      expect(["legendary", "rare", "uncommon"]).toContain(token.rarityTier);
       expect(token.rarityScore).toBeGreaterThan(0);
       expect(token.maxSupply).toBeGreaterThan(0);
       expect(token.rationale.length).toBeGreaterThan(10);
     }
   });
 
-  it("sorts by catalog rarity", () => {
+  it("sorts by catalog score", () => {
     const sorted = getKeyboardTokensByRarity();
     const scores = sorted.map((token) => token.rarityScore);
 

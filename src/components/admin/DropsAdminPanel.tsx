@@ -207,7 +207,7 @@ export function DropsAdminPanel({
       <div className="rounded-2xl border border-white/10 bg-bg-surface p-6">
         <p className="text-sm text-text-muted">
           Approve candidates to publish them at the top of the home page with a
-          legendary token (default max supply {DROP_TOKEN_DEFAULTS.maxSupply}).
+          drop token (default max supply {DROP_TOKEN_DEFAULTS.maxSupply}).
         </p>
       </div>
 

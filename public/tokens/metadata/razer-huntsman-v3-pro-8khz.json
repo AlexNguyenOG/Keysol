@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Huntsman V3 Pro 8KHz Token",
+  "symbol": "KSOL-HV3FS",
+  "description": "Full-size 8 kHz analog optical flagship — newest Razer speed tier board.",
+  "image": "https://keysol.vercel.app/keyboards/razer-huntsman-v3-pro-8khz.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "razer-huntsman-v3-pro-8khz"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 73
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 1500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/razer-huntsman-v3-pro-8khz.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

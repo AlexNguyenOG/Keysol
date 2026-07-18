@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Apex Pro Gen 3 TKL Token",
+  "symbol": "KSOL-AP3TKL",
+  "description": "$300 OmniPoint 3.0 TKL flagship with smaller production volume than the full-size.",
+  "image": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-gen3-tkl.jpg",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "steelseries-apex-pro-gen3-tkl"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 88
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 750
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/steelseries-apex-pro-gen3-tkl.jpg",
+        "type": "image/png"
+      }
+    ]
+  }
+}

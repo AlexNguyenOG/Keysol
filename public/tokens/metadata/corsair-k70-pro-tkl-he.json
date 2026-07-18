@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Corsair K70 PRO TKL HE Token",
+  "symbol": "KSOL-K70PTKL",
+  "description": "Newer hall-effect TKL with MGX Hyperdrive — high demand in the magnetic segment.",
+  "image": "https://keysol.vercel.app/keyboards/corsair-k70-pro-tkl-he.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "corsair-k70-pro-tkl-he"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 78
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 1200
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/corsair-k70-pro-tkl-he.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

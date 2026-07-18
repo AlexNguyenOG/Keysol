@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Corsair K70 RGB Token",
+  "symbol": "KSOL-K70PRO",
+  "description": "Mass-market speed-silver K70 with broad retailer distribution and regular restocks.",
+  "image": "https://keysol.vercel.app/keyboards/corsair-k70-rgb-pro.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "corsair-k70-rgb-pro"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 48
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 5000
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/corsair-k70-rgb-pro.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

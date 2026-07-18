@@ -2,7 +2,7 @@ import type { KeyboardToken } from "@/types";
 
 /**
  * KeySol keyboard tokens — one per catalog board.
- * Rarity = stable catalog baseline. Live stock is merged server-side at snapshot time.
+ * Catalog score = stable baseline. Live stock is merged server-side at snapshot time.
  * Off-chain registry only; mint addresses are filled in when you deploy on Solana.
  */
 export const keyboardTokens: KeyboardToken[] = [
@@ -11,7 +11,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "wooting-60he-plus",
     symbol: "KSOL-W60HE",
     name: "KeySol Wooting 60HE+ Token",
-    rarityTier: "legendary",
     rarityScore: 100,
     maxSupply: 500,
     rationale:
@@ -22,7 +21,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "wooting-two-he",
     symbol: "KSOL-W2HE",
     name: "KeySol Wooting Two HE Token",
-    rarityTier: "legendary",
     rarityScore: 98,
     maxSupply: 500,
     rationale:
@@ -33,7 +31,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "steelseries-apex-pro-gen3-tkl",
     symbol: "KSOL-AP3TKL",
     name: "KeySol Apex Pro Gen 3 TKL Token",
-    rarityTier: "rare",
     rarityScore: 88,
     maxSupply: 750,
     rationale:
@@ -44,7 +41,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "corsair-k70-max",
     symbol: "KSOL-K70MAX",
     name: "KeySol Corsair K70 MAX Token",
-    rarityTier: "rare",
     rarityScore: 85,
     maxSupply: 1000,
     rationale:
@@ -55,7 +51,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "hyperx-alloy-rise",
     symbol: "KSOL-ALRISE",
     name: "KeySol HyperX Alloy Rise Token",
-    rarityTier: "rare",
     rarityScore: 82,
     maxSupply: 1000,
     rationale:
@@ -66,7 +61,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "hyperx-origins-2-pro-65",
     symbol: "KSOL-O2P65",
     name: "KeySol Origins 2 Pro 65 Token",
-    rarityTier: "rare",
     rarityScore: 80,
     maxSupply: 1200,
     rationale:
@@ -77,7 +71,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "corsair-k70-pro-tkl-he",
     symbol: "KSOL-K70PTKL",
     name: "KeySol Corsair K70 PRO TKL HE Token",
-    rarityTier: "rare",
     rarityScore: 78,
     maxSupply: 1200,
     rationale:
@@ -88,7 +81,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "steelseries-apex-pro-gen3",
     symbol: "KSOL-AP3FS",
     name: "KeySol Apex Pro Gen 3 Token",
-    rarityTier: "rare",
     rarityScore: 76,
     maxSupply: 1500,
     rationale:
@@ -99,7 +91,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "razer-huntsman-v3-pro-tkl-8khz",
     symbol: "KSOL-HV3TKL",
     name: "KeySol Huntsman V3 Pro TKL Token",
-    rarityTier: "rare",
     rarityScore: 74,
     maxSupply: 1500,
     rationale:
@@ -110,7 +101,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "razer-huntsman-v3-pro-mini",
     symbol: "KSOL-HV3MINI",
     name: "KeySol Huntsman V3 Pro Mini Token",
-    rarityTier: "rare",
     rarityScore: 72,
     maxSupply: 1500,
     rationale:
@@ -121,7 +111,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "keychron-q1-he",
     symbol: "KSOL-Q1HE",
     name: "KeySol Keychron Q1 HE Token",
-    rarityTier: "uncommon",
     rarityScore: 70,
     maxSupply: 2000,
     rationale:
@@ -132,7 +121,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "keychron-k2-he",
     symbol: "KSOL-K2HE",
     name: "KeySol Keychron K2 HE Token",
-    rarityTier: "uncommon",
     rarityScore: 68,
     maxSupply: 2500,
     rationale:
@@ -143,7 +131,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "logitech-g515-rapid-tkl",
     symbol: "KSOL-G515",
     name: "KeySol Logitech G515 RAPID TKL Token",
-    rarityTier: "uncommon",
     rarityScore: 62,
     maxSupply: 3000,
     rationale:
@@ -154,7 +141,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "hyperx-origins-2-65",
     symbol: "KSOL-O265",
     name: "KeySol Origins 2 65 Token",
-    rarityTier: "uncommon",
     rarityScore: 58,
     maxSupply: 3500,
     rationale:
@@ -165,7 +151,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "hyperx-origins-2-1800",
     symbol: "KSOL-O2180",
     name: "KeySol Origins 2 1800 Token",
-    rarityTier: "uncommon",
     rarityScore: 56,
     maxSupply: 3500,
     rationale:
@@ -176,7 +161,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "logitech-g-pro-x-tkl-lightspeed",
     symbol: "KSOL-GPROX",
     name: "KeySol G Pro X TKL Lightspeed Token",
-    rarityTier: "uncommon",
     rarityScore: 54,
     maxSupply: 4000,
     rationale:
@@ -187,7 +171,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "corsair-k70-rgb-pro",
     symbol: "KSOL-K70PRO",
     name: "KeySol Corsair K70 RGB Token",
-    rarityTier: "uncommon",
     rarityScore: 48,
     maxSupply: 5000,
     rationale:
@@ -198,7 +181,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "ducky-one-3-rgb-tkl",
     symbol: "KSOL-D1TKL",
     name: "KeySol Ducky One 3 RGB TKL Token",
-    rarityTier: "uncommon",
     rarityScore: 46,
     maxSupply: 5000,
     rationale:
@@ -209,7 +191,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "ducky-one-3-rgb-full",
     symbol: "KSOL-D1FULL",
     name: "KeySol Ducky One 3 RGB Full Token",
-    rarityTier: "uncommon",
     rarityScore: 45,
     maxSupply: 5000,
     rationale:
@@ -220,7 +201,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "ducky-one-3-mini-sf",
     symbol: "KSOL-D1MINI",
     name: "KeySol Ducky One 3 Mini SF Token",
-    rarityTier: "uncommon",
     rarityScore: 44,
     maxSupply: 5000,
     rationale:
@@ -231,7 +211,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "corsair-k70-rgb-mk2",
     symbol: "KSOL-K70MK2",
     name: "KeySol Corsair K70 RGB MK.2 Token",
-    rarityTier: "uncommon",
     rarityScore: 35,
     maxSupply: 10000,
     rationale:
@@ -242,7 +221,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "wooting-80he",
     symbol: "KSOL-W80HE",
     name: "KeySol Wooting 80HE Token",
-    rarityTier: "legendary",
     rarityScore: 97,
     maxSupply: 500,
     rationale:
@@ -253,7 +231,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "razer-huntsman-v3-pro-8khz",
     symbol: "KSOL-HV3FS",
     name: "KeySol Huntsman V3 Pro 8KHz Token",
-    rarityTier: "rare",
     rarityScore: 73,
     maxSupply: 1500,
     rationale:
@@ -264,7 +241,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "keychron-q3-he-8k",
     symbol: "KSOL-Q3HE8K",
     name: "KeySol Keychron Q3 HE 8K Token",
-    rarityTier: "rare",
     rarityScore: 71,
     maxSupply: 2000,
     rationale:
@@ -275,7 +251,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "keychron-q6-he-8k",
     symbol: "KSOL-Q6HE8K",
     name: "KeySol Keychron Q6 HE 8K Token",
-    rarityTier: "rare",
     rarityScore: 69,
     maxSupply: 2000,
     rationale:
@@ -286,7 +261,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "nuphy-field75-he",
     symbol: "KSOL-F75HE",
     name: "KeySol NuPhy Field75 HE Token",
-    rarityTier: "rare",
     rarityScore: 69,
     maxSupply: 2500,
     rationale:
@@ -297,7 +271,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "steelseries-apex-pro-tkl-v2",
     symbol: "KSOL-APTKL2",
     name: "KeySol Apex Pro TKL Token",
-    rarityTier: "rare",
     rarityScore: 67,
     maxSupply: 3000,
     rationale:
@@ -308,7 +281,6 @@ export const keyboardTokens: KeyboardToken[] = [
     keyboardId: "steelseries-apex-pro-mini",
     symbol: "KSOL-APMINI",
     name: "KeySol Apex Pro Mini Token",
-    rarityTier: "uncommon",
     rarityScore: 65,
     maxSupply: 3500,
     rationale:

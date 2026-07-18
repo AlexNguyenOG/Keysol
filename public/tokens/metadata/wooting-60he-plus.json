@@ -1,0 +1,30 @@
+{
+  "name": "KeySol Wooting 60HE+ Token",
+  "symbol": "KSOL-W60HE",
+  "description": "Batch-drop hall-effect board with chronic restock scarcity and esports demand.",
+  "image": "https://keysol.vercel.app/keyboards/wooting-60he-plus.png",
+  "external_url": "https://keysol.vercel.app/tokens",
+  "attributes": [
+    {
+      "trait_type": "keyboardId",
+      "value": "wooting-60he-plus"
+    },
+    {
+      "trait_type": "catalogScore",
+      "value": 100
+    },
+    {
+      "trait_type": "maxSupply",
+      "value": 500
+    }
+  ],
+  "properties": {
+    "category": "collectible",
+    "files": [
+      {
+        "uri": "https://keysol.vercel.app/keyboards/wooting-60he-plus.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}
