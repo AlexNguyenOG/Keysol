@@ -8,6 +8,9 @@ const securityHeaderEntries = Object.entries(getSecurityHeaders(isDevelopment)).
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "www.keychron.com" },

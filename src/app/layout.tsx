@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { KeyboardAssistant } from "@/components/assistant/KeyboardAssistant";
 import { AvailabilityProvider } from "@/components/providers/AvailabilityProvider";
+import { PageFade } from "@/components/providers/PageFade";
 import "./globals.css";
 
 const inter = Inter({
@@ -31,7 +32,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-bg-primary text-text-primary">
         <AvailabilityProvider>
-          {children}
+          <PageFade>{children}</PageFade>
           <KeyboardAssistant />
         </AvailabilityProvider>
       </body>

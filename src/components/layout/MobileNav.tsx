@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NAV_LINKS } from "@/components/layout/nav-links";
+import { NAV_LINKS, SOLANA_KEYBOARD } from "@/components/layout/nav-links";
 
 function isActiveLink(href: string, pathname: string): boolean {
   if (href.startsWith("/#")) {
@@ -49,20 +50,33 @@ export function MobileNav() {
           id="mobile-nav-menu"
           className="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-white/10 bg-bg-surface p-2 shadow-xl"
         >
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className={`block rounded-lg px-3 py-2.5 text-sm transition-colors ${
-                isActiveLink(link.href, pathname)
-                  ? "bg-solana-purple/15 text-solana-purple"
-                  : "text-text-muted hover:bg-white/5 hover:text-text-primary"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isSolanaKeyboards = link.href === "/solana-keyboards";
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  isActiveLink(link.href, pathname)
+                    ? "bg-solana-purple/15 text-solana-purple"
+                    : "text-text-muted hover:bg-white/5 hover:text-text-primary"
+                }`}
+              >
+                {isSolanaKeyboards && (
+                  <Image
+                    src={SOLANA_KEYBOARD.image}
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="h-5 w-5 rounded-sm object-cover"
+                  />
+                )}
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

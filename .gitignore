@@ -57,3 +57,7 @@ logs/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local agent skills (installed via npx skills)
+.agents/
+skills-lock.json
