@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { TokenGuideExplainer } from "@/components/tokens/TokenGuideExplainer";
+import { TokenPolicy } from "@/components/tokens/TokenPolicy";
 import { TokenCatalogList } from "@/components/tokens/TokenCatalogList";
 import { GradientText } from "@/components/ui/GradientText";
 
 export const metadata: Metadata = {
   title: "Token Guide — KeySol",
   description:
-    "How KeySol keyboard tokens work: catalog rarity, live stock scarcity, effective scores, and the full token registry.",
+    "How KeySol keyboard tokens work: catalog rarity, live stock scarcity, token policy, and the full token registry.",
 };
 
 export default function TokensPage() {
@@ -31,6 +32,7 @@ export default function TokensPage() {
           </div>
 
           <TokenGuideExplainer />
+          <TokenPolicy />
           <TokenCatalogList />
         </div>
       </main>

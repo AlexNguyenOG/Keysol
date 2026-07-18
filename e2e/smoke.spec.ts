@@ -125,6 +125,12 @@ test.describe("tokens page", () => {
       page.getByRole("heading", { name: /how effective scores work/i }),
     ).toBeVisible();
     await expect(
+      page.getByRole("heading", { name: /token policy/i }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /devnet technical checklist/i }),
+    ).toBeVisible();
+    await expect(
       page.getByRole("heading", { name: /token catalog/i }),
     ).toBeVisible();
     await expect(page.getByText("KSOL-W60HE")).toBeVisible();

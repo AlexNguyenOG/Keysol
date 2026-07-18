@@ -208,7 +208,14 @@ export function TokenGuideExplainer() {
             </li>
             <li>
               Collecting will mean owning a token tied to a keyboard you care
-              about — not random rolls or speculative packs.
+              about — not random rolls or speculative packs. See the{" "}
+              <a
+                href="#token-policy-title"
+                className="text-solana-green underline-offset-2 hover:underline"
+              >
+                Token policy
+              </a>{" "}
+              for ownership rules and the mint checklist.
             </li>
           </ul>
         </div>
