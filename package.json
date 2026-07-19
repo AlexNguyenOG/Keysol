@@ -17,6 +17,7 @@
     "tokens:metadata": "tsx scripts/write-token-metadata.ts",
     "tokens:devnet:create": "TOKEN_MINT_LIMIT=2 TOKEN_MINT_PICK=lowest NEXT_PUBLIC_SOLANA_CLUSTER=devnet tsx scripts/create-devnet-mints.ts",
     "tokens:localnet:create": "NEXT_PUBLIC_SOLANA_CLUSTER=localnet NEXT_PUBLIC_SOLANA_RPC_URL=http://127.0.0.1:8899 TOKEN_MINT_LIMIT=3 TOKEN_MINT_PICK=lowest tsx scripts/create-devnet-mints.ts",
+    "tokens:localnet:reset": "rm -f src/data/token-mints.localnet.json && npm run tokens:localnet:create",
     "tokens:localnet:create:drops": "NEXT_PUBLIC_SOLANA_CLUSTER=localnet NEXT_PUBLIC_SOLANA_RPC_URL=http://127.0.0.1:8899 TOKEN_MINT_PICK=first TOKEN_MINT_INCLUDE_DROPS=true tsx scripts/create-devnet-mints.ts",
     "surfpool:start": "NO_DNA=1 surfpool start --offline --ci --no-deploy --airdrop-keypair-path .keys/mint-authority.json --airdrop-amount 10000000000",
     "showcase:fetch": "node scripts/fetch-keyboard-showcases.mjs",

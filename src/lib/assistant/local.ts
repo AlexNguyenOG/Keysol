@@ -249,13 +249,13 @@ function answerTokens(): string {
     .slice(0, 5);
 
   return [
-    "KeySol keyboard tokens are collectible tags tied to catalog boards — wallet minting is on the roadmap, not live yet.",
+    "KeySol keyboard tokens are collectible tags tied to catalog boards. Devnet wallet claims are live on /tokens when tokenization is enabled.",
     "Top catalog-score tokens in the guide:",
     ...top.map(
       (token, index) =>
         `${index + 1}. ${token.symbol} — ${token.name} (catalog score ${token.rarityScore})`,
     ),
-    "See /tokens for the full guide and /value-trends for score movement.",
+    "See /tokens to claim pilot tokens and /value-trends for score movement.",
   ].join("\n");
 }
 

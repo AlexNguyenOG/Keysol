@@ -4,9 +4,11 @@ import { Footer } from "@/components/layout/Footer";
 import { TokenGuideExplainer } from "@/components/tokens/TokenGuideExplainer";
 import { TokenPolicy } from "@/components/tokens/TokenPolicy";
 import { TokenClaimLab } from "@/components/tokens/TokenClaimLab";
+import { TokenCollectionBadges } from "@/components/tokens/TokenCollectionBadges";
 import { TokenCatalogList } from "@/components/tokens/TokenCatalogList";
 import { GradientText } from "@/components/ui/GradientText";
 import { isTokenizationEnabled } from "@/lib/tokens";
+import { getClusterLabel } from "@/lib/solana/cluster";
 
 export const metadata: Metadata = {
   title: "Token Guide — KeySol",
@@ -15,6 +17,9 @@ export const metadata: Metadata = {
 };
 
 export default function TokensPage() {
+  const tokenizationEnabled = isTokenizationEnabled();
+  const clusterLabel = getClusterLabel();
+
   return (
     <>
       <Navbar />
@@ -30,11 +35,19 @@ export default function TokensPage() {
             <p className="mx-auto mt-4 max-w-2xl text-text-muted">
               One token per keyboard — catalog score plus scarcity from
               verified stock. Utility and collectibles, not gambling.
+              {tokenizationEnabled
+                ? ` Free claims are live on ${clusterLabel}.`
+                : ""}
             </p>
           </div>
 
           <TokenGuideExplainer />
-          {isTokenizationEnabled() ? <TokenClaimLab /> : null}
+          {tokenizationEnabled ? (
+            <>
+              <TokenClaimLab />
+              <TokenCollectionBadges />
+            </>
+          ) : null}
           <TokenPolicy />
           <TokenCatalogList />
         </div>

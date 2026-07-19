@@ -331,6 +331,7 @@ export function TokenClaimLab() {
   const [busy, setBusy] = useState(false);
   const [lastSignature, setLastSignature] = useState<string | null>(null);
   const [apiClusterLabel, setApiClusterLabel] = useState<string | null>(null);
+  const [mintHealthHint, setMintHealthHint] = useState<string | null>(null);
 
   const activeAddress = localSigner?.address ?? extensionAccount?.address;
 
@@ -370,6 +371,35 @@ export function TokenClaimLab() {
       setError(err instanceof Error ? err.message : "Failed to load holdings");
     });
   }, [enabled, activeAddress, refreshHoldings]);
+
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    fetch("/api/tokens/health", { cache: "no-store" })
+      .then(async (response) => {
+        const data = (await response.json()) as {
+          ok?: boolean;
+          recreateHint?: string | null;
+          error?: string;
+        };
+        if (!response.ok || data.ok === false) {
+          setMintHealthHint(
+            data.recreateHint ??
+              data.error ??
+              "Mint accounts missing or RPC unreachable.",
+          );
+          return;
+        }
+        setMintHealthHint(null);
+      })
+      .catch(() => {
+        setMintHealthHint(
+          "Could not reach Solana RPC. For localnet: npm run surfpool:start then npm run tokens:localnet:reset",
+        );
+      });
+  }, [enabled]);
 
   const selected = useMemo(
     () => claimable.find((token) => token.keyboardId === selectedKeyboardId),
@@ -430,6 +460,13 @@ export function TokenClaimLab() {
         can’t install Phantom (Cursor preview / Safari), use the local test
         wallet below.
       </p>
+
+      {mintHealthHint && (
+        <div className="mt-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+          <p className="font-medium text-amber-200">Mint health warning</p>
+          <p className="mt-1 text-amber-100/90">{mintHealthHint}</p>
+        </div>
+      )}
 
       <div className="mt-6 space-y-4">
         <div>

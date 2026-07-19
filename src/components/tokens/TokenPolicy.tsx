@@ -30,18 +30,18 @@ const policyRules = [
 const mintSteps = [
   {
     step: "1",
-    title: "Devnet first",
-    body: "Ship wallet connect + mint on Solana devnet. Confirm holdings, catalog mint addresses, and revoke flows before any mainnet spend.",
+    title: "Devnet pilot (live)",
+    body: "Wallet connect + signed claims are live on Solana Devnet for pilot boards. Confirm holdings, catalog mint addresses, and revoke flows before any mainnet spend.",
   },
   {
     step: "2",
     title: "Publish mint addresses",
-    body: "List each on-chain mint address next to its catalog entry so collectors can verify on Solscan against keysol.vercel.app.",
+    body: "List each on-chain mint address next to its catalog entry so collectors can verify on explorers against keysol.vercel.app.",
   },
   {
     step: "3",
-    title: "Pilot, then expand",
-    body: "Mainnet starts with a small pilot (1–2 keyboard tokens). Expand to the full catalog only after the pilot is clean.",
+    title: "Expand carefully",
+    body: "Grow beyond the pilot set only after Devnet claims, holdings, and limited-edition drop mints are clean.",
   },
 ];
 
@@ -72,10 +72,9 @@ export function TokenPolicy() {
           Token policy
         </h2>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-text-muted sm:text-base">
-          These are the rules KeySol intends to follow when on-chain minting
-          goes live. The registry and scoring on this site already follow them
-          off-chain. Until mint addresses appear in the catalog, nothing here is
-          tradable on Solana.
+          These are the rules KeySol follows for on-chain minting. The registry
+          and scoring on this site already follow them off-chain. Pilot mint
+          addresses appear in the catalog when a cluster registry is published.
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">

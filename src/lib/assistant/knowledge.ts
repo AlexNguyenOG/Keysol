@@ -62,7 +62,7 @@ export function buildSiteContext(): string {
     `- Catalog: ${keyboardCount} keyboards across ${brandCount} brands (always use this list — it is current).`,
     "- /rankings — speed score leaderboard",
     "- /value-trends — token value trends",
-    "- /tokens — KeySol keyboard token guide (collectibles roadmap; wallet minting not live yet)",
+    "- /tokens — KeySol keyboard token guide (Devnet claims live when enabled)",
     "- Home page includes a Switch Technology Guide section",
   ].join("\n");
 }
@@ -77,7 +77,7 @@ export function buildTokenContext(): string {
     );
 
   return [
-    "KEYSOL TOKEN GUIDE (roadmap — not live wallet minting yet):",
+    "KEYSOL TOKEN GUIDE (Devnet pilot claims available on /tokens):",
     ...topTokens,
     "Full token list and catalog scores: /tokens",
   ].join("\n");

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getKeyboardTokensByRarity } from "@/lib/tokens";
+import { getKeyboardTokensByRarity, isTokenizationEnabled } from "@/lib/tokens";
 import { GradientText } from "@/components/ui/GradientText";
 
 const previewSymbols = getKeyboardTokensByRarity()
@@ -7,24 +7,30 @@ const previewSymbols = getKeyboardTokensByRarity()
   .map((token) => token.symbol);
 
 export function TokenComingSoon() {
+  const live = isTokenizationEnabled();
+
   return (
     <section
-      aria-label="Tokens coming soon"
+      aria-label={live ? "Keyboard token collectibles" : "Tokens coming soon"}
       className="border-t border-white/10 bg-bg-surface/40 px-4 py-16 sm:px-6 lg:px-8"
     >
       <div className="mx-auto max-w-7xl">
         <div className="gradient-border flex flex-col gap-6 rounded-2xl p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-solana-green sm:text-base">
-              Coming soon
+              {live ? "Live on Devnet" : "Collectibles"}
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
               Keyboard{" "}
               <GradientText as="span">token collectibles</GradientText>
             </h2>
             <p className="mt-4 text-base leading-relaxed text-text-muted sm:text-lg">
-              One token per catalog keyboard — catalog score from the board itself,
-              scarcity from live stock checks. Utility and collectibles, not gambling.
+              One token per catalog keyboard — catalog score from the board
+              itself, scarcity from live stock checks. Utility and collectibles,
+              not gambling.
+              {live
+                ? " Claim free pilot tokens on Devnet from the Token Guide."
+                : ""}
             </p>
           </div>
 
@@ -39,15 +45,26 @@ export function TokenComingSoon() {
                 </span>
               ))}
             </div>
-            <span className="rounded-full border border-solana-purple/40 bg-solana-purple/15 px-5 py-2 text-base font-semibold text-solana-purple sm:text-lg">
-              Tokens launching soon
-            </span>
-            <Link
-              href="/tokens"
-              className="text-sm font-medium text-solana-green transition-colors hover:text-text-primary sm:text-base"
-            >
-              Read the token guide →
-            </Link>
+            {live ? (
+              <Link
+                href="/tokens"
+                className="rounded-full border border-solana-green/40 bg-solana-green/15 px-5 py-2 text-base font-semibold text-solana-green transition hover:bg-solana-green/25 sm:text-lg"
+              >
+                Claim on Token Guide →
+              </Link>
+            ) : (
+              <>
+                <span className="rounded-full border border-solana-purple/40 bg-solana-purple/15 px-5 py-2 text-base font-semibold text-solana-purple sm:text-lg">
+                  Tokens launching soon
+                </span>
+                <Link
+                  href="/tokens"
+                  className="text-sm font-medium text-solana-green transition-colors hover:text-text-primary sm:text-base"
+                >
+                  Read the token guide →
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

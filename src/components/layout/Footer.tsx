@@ -53,7 +53,7 @@ export function Footer() {
           <p className="text-base font-medium text-text-muted sm:text-lg">
             Solana-inspired design ·{" "}
             <span className="gradient-text text-lg font-semibold sm:text-xl">
-              Keyboard token collectibles coming soon
+              Keyboard token collectibles on Devnet
             </span>
           </p>
           <p className="mt-4 text-sm text-text-muted">

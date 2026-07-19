@@ -47,9 +47,9 @@ export function TokenGuideExplainer() {
           <span className="text-text-primary">catalog score</span> (how hard the
           keyboard is to obtain in general) and an{" "}
           <span className="text-text-primary">effective score</span> that blends
-          that baseline with live retailer stock. Minting and wallet flows are
-          coming soon; this guide documents how tokens are ranked today. Track
-          live movers on the{" "}
+          that baseline with live retailer stock. Devnet wallet claims are live
+          in the Claim Lab below when tokenization is enabled. Track live movers
+          on the{" "}
           <Link
             href="/value-trends"
             className="text-solana-green underline-offset-2 hover:underline"
