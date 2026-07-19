@@ -16,21 +16,30 @@ function resolveKeypairPath(): string {
     : path.join(process.cwd(), configured);
 }
 
-/** Load the Devnet mint-authority keypair used to create mints and claim tokens. */
+function parseKeypairBytes(raw: unknown, source: string): Uint8Array {
+  if (!Array.isArray(raw) || raw.length < 64) {
+    throw new Error(`Invalid mint authority keypair from ${source}`);
+  }
+  return Uint8Array.from(raw as number[]);
+}
+
+/** Load the mint-authority keypair used to create mints and claim tokens. */
 export async function loadMintAuthoritySigner(): Promise<KeyPairSigner> {
+  const jsonEnv = process.env.TOKEN_MINT_AUTHORITY_JSON?.trim();
+  if (jsonEnv) {
+    const raw = JSON.parse(jsonEnv) as unknown;
+    return createKeyPairSignerFromBytes(parseKeypairBytes(raw, "TOKEN_MINT_AUTHORITY_JSON"));
+  }
+
   const keypairPath = resolveKeypairPath();
   if (!fs.existsSync(keypairPath)) {
     throw new Error(
-      `Mint authority keypair not found at ${keypairPath}. Run: npm run tokens:devnet:create`,
+      `Mint authority keypair not found. Set TOKEN_MINT_AUTHORITY_JSON or place a keypair at ${keypairPath}.`,
     );
   }
 
-  const raw = JSON.parse(fs.readFileSync(keypairPath, "utf8")) as number[];
-  if (!Array.isArray(raw) || raw.length < 64) {
-    throw new Error(`Invalid keypair file: ${keypairPath}`);
-  }
-
-  return createKeyPairSignerFromBytes(Uint8Array.from(raw));
+  const raw = JSON.parse(fs.readFileSync(keypairPath, "utf8")) as unknown;
+  return createKeyPairSignerFromBytes(parseKeypairBytes(raw, keypairPath));
 }
 
 export function getMintAuthorityKeypairPath(): string {
