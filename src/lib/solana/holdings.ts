@@ -6,7 +6,7 @@ import {
   type Address,
 } from "@solana/kit";
 import { getSolanaRpcUrl } from "@/lib/solana/cluster";
-import { getClaimableTokens } from "@/lib/solana/mints";
+import { getClaimableTokensAsync } from "@/lib/solana/mints";
 
 export interface OnChainHolding {
   keyboardId: string;
@@ -18,7 +18,9 @@ export interface OnChainHolding {
 export async function fetchOnChainHoldings(
   walletAddress: string,
 ): Promise<OnChainHolding[]> {
-  const claimable = getClaimableTokens().filter((token) => token.mintAddress);
+  const claimable = (await getClaimableTokensAsync()).filter(
+    (token) => token.mintAddress,
+  );
   if (claimable.length === 0) {
     return [];
   }

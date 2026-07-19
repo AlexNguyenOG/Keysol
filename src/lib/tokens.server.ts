@@ -2,6 +2,7 @@ import "server-only";
 
 import { getAllKeyboards, getAllKeyboardTokens } from "@/lib/catalog.server";
 import type { AvailabilityMap } from "@/lib/availability/types";
+import { withMintAddresses } from "@/lib/solana/mints";
 import {
   computeEffectiveTokenScore,
   stockScoreFromStatus,
@@ -9,12 +10,22 @@ import {
 import { computeValueTrend } from "@/lib/tokens/trend";
 import type { Keyboard, KeyboardToken, TokenSnapshot } from "@/types";
 
+/** Resolve catalog or published drop token by keyboard id. */
+export async function resolveKeyboardToken(
+  keyboardId: string,
+): Promise<KeyboardToken | undefined> {
+  const tokens = await getAllKeyboardTokens();
+  return tokens.find((token) => token.keyboardId === keyboardId);
+}
+
 export async function buildMergedTokenSnapshots(
   availability: AvailabilityMap,
   snapshotAt = new Date().toISOString(),
   previousScores: Record<string, number> = {},
 ): Promise<TokenSnapshot[]> {
-  return (await getAllKeyboardTokens())
+  const tokens = withMintAddresses(await getAllKeyboardTokens());
+
+  return tokens
     .map((token) => {
       const record = availability[token.keyboardId];
       const stockStatus = record?.status ?? "unknown";
@@ -56,8 +67,9 @@ export async function getMergedKeyboardsWithTokens(): Promise<
   KeyboardWithToken[]
 > {
   const keyboards = await getAllKeyboards();
+  const tokens = withMintAddresses(await getAllKeyboardTokens());
 
-  return (await getAllKeyboardTokens())
+  return tokens
     .map((token) => {
       const keyboard = keyboards.find((entry) => entry.id === token.keyboardId);
       if (!keyboard) {

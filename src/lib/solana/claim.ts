@@ -29,7 +29,7 @@ import {
   recordTokenClaim,
 } from "@/lib/solana/claims-store";
 import { revokeMintAuthorityWithSigner } from "@/lib/solana/revoke-mint";
-import { getKeyboardToken } from "@/lib/tokens";
+import { resolveKeyboardToken } from "@/lib/tokens.server";
 
 export interface ClaimTokenResult {
   ok: true;
@@ -67,7 +67,7 @@ export async function claimDevnetToken(input: {
     return { ok: false, error: "Invalid wallet address", status: 400 };
   }
 
-  const token = getKeyboardToken(keyboardId);
+  const token = await resolveKeyboardToken(keyboardId);
   if (!token) {
     return { ok: false, error: "Unknown keyboard token", status: 404 };
   }
@@ -135,6 +135,20 @@ export async function claimDevnetToken(input: {
     rpcSubscriptions,
   });
 
+  const mintInfo = await rpc
+    .getAccountInfo(address(mintRecord!.mintAddress) as Address, {
+      encoding: "base64",
+    })
+    .send();
+  if (!mintInfo.value) {
+    return {
+      ok: false,
+      error:
+        "Mint account missing on this Surfpool session (localnet resets wipe state). Run: npm run tokens:localnet:create",
+      status: 409,
+    };
+  }
+
   const mint = address(mintRecord!.mintAddress) as Address;
   const owner = address(walletAddress) as Address;
   const [ata] = await findAssociatedTokenPda({
@@ -170,10 +184,19 @@ export async function claimDevnetToken(input: {
   const signed = await signTransactionMessageWithSigners(message);
   const signature = getSignatureFromTransaction(signed);
 
-  await sendAndConfirmTransaction(
-    signed as Parameters<typeof sendAndConfirmTransaction>[0],
-    { commitment: "confirmed" },
-  );
+  try {
+    await sendAndConfirmTransaction(
+      signed as Parameters<typeof sendAndConfirmTransaction>[0],
+      { commitment: "confirmed" },
+    );
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      detail.includes("simulation failed")
+        ? `${detail}. If Surfpool was restarted, recreate mints with npm run tokens:localnet:create`
+        : detail,
+    );
+  }
 
   await recordTokenClaim({
     walletAddress,

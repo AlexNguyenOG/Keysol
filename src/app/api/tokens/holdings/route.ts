@@ -6,7 +6,11 @@ import {
   isDevnetClaimEnabled,
 } from "@/lib/solana/cluster";
 import { fetchOnChainHoldings } from "@/lib/solana/holdings";
-import { getClaimableTokens, getMintForKeyboard } from "@/lib/solana/mints";
+import {
+  getClaimableTokens,
+  getClaimableTokensAsync,
+  getMintForKeyboard,
+} from "@/lib/solana/mints";
 import { keyboardTokens } from "@/data/keyboard-tokens";
 import {
   enforceRateLimit,
@@ -36,12 +40,13 @@ export async function GET(request: Request) {
   const cluster = getSolanaCluster();
   const clusterLabel = getClusterLabel();
 
+  const minted = await getClaimableTokensAsync();
   const claimableSource =
-    getClaimableTokens().length > 0
-      ? getClaimableTokens()
+    minted.length > 0
+      ? minted
       : simulation
         ? keyboardTokens
-        : [];
+        : getClaimableTokens();
 
   if (!walletAddress) {
     return withRateLimitHeaders(

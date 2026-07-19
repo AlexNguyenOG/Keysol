@@ -9,6 +9,7 @@ import {
   type UiWalletAccount,
 } from "@wallet-standard/react";
 import { useSignMessage } from "@solana/react";
+import { getPublicKeyAsync, signAsync, utils } from "@noble/ed25519";
 import bs58 from "bs58";
 import { isTokenizationEnabled } from "@/lib/tokens";
 import {
@@ -16,6 +17,7 @@ import {
   getClusterShortLabel,
   getExplorerAddressUrl,
   getExplorerTxUrl,
+  getSolanaCluster,
 } from "@/lib/solana/cluster";
 
 interface ClaimableToken {
@@ -27,8 +29,44 @@ interface ClaimableToken {
   onChainAmount?: number;
 }
 
+interface LabSigner {
+  address: string;
+  label: string;
+  signMessage: (message: Uint8Array) => Promise<Uint8Array>;
+}
+
+const LOCAL_TEST_WALLET_KEY = "keysol.local-test-wallet.secret";
+
 function isSolanaWallet(wallet: UiWallet): boolean {
   return wallet.chains.some((chain) => chain.startsWith("solana:"));
+}
+
+function allowLocalTestWallet(): boolean {
+  return getSolanaCluster() !== "mainnet-beta";
+}
+
+async function createOrLoadLocalTestWallet(): Promise<LabSigner> {
+  let secret: Uint8Array;
+  const existing =
+    typeof window !== "undefined"
+      ? window.sessionStorage.getItem(LOCAL_TEST_WALLET_KEY)
+      : null;
+
+  if (existing) {
+    secret = bs58.decode(existing);
+  } else {
+    secret = utils.randomSecretKey();
+    window.sessionStorage.setItem(LOCAL_TEST_WALLET_KEY, bs58.encode(secret));
+  }
+
+  const publicKey = await getPublicKeyAsync(secret);
+  const address = bs58.encode(publicKey);
+
+  return {
+    address,
+    label: "Local test wallet",
+    signMessage: async (message: Uint8Array) => signAsync(message, secret),
+  };
 }
 
 function WalletButton({
@@ -58,7 +96,7 @@ function WalletButton({
   );
 }
 
-function DisconnectButton({
+function DisconnectExtensionButton({
   wallet,
   onDisconnected,
 }: {
@@ -81,18 +119,9 @@ function DisconnectButton({
   );
 }
 
-function ClaimControls({
+function ExtensionClaimControls({
   account,
-  selected,
-  selectedKeyboardId,
-  claimable,
-  busy,
-  onBusy,
-  onStatus,
-  onError,
-  onSignature,
-  onClaimed,
-  onSelectKeyboard,
+  ...rest
 }: {
   account: UiWalletAccount;
   selected: ClaimableToken | undefined;
@@ -107,6 +136,43 @@ function ClaimControls({
   onSelectKeyboard: (keyboardId: string) => void;
 }) {
   const signMessage = useSignMessage(account);
+  const signer: LabSigner = {
+    address: account.address,
+    label: "Extension wallet",
+    signMessage: async (message) => {
+      const { signature } = await signMessage({ message });
+      return signature;
+    },
+  };
+
+  return <ClaimControls signer={signer} {...rest} />;
+}
+
+function ClaimControls({
+  signer,
+  selected,
+  selectedKeyboardId,
+  claimable,
+  busy,
+  onBusy,
+  onStatus,
+  onError,
+  onSignature,
+  onClaimed,
+  onSelectKeyboard,
+}: {
+  signer: LabSigner;
+  selected: ClaimableToken | undefined;
+  selectedKeyboardId: string;
+  claimable: ClaimableToken[];
+  busy: boolean;
+  onBusy: (value: boolean) => void;
+  onStatus: (value: string | null) => void;
+  onError: (value: string | null) => void;
+  onSignature: (value: string | null) => void;
+  onClaimed: () => Promise<void>;
+  onSelectKeyboard: (keyboardId: string) => void;
+}) {
   const clusterLabel = getClusterLabel();
   const clusterShort = getClusterShortLabel();
 
@@ -126,7 +192,7 @@ function ClaimControls({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          walletAddress: account.address,
+          walletAddress: signer.address,
           keyboardId: selectedKeyboardId,
         }),
       });
@@ -143,16 +209,16 @@ function ClaimControls({
         throw new Error(challengeData.error ?? "Failed to issue claim challenge");
       }
 
-      onStatus("Sign the ownership message in your wallet…");
+      onStatus("Signing ownership message…");
       const messageBytes = new TextEncoder().encode(challengeData.challenge);
-      const { signature } = await signMessage({ message: messageBytes });
+      const signature = await signer.signMessage(messageBytes);
 
       onStatus(`Submitting signed claim on ${clusterShort}…`);
       const response = await fetch("/api/tokens/claim", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          walletAddress: account.address,
+          walletAddress: signer.address,
           keyboardId: selectedKeyboardId,
           challengeId: challengeData.challengeId,
           message: challengeData.challenge,
@@ -231,9 +297,7 @@ function ClaimControls({
 
       <button
         type="button"
-        disabled={
-          busy || !selectedKeyboardId || Boolean(selected?.claimed)
-        }
+        disabled={busy || !selectedKeyboardId || Boolean(selected?.claimed)}
         onClick={() => {
           void claim();
         }}
@@ -254,8 +318,12 @@ export function TokenClaimLab() {
   const wallets = useWallets().filter(isSolanaWallet);
   const clusterLabel = getClusterLabel();
   const clusterShort = getClusterShortLabel();
+  const localTestAllowed = allowLocalTestWallet();
   const [wallet, setWallet] = useState<UiWallet | null>(null);
-  const [account, setAccount] = useState<UiWalletAccount | null>(null);
+  const [extensionAccount, setExtensionAccount] =
+    useState<UiWalletAccount | null>(null);
+  const [localSigner, setLocalSigner] = useState<LabSigner | null>(null);
+  const [localBusy, setLocalBusy] = useState(false);
   const [claimable, setClaimable] = useState<ClaimableToken[]>([]);
   const [selectedKeyboardId, setSelectedKeyboardId] = useState("");
   const [status, setStatus] = useState<string | null>(null);
@@ -263,6 +331,8 @@ export function TokenClaimLab() {
   const [busy, setBusy] = useState(false);
   const [lastSignature, setLastSignature] = useState<string | null>(null);
   const [apiClusterLabel, setApiClusterLabel] = useState<string | null>(null);
+
+  const activeAddress = localSigner?.address ?? extensionAccount?.address;
 
   const refreshHoldings = useCallback(async (walletAddress?: string) => {
     const query = walletAddress
@@ -296,10 +366,10 @@ export function TokenClaimLab() {
       return;
     }
 
-    refreshHoldings(account?.address).catch((err: unknown) => {
+    refreshHoldings(activeAddress).catch((err: unknown) => {
       setError(err instanceof Error ? err.message : "Failed to load holdings");
     });
-  }, [enabled, account?.address, refreshHoldings]);
+  }, [enabled, activeAddress, refreshHoldings]);
 
   const selected = useMemo(
     () => claimable.find((token) => token.keyboardId === selectedKeyboardId),
@@ -311,6 +381,33 @@ export function TokenClaimLab() {
   }
 
   const displayCluster = apiClusterLabel ?? clusterLabel;
+  const connected = Boolean(localSigner || extensionAccount);
+
+  async function startLocalTestWallet() {
+    setLocalBusy(true);
+    setError(null);
+    try {
+      const signer = await createOrLoadLocalTestWallet();
+      setWallet(null);
+      setExtensionAccount(null);
+      setLocalSigner(signer);
+      setStatus(`Using ${signer.label} — no Phantom install needed.`);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Could not create local test wallet",
+      );
+    } finally {
+      setLocalBusy(false);
+    }
+  }
+
+  function disconnectAll() {
+    setWallet(null);
+    setExtensionAccount(null);
+    setLocalSigner(null);
+    setStatus(null);
+    setLastSignature(null);
+  }
 
   return (
     <section
@@ -327,55 +424,89 @@ export function TokenClaimLab() {
         Claim a keyboard collectible
       </h2>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-text-muted sm:text-base">
-        Connect a Solana wallet configured for{" "}
+        Connect a wallet for{" "}
         <span className="text-text-primary">{displayCluster}</span>, then sign a
-        one-time ownership message to claim one free token per keyboard. Claims
-        are anti-bot protected: the server verifies your wallet signature before
-        minting. With real mints this writes an SPL token to your wallet; with
-        simulation mode it only records the claim locally.
+        one-time ownership message to claim one free token per keyboard. If you
+        can’t install Phantom (Cursor preview / Safari), use the local test
+        wallet below.
       </p>
 
       <div className="mt-6 space-y-4">
         <div>
           <p className="mb-2 text-sm text-text-muted">Wallet</p>
-          {account && wallet ? (
+          {connected ? (
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-mono text-sm text-solana-green">
-                {account.address.slice(0, 6)}…{account.address.slice(-6)}
+                {(activeAddress ?? "").slice(0, 6)}…
+                {(activeAddress ?? "").slice(-6)}
               </span>
-              <DisconnectButton
-                wallet={wallet}
-                onDisconnected={() => {
-                  setWallet(null);
-                  setAccount(null);
-                }}
-              />
-            </div>
-          ) : wallets.length === 0 ? (
-            <p className="text-sm text-text-muted">
-              No Solana wallet detected. Install Phantom or Solflare, then
-              refresh.
-            </p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {wallets.map((entry) => (
-                <WalletButton
-                  key={entry.name}
-                  wallet={entry}
-                  onConnected={(nextWallet, nextAccount) => {
-                    setWallet(nextWallet);
-                    setAccount(nextAccount);
-                    setError(null);
-                  }}
+              <span className="text-xs text-text-muted">
+                {localSigner?.label ?? wallet?.name ?? "Wallet"}
+              </span>
+              {wallet ? (
+                <DisconnectExtensionButton
+                  wallet={wallet}
+                  onDisconnected={disconnectAll}
                 />
-              ))}
+              ) : (
+                <button
+                  type="button"
+                  onClick={disconnectAll}
+                  className="rounded-lg border border-white/15 px-3 py-1.5 text-xs text-text-muted hover:text-text-primary"
+                >
+                  Disconnect
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {localTestAllowed && (
+                <button
+                  type="button"
+                  disabled={localBusy}
+                  onClick={() => {
+                    void startLocalTestWallet();
+                  }}
+                  className="rounded-lg bg-gradient-to-r from-solana-purple to-solana-green px-4 py-2.5 text-sm font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:opacity-60"
+                >
+                  {localBusy ? "Creating…" : "Use local test wallet (no install)"}
+                </button>
+              )}
+
+              {wallets.length > 0 ? (
+                <div className="space-y-2">
+                  <p className="text-sm text-text-muted">
+                    Or connect a browser extension:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {wallets.map((entry) => (
+                      <WalletButton
+                        key={entry.name}
+                        wallet={entry}
+                        onConnected={(nextWallet, nextAccount) => {
+                          setLocalSigner(null);
+                          setWallet(nextWallet);
+                          setExtensionAccount(nextAccount);
+                          setError(null);
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-text-muted">
+                  No extension detected here. That’s normal inside Cursor’s
+                  preview — the local test wallet is enough for Surfpool claims.
+                  For Phantom later, open this page in Chrome.
+                </p>
+              )}
             </div>
           )}
         </div>
 
-        {account ? (
+        {localSigner ? (
           <ClaimControls
-            account={account}
+            signer={localSigner}
             selected={selected}
             selectedKeyboardId={selectedKeyboardId}
             claimable={claimable}
@@ -384,42 +515,26 @@ export function TokenClaimLab() {
             onStatus={setStatus}
             onError={setError}
             onSignature={setLastSignature}
-            onClaimed={() => refreshHoldings(account.address)}
+            onClaimed={() => refreshHoldings(localSigner.address)}
             onSelectKeyboard={setSelectedKeyboardId}
           />
-        ) : (
-          <>
-            <label className="block text-sm">
-              <span className="text-text-muted">Token to claim</span>
-              <select
-                value={selectedKeyboardId}
-                onChange={(event) => setSelectedKeyboardId(event.target.value)}
-                disabled
-                className="mt-1 w-full max-w-md rounded-lg border border-white/10 bg-bg-primary px-3 py-2 text-text-primary disabled:opacity-60"
-              >
-                {claimable.length === 0 ? (
-                  <option value="">
-                    No {clusterShort} mints yet — run create script
-                  </option>
-                ) : (
-                  claimable.map((token) => (
-                    <option key={token.keyboardId} value={token.keyboardId}>
-                      {token.symbol}
-                      {token.mintAddress ? "" : " (mint missing)"}
-                    </option>
-                  ))
-                )}
-              </select>
-            </label>
-            <button
-              type="button"
-              disabled
-              className="rounded-lg bg-gradient-to-r from-solana-purple to-solana-green px-4 py-2 text-sm font-semibold text-bg-primary opacity-50"
-            >
-              Connect a wallet to claim
-            </button>
-          </>
-        )}
+        ) : null}
+
+        {extensionAccount ? (
+          <ExtensionClaimControls
+            account={extensionAccount}
+            selected={selected}
+            selectedKeyboardId={selectedKeyboardId}
+            claimable={claimable}
+            busy={busy}
+            onBusy={setBusy}
+            onStatus={setStatus}
+            onError={setError}
+            onSignature={setLastSignature}
+            onClaimed={() => refreshHoldings(extensionAccount.address)}
+            onSelectKeyboard={setSelectedKeyboardId}
+          />
+        ) : null}
 
         {status && <p className="text-sm text-solana-green">{status}</p>}
         {error && <p className="text-sm text-red-400">{error}</p>}

@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     return jsonResponse({ error: "Invalid wallet address" }, { status: 400 });
   }
 
-  const challenge = issueKeyboardClaimChallenge({
+  const challenge = await issueKeyboardClaimChallenge({
     walletAddress: body.walletAddress.trim(),
     keyboardId: body.keyboardId.trim(),
   });

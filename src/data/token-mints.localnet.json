@@ -1,31 +1,34 @@
 {
   "cluster": "localnet",
-  "updatedAt": "2026-07-18T15:28:19.185Z",
+  "updatedAt": "2026-07-18T20:48:09.672Z",
   "mintAuthority": "327sCnm49wg1dq7jLZHfRwmzw3rEPAW5fC4X8CzUDeEm",
   "mints": [
     {
-      "keyboardId": "wooting-60he-plus",
-      "tokenId": "keysol-wooting-60he",
-      "symbol": "KSOL-W60HE",
-      "mintAddress": "E7KbDbW8rdYAHCik32aTZiqLCMXcwKkkNeovxGaD9bW9",
+      "keyboardId": "corsair-k70-rgb-mk2",
+      "tokenId": "keysol-corsair-k70-rgb-mk2",
+      "symbol": "KSOL-K70MK2",
+      "mintAddress": "3WhZCUHeDfK4c6PNitn6stsFZwD8ccSM8vSUSk4Teqo7",
       "decimals": 0,
-      "createdAt": "2026-07-18T15:28:18.384Z"
+      "createdAt": "2026-07-18T20:48:08.880Z",
+      "metadataUri": "https://keysol.vercel.app/tokens/metadata/corsair-k70-rgb-mk2.json"
     },
     {
-      "keyboardId": "wooting-two-he",
-      "tokenId": "keysol-wooting-two-he",
-      "symbol": "KSOL-W2HE",
-      "mintAddress": "92bm8tM5MduaDrNyGD6mKu8p2So8ZxrpbHpwPD9hKQc3",
+      "keyboardId": "ducky-one-3-mini-sf",
+      "tokenId": "keysol-ducky-one-3-mini",
+      "symbol": "KSOL-D1MINI",
+      "mintAddress": "3QPMzkLZCGuFJetv2JyiBqmzj8PpfkSYww5DsXwqdkwz",
       "decimals": 0,
-      "createdAt": "2026-07-18T15:28:18.812Z"
+      "createdAt": "2026-07-18T20:48:09.249Z",
+      "metadataUri": "https://keysol.vercel.app/tokens/metadata/ducky-one-3-mini-sf.json"
     },
     {
-      "keyboardId": "steelseries-apex-pro-gen3-tkl",
-      "tokenId": "keysol-apex-pro-gen3-tkl",
-      "symbol": "KSOL-AP3TKL",
-      "mintAddress": "9J1ePzauWMxsqAUDrU4nW9bGbfHYVSnuzMuxVJB8DXzX",
+      "keyboardId": "ducky-one-3-rgb-full",
+      "tokenId": "keysol-ducky-one-3-full",
+      "symbol": "KSOL-D1FULL",
+      "mintAddress": "6LoJMKKDMZNXSB7pSoLCBiFW3EJmNBwkLNP7DgSLNrY4",
       "decimals": 0,
-      "createdAt": "2026-07-18T15:28:19.185Z"
+      "createdAt": "2026-07-18T20:48:09.672Z",
+      "metadataUri": "https://keysol.vercel.app/tokens/metadata/ducky-one-3-rgb-full.json"
     }
   ]
 }

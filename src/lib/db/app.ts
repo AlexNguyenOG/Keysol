@@ -56,6 +56,17 @@ async function initializeSchema(db: Client): Promise<void> {
       featured_at INTEGER NOT NULL,
       approved_by TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS token_claim_challenges (
+      challenge_id TEXT PRIMARY KEY,
+      challenge TEXT NOT NULL,
+      wallet_address TEXT NOT NULL,
+      keyboard_id TEXT NOT NULL,
+      expires_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_token_claim_challenges_expires
+      ON token_claim_challenges(expires_at);
   `);
 }
 

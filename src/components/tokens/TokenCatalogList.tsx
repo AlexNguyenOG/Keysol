@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { keyboards } from "@/data/keyboards";
 import { getKeyboardTokensByRarity } from "@/lib/tokens";
 import { computeEffectiveTokenScore } from "@/lib/tokens/scoring";
+import { getExplorerAddressUrl, getClusterShortLabel } from "@/lib/solana/cluster";
 import { AVAILABILITY_LABELS, AVAILABILITY_STYLES } from "@/lib/availability/labels";
 import type { TokenSnapshot } from "@/types";
 
@@ -15,8 +16,18 @@ const sortOptions: { value: TokenSort; label: string }[] = [
   { value: "symbol", label: "Symbol (A–Z)" },
 ];
 
-function keyboardName(id: string): string {
-  return keyboards.find((keyboard) => keyboard.id === id)?.name ?? id;
+function keyboardName(snapshot: TokenSnapshot): string {
+  const catalogName = keyboards.find(
+    (keyboard) => keyboard.id === snapshot.keyboardId,
+  )?.name;
+  if (catalogName) {
+    return catalogName;
+  }
+
+  return snapshot.token.name
+    .replace(/^KeySol\s+/i, "")
+    .replace(/\s+(Drop\s+)?Token$/i, "")
+    .trim() || snapshot.keyboardId;
 }
 
 function buildStaticSnapshots(): TokenSnapshot[] {
@@ -193,13 +204,32 @@ export function TokenCatalogList() {
                 <div className="min-w-0 flex-1">
                   <p className="font-mono text-sm font-semibold text-solana-purple sm:text-base">
                     {snapshot.token.symbol}
+                    {snapshot.token.mintAddress ? (
+                      <span className="ml-2 rounded-full border border-solana-green/30 bg-solana-green/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-solana-green">
+                        {getClusterShortLabel()} mint
+                      </span>
+                    ) : null}
                   </p>
                   <h3 className="mt-1 text-lg font-semibold text-text-primary">
-                    {keyboardName(snapshot.keyboardId)}
+                    {keyboardName(snapshot)}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-text-muted">
                     {snapshot.token.rationale}
                   </p>
+                  {snapshot.token.mintAddress ? (
+                    <p className="mt-2 text-xs text-text-muted">
+                      Mint:{" "}
+                      <a
+                        href={getExplorerAddressUrl(snapshot.token.mintAddress)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-solana-green underline-offset-2 hover:underline"
+                      >
+                        {snapshot.token.mintAddress.slice(0, 8)}…
+                        {snapshot.token.mintAddress.slice(-8)}
+                      </a>
+                    </p>
+                  ) : null}
                 </div>
               </div>
 

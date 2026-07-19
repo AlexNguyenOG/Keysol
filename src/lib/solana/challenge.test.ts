@@ -1,16 +1,31 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import { signAsync, utils, getPublicKeyAsync } from "@noble/ed25519";
 import bs58 from "bs58";
+import path from "node:path";
+import os from "node:os";
 import {
   buildClaimMessage,
   consumeAndVerifyClaimSignature,
   issueKeyboardClaimChallenge,
   resetChallengesForTests,
 } from "@/lib/solana/challenge";
+import {
+  closeAppDbForTests,
+  resetAppDbForTests,
+} from "@/lib/db/app";
 
 describe("claim challenge signatures", () => {
-  beforeEach(() => {
-    resetChallengesForTests();
+  beforeEach(async () => {
+    const dbPath = path.join(
+      os.tmpdir(),
+      `keysol-challenge-${process.pid}-${Date.now()}.db`,
+    );
+    await resetAppDbForTests(dbPath);
+    await resetChallengesForTests();
+  });
+
+  afterEach(() => {
+    closeAppDbForTests();
   });
 
   it("builds a stable claim message", () => {
@@ -32,7 +47,10 @@ describe("claim challenge signatures", () => {
     const walletAddress = bs58.encode(publicKey);
     const keyboardId = "wooting-60he-plus";
 
-    const issued = issueKeyboardClaimChallenge({ walletAddress, keyboardId });
+    const issued = await issueKeyboardClaimChallenge({
+      walletAddress,
+      keyboardId,
+    });
     const signature = await signAsync(
       new TextEncoder().encode(issued.challenge),
       secret,
@@ -61,10 +79,9 @@ describe("claim challenge signatures", () => {
     const secretA = utils.randomSecretKey();
     const secretB = utils.randomSecretKey();
     const walletA = bs58.encode(await getPublicKeyAsync(secretA));
-    const walletB = bs58.encode(await getPublicKeyAsync(secretB));
     const keyboardId = "wooting-two-he";
 
-    const issued = issueKeyboardClaimChallenge({
+    const issued = await issueKeyboardClaimChallenge({
       walletAddress: walletA,
       keyboardId,
     });
@@ -89,7 +106,10 @@ describe("claim challenge signatures", () => {
     const walletAddress = bs58.encode(await getPublicKeyAsync(secret));
     const keyboardId = "steelseries-apex-pro-gen3-tkl";
 
-    const issued = issueKeyboardClaimChallenge({ walletAddress, keyboardId });
+    const issued = await issueKeyboardClaimChallenge({
+      walletAddress,
+      keyboardId,
+    });
     const tampered = `${issued.challenge}\nextra`;
     const signature = await signAsync(
       new TextEncoder().encode(tampered),

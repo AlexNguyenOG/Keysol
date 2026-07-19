@@ -3,7 +3,10 @@
  * Usage:
  *   npm run tokens:devnet:create
  *   npm run tokens:localnet:create
- * Optional: TOKEN_MINT_LIMIT=5
+ * Optional:
+ *   TOKEN_MINT_LIMIT=3
+ *   TOKEN_MINT_PICK=lowest|highest|first  (default: first)
+ *   TOKEN_MINT_INCLUDE_DROPS=true|false   (default: true — also mints published LE drops)
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -30,6 +33,7 @@ import {
   TOKEN_PROGRAM_ADDRESS,
 } from "@solana-program/token";
 import { keyboardTokens } from "../src/data/keyboard-tokens";
+import type { KeyboardToken } from "../src/types";
 import type { TokenMintRegistry } from "../src/lib/solana/mint-registry";
 import type { SolanaCluster } from "../src/lib/solana/cluster";
 import { attachFungibleMetadata } from "./attach-token-metadata";
@@ -57,9 +61,47 @@ const REGISTRY_PATH = path.join(
     : "src/data/token-mints.devnet.json",
 );
 const LIMIT = Number(process.env.TOKEN_MINT_LIMIT ?? "0");
+const PICK = (process.env.TOKEN_MINT_PICK?.trim().toLowerCase() ||
+  "first") as "first" | "lowest" | "highest";
+const INCLUDE_DROPS = process.env.TOKEN_MINT_INCLUDE_DROPS !== "false";
 /** Skip on-chain Metaplex attach when program is unavailable (e.g. Surfpool offline). */
 const ATTACH_ONCHAIN_METADATA =
   process.env.ATTACH_TOKEN_METADATA !== "false" && CLUSTER !== "localnet";
+
+async function loadPublishedDropTokens(): Promise<KeyboardToken[]> {
+  if (!INCLUDE_DROPS) {
+    return [];
+  }
+
+  try {
+    const { listPublishedDrops } = await import("../src/lib/drops/store");
+    const drops = await listPublishedDrops();
+    return drops.map((drop) => drop.token);
+  } catch (error) {
+    console.warn(
+      "Could not load published drop tokens:",
+      error instanceof Error ? error.message : error,
+    );
+    return [];
+  }
+}
+
+function selectMintTargets(source: KeyboardToken[]) {
+  const sorted =
+    PICK === "lowest"
+      ? [...source].sort(
+          (a, b) =>
+            a.rarityScore - b.rarityScore || a.symbol.localeCompare(b.symbol),
+        )
+      : PICK === "highest"
+        ? [...source].sort(
+            (a, b) =>
+              b.rarityScore - a.rarityScore || a.symbol.localeCompare(b.symbol),
+          )
+        : [...source];
+
+  return LIMIT > 0 ? sorted.slice(0, LIMIT) : sorted;
+}
 
 async function loadOrCreateAuthority() {
   fs.mkdirSync(KEYS_DIR, { recursive: true });
@@ -128,7 +170,22 @@ async function main() {
     (existing?.mints ?? []).map((mint) => [mint.keyboardId, mint]),
   );
 
-  const targets = LIMIT > 0 ? keyboardTokens.slice(0, LIMIT) : keyboardTokens;
+  const dropTokens = await loadPublishedDropTokens();
+  const byTokenId = new Map<string, KeyboardToken>();
+  for (const token of [...keyboardTokens, ...dropTokens]) {
+    byTokenId.set(token.id, token);
+  }
+  const source = [...byTokenId.values()];
+  if (dropTokens.length > 0) {
+    console.log(`Including ${dropTokens.length} published limited-edition drop token(s)`);
+  }
+
+  const targets = selectMintTargets(source);
+  console.log(
+    `Mint pick=${PICK}${LIMIT > 0 ? ` limit=${LIMIT}` : ""} → ${targets
+      .map((token) => `${token.symbol}(${token.rarityScore})`)
+      .join(", ")}`,
+  );
   const space = getMintSize();
   const rentLamports = await rpc
     .getMinimumBalanceForRentExemption(BigInt(space))
