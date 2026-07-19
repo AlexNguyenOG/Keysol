@@ -1,0 +1,25 @@
+{
+  "cluster": "devnet",
+  "updatedAt": "2026-07-19T14:18:15.612Z",
+  "mintAuthority": "327sCnm49wg1dq7jLZHfRwmzw3rEPAW5fC4X8CzUDeEm",
+  "mints": [
+    {
+      "keyboardId": "corsair-k70-rgb-mk2",
+      "tokenId": "keysol-corsair-k70-rgb-mk2",
+      "symbol": "KSOL-K70MK2",
+      "mintAddress": "FQPrZGXvGz9zgqxpaFVn4xtseG2ASpKS8BjL1qARTWdf",
+      "decimals": 0,
+      "createdAt": "2026-07-19T14:18:14.681Z",
+      "metadataUri": "https://keysol.vercel.app/tokens/metadata/corsair-k70-rgb-mk2.json"
+    },
+    {
+      "keyboardId": "ducky-one-3-mini-sf",
+      "tokenId": "keysol-ducky-one-3-mini",
+      "symbol": "KSOL-D1MINI",
+      "mintAddress": "Fi2v9D6FCkv9hvgqeVtAAZaVm49CNNmoo9Sip9565nNn",
+      "decimals": 0,
+      "createdAt": "2026-07-19T14:18:15.582Z",
+      "metadataUri": "https://keysol.vercel.app/tokens/metadata/ducky-one-3-mini-sf.json"
+    }
+  ]
+}
