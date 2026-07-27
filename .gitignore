@@ -28,6 +28,8 @@
 .DS_Store
 *.pem
 .cache/
+bun.lock
+bun.lockb
 data/users.json
 data/auth.db
 data/auth.db-shm

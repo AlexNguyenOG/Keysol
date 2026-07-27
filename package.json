@@ -13,6 +13,7 @@
     "availability:cron": "node scripts/availability-cron.mjs",
     "availability:refresh": "tsx scripts/refresh-availability.ts",
     "availability:snapshot": "node scripts/update-availability-snapshot.mjs",
+    "drops:seed": "bun run scripts/seed-featured-drops.ts",
     "tokens:baseline": "tsx scripts/update-token-baseline.ts",
     "tokens:metadata": "tsx scripts/write-token-metadata.ts",
     "tokens:devnet:create": "TOKEN_MINT_LIMIT=2 TOKEN_MINT_PICK=lowest NEXT_PUBLIC_SOLANA_CLUSTER=devnet tsx scripts/create-devnet-mints.ts",
