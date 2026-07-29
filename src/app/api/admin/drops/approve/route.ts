@@ -57,5 +57,8 @@ export async function POST(request: Request) {
     // Approval succeeded; stock refresh can retry via cron.
   }
 
-  return jsonResponse({ drop: result.drop });
+  return jsonResponse({
+    drop: result.drop,
+    replacedKeyboardIds: result.replacedKeyboardIds,
+  });
 }
