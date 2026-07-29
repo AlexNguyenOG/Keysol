@@ -2,6 +2,9 @@
  * Seeds local SQLite with the featured limited drops currently published
  * on production (keysol.vercel.app), so localhost matches the live catalog.
  *
+ * By default, replaces existing featured drops that are out_of_stock or
+ * unknown (keeps in_stock / limited). Pass --keep-unavailable to skip that.
+ *
  * Usage: bun run scripts/seed-featured-drops.ts
  */
 import { mkdirSync } from "node:fs";
@@ -15,7 +18,12 @@ interface FeaturedDropPayload {
   featuredAt: string;
 }
 
+interface AvailabilityRecord {
+  status?: string;
+}
+
 async function main() {
+  const keepUnavailable = process.argv.includes("--keep-unavailable");
   const response = await fetch("https://keysol.vercel.app/api/drops/featured");
   if (!response.ok) {
     throw new Error(`Failed to fetch production drops: ${response.status}`);
@@ -42,6 +50,39 @@ async function main() {
       approved_by TEXT NOT NULL
     );
   `);
+
+  if (!keepUnavailable) {
+    let availability: Record<string, AvailabilityRecord> = {};
+    try {
+      const base =
+        process.env.KEYSOL_BASE_URL?.replace(/\/$/, "") ||
+        "http://127.0.0.1:3002";
+      const availRes = await fetch(`${base}/api/availability`);
+      if (availRes.ok) {
+        const availBody = (await availRes.json()) as {
+          availability?: Record<string, AvailabilityRecord>;
+        };
+        availability = availBody.availability ?? {};
+      }
+    } catch {
+      // Local server may be down; fall back to keeping existing rows.
+    }
+
+    const existing = await db.execute("SELECT keyboard_id FROM published_drops");
+    for (const row of existing.rows) {
+      const keyboardId = String(row.keyboard_id);
+      const status = availability[keyboardId]?.status ?? "unknown";
+      if (status === "out_of_stock" || status === "unknown") {
+        await db.execute({
+          sql: "DELETE FROM published_drops WHERE keyboard_id = ?",
+          args: [keyboardId],
+        });
+        console.log(
+          `Replaced unavailable featured drop: ${keyboardId} (${status})`,
+        );
+      }
+    }
+  }
 
   let order = body.drops.length;
   for (const drop of body.drops) {
