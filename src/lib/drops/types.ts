@@ -34,7 +34,15 @@ export interface ApproveDropInput {
   keyboard?: Partial<Keyboard>;
   maxSupply?: number;
   rarityScore?: number;
+  /** When true (default), unpublish featured drops that are out_of_stock or unknown. */
+  replaceUnavailableFeatured?: boolean;
 }
+
+/** Featured drops with these stock statuses may be replaced by new limited editions. */
+export const REPLACEABLE_FEATURED_STATUSES = [
+  "out_of_stock",
+  "unknown",
+] as const;
 
 export const DROP_TOKEN_DEFAULTS = {
   rarityScore: 99,

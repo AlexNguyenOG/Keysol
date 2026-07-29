@@ -1,12 +1,17 @@
 import { brands } from "@/data/brands";
+import { readCache } from "@/lib/availability/cache";
+import type { AvailabilityStatus } from "@/lib/availability/types";
 import {
   getDropCandidate,
+  listPublishedDrops,
   publishDrop,
   setDropCandidateStatus,
+  unpublishDrop,
   upsertDropCandidate,
 } from "@/lib/drops/store";
 import {
   DROP_TOKEN_DEFAULTS,
+  REPLACEABLE_FEATURED_STATUSES,
   type ApproveDropInput,
   type DropCandidate,
   type PublishedDrop,
@@ -16,6 +21,8 @@ import { assertPublicHttpUrl } from "@/lib/security/url";
 import type { Keyboard, KeyboardToken } from "@/types";
 
 const DROP_IMAGE_PLACEHOLDER = "/keyboards/drop-placeholder.svg";
+
+const REPLACEABLE = new Set<AvailabilityStatus>(REPLACEABLE_FEATURED_STATUSES);
 
 function slugify(value: string): string {
   return value
@@ -40,10 +47,41 @@ function buildTokenSymbol(name: string): string {
   return `KSOL-${parts.join("") || "DROP"}`.slice(0, 12);
 }
 
+/**
+ * Unpublish featured limited editions whose retailer stock is out_of_stock or
+ * unknown so new LEs can take their slots. Keeps in_stock / limited drops.
+ */
+export async function replaceUnavailableFeaturedDrops(options?: {
+  keepKeyboardId?: string;
+}): Promise<string[]> {
+  const availability = await readCache();
+  const featured = await listPublishedDrops();
+  const replaced: string[] = [];
+
+  for (const drop of featured) {
+    if (options?.keepKeyboardId && drop.keyboardId === options.keepKeyboardId) {
+      continue;
+    }
+
+    const status = availability[drop.keyboardId]?.status ?? "unknown";
+    if (!REPLACEABLE.has(status)) {
+      continue;
+    }
+
+    const removed = await unpublishDrop(drop.keyboardId);
+    if (removed) {
+      replaced.push(drop.keyboardId);
+    }
+  }
+
+  return replaced;
+}
+
 export async function approveDropCandidate(input: ApproveDropInput): Promise<
   | {
       ok: true;
       drop: PublishedDrop;
+      replacedKeyboardIds: string[];
     }
   | { ok: false; error: string }
 > {
@@ -119,6 +157,11 @@ export async function approveDropCandidate(input: ApproveDropInput): Promise<
     rationale: `Admin-approved limited drop (${candidate.signals.join(", ")}). Low max supply reflects batch scarcity.`,
   };
 
+  const replacedKeyboardIds =
+    input.replaceUnavailableFeatured === false
+      ? []
+      : await replaceUnavailableFeaturedDrops({ keepKeyboardId: keyboard.id });
+
   const published = await publishDrop({
     keyboard,
     token,
@@ -128,7 +171,7 @@ export async function approveDropCandidate(input: ApproveDropInput): Promise<
 
   await setDropCandidateStatus(candidate.id, "approved", input.approvedBy);
 
-  return { ok: true, drop: published };
+  return { ok: true, drop: published, replacedKeyboardIds };
 }
 
 export async function rejectDropCandidate(

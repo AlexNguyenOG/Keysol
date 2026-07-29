@@ -22,8 +22,12 @@ function resolveDatabaseUrl(): { url: string; authToken?: string } | null {
     return null;
   }
 
-  const filePath = process.env.APP_DATABASE_PATH ?? DEFAULT_DB_PATH;
-  mkdirSync(path.dirname(filePath), { recursive: true });
+  const configuredPath = process.env.APP_DATABASE_PATH?.trim();
+  const filePath = configuredPath || DEFAULT_DB_PATH;
+  const dir = path.dirname(filePath);
+  if (dir && dir !== ".") {
+    mkdirSync(dir, { recursive: true });
+  }
   return { url: `file:${filePath}` };
 }
 
