@@ -4,31 +4,23 @@ import { useEffect, useMemo, useState } from "react";
 import { keyboards } from "@/data/keyboards";
 import { getKeyboardTokensByRarity } from "@/lib/tokens";
 import { computeEffectiveTokenScore } from "@/lib/tokens/scoring";
-import { getExplorerAddressUrl, getClusterShortLabel } from "@/lib/solana/cluster";
-import { AVAILABILITY_LABELS, AVAILABILITY_STYLES } from "@/lib/availability/labels";
+import {
+  compareCollectibleRarity,
+  getRarityTierForToken,
+  STOCK_PREFERENCE_RANK,
+} from "@/lib/tokens/rarity";
 import type { TokenSnapshot } from "@/types";
+import { CollectibleCard } from "./CollectibleCard";
+import { useTokenCollectibles } from "./TokenCollectiblesProvider";
 
-type TokenSort = "effective" | "catalog" | "symbol";
+type TokenSort = "rarity" | "stock" | "symbol";
+type OwnershipFilter = "all" | "owned" | "missing";
 
 const sortOptions: { value: TokenSort; label: string }[] = [
-  { value: "effective", label: "Effective score" },
-  { value: "catalog", label: "Catalog score" },
+  { value: "rarity", label: "Rarity (Legendary first)" },
+  { value: "stock", label: "In stock first" },
   { value: "symbol", label: "Symbol (A–Z)" },
 ];
-
-function keyboardName(snapshot: TokenSnapshot): string {
-  const catalogName = keyboards.find(
-    (keyboard) => keyboard.id === snapshot.keyboardId,
-  )?.name;
-  if (catalogName) {
-    return catalogName;
-  }
-
-  return snapshot.token.name
-    .replace(/^KeySol\s+/i, "")
-    .replace(/\s+(Drop\s+)?Token$/i, "")
-    .trim() || snapshot.keyboardId;
-}
 
 function buildStaticSnapshots(): TokenSnapshot[] {
   const snapshotAt = new Date(0).toISOString();
@@ -57,48 +49,37 @@ function buildStaticSnapshots(): TokenSnapshot[] {
   });
 }
 
-function RankBadge({ rank }: { rank: number }) {
-  if (rank === 1) {
-    return (
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-solana-purple to-solana-green text-sm font-bold text-bg-primary">
-        {rank}
-      </span>
-    );
-  }
+function keyboardFor(id: string) {
+  return keyboards.find((keyboard) => keyboard.id === id);
+}
 
-  if (rank <= 3) {
-    return (
-      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-solana-green/40 bg-solana-green/10 text-sm font-bold text-solana-green">
-        {rank}
-      </span>
-    );
-  }
-
-  return (
-    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-sm font-semibold text-text-muted">
-      {rank}
-    </span>
+function rarityCompare(a: TokenSnapshot, b: TokenSnapshot) {
+  return compareCollectibleRarity(
+    {
+      rarityScore: a.rarityScore,
+      maxSupply: a.token.maxSupply,
+      stockStatus: a.stockStatus,
+    },
+    {
+      rarityScore: b.rarityScore,
+      maxSupply: b.token.maxSupply,
+      stockStatus: b.stockStatus,
+    },
   );
 }
 
-function StockBadge({ status }: { status: TokenSnapshot["stockStatus"] }) {
-  const styles = AVAILABILITY_STYLES[status];
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${styles.badge}`}
-    >
-      <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
-      {AVAILABILITY_LABELS[status]}
-    </span>
-  );
+function sortByRarity(list: TokenSnapshot[]) {
+  return list.sort(rarityCompare);
 }
 
 export function TokenCatalogList() {
+  const { connected, claimedIds, enabled } = useTokenCollectibles();
   const [snapshots, setSnapshots] = useState<TokenSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sort, setSort] = useState<TokenSort>("effective");
+  const [sort, setSort] = useState<TokenSort>("rarity");
+  const [ownershipFilter, setOwnershipFilter] =
+    useState<OwnershipFilter>("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -119,7 +100,9 @@ export function TokenCatalogList() {
       .catch(() => {
         if (!cancelled) {
           setSnapshots(buildStaticSnapshots());
-          setError("Could not load live stock data. Showing catalog scores only.");
+          setError(
+            "Could not load live stock data. Showing catalog collectibles only.",
+          );
         }
       })
       .finally(() => {
@@ -134,10 +117,12 @@ export function TokenCatalogList() {
   }, []);
 
   const sorted = useMemo(() => {
-    const list = [...snapshots];
+    let list = [...snapshots];
 
-    if (sort === "catalog") {
-      return list.sort((a, b) => b.rarityScore - a.rarityScore);
+    if (connected && ownershipFilter === "owned") {
+      list = list.filter((snapshot) => claimedIds.has(snapshot.keyboardId));
+    } else if (connected && ownershipFilter === "missing") {
+      list = list.filter((snapshot) => !claimedIds.has(snapshot.keyboardId));
     }
 
     if (sort === "symbol") {
@@ -146,44 +131,104 @@ export function TokenCatalogList() {
       );
     }
 
-    return list.sort((a, b) => b.effectiveScore - a.effectiveScore);
-  }, [snapshots, sort]);
+    if (sort === "stock") {
+      return list.sort((a, b) => {
+        const byStock =
+          STOCK_PREFERENCE_RANK[a.stockStatus] -
+          STOCK_PREFERENCE_RANK[b.stockStatus];
+        if (byStock !== 0) {
+          return byStock;
+        }
+        return rarityCompare(a, b);
+      });
+    }
+
+    return sortByRarity(list);
+  }, [snapshots, sort, ownershipFilter, connected, claimedIds]);
+
+  const dexNumbers = useMemo(() => {
+    // Stable dex index by rarity order so Legendary boards get low numbers.
+    const byRarity = sortByRarity([...snapshots]);
+    const map = new Map<string, number>();
+    byRarity.forEach((snapshot, index) => {
+      map.set(snapshot.keyboardId, index + 1);
+    });
+    return map;
+  }, [snapshots]);
+
+  const legendaryCount = useMemo(
+    () =>
+      snapshots.filter(
+        (snapshot) => getRarityTierForToken(snapshot.token).tier === "legendary",
+      ).length,
+    [snapshots],
+  );
 
   return (
-    <section aria-labelledby="token-catalog-title">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <section aria-labelledby="token-catalog-title" className="mb-16">
+      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-solana-green">
+            Collectibles dex
+          </p>
           <h2
             id="token-catalog-title"
-            className="text-xl font-semibold text-text-primary sm:text-2xl"
+            className="mt-2 text-xl font-semibold text-text-primary sm:text-2xl"
           >
-            Token catalog
+            Keyboard collectibles
           </h2>
           <p className="mt-1 text-sm text-text-muted">
             {loading
-              ? "Loading snapshots…"
-              : `${sorted.length} tokens · live stock blended into effective score`}
+              ? "Loading dex…"
+              : `${sorted.length} of ${snapshots.length} shown · ${legendaryCount} Legendary · higher tiers are rarer to catch`}
           </p>
         </div>
 
-        <label className="flex items-center gap-3 text-sm">
-          <span id="token-sort-label" className="text-text-muted">
-            Sort by
-          </span>
-          <select
-            id="token-sort"
-            aria-labelledby="token-sort-label"
-            value={sort}
-            onChange={(event) => setSort(event.target.value as TokenSort)}
-            className="rounded-lg border border-white/10 bg-bg-surface px-3 py-2 text-text-primary outline-none focus:border-solana-purple/50"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          {enabled && connected ? (
+            <div className="flex rounded-lg border border-white/10 bg-bg-surface p-1 text-sm">
+              {(
+                [
+                  ["all", "All"],
+                  ["owned", "Caught"],
+                  ["missing", "Missing"],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setOwnershipFilter(value)}
+                  className={`rounded-md px-3 py-1.5 transition ${
+                    ownershipFilter === value
+                      ? "bg-white/10 text-text-primary"
+                      : "text-text-muted hover:text-text-primary"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          <label className="flex items-center gap-3 text-sm">
+            <span id="token-sort-label" className="text-text-muted">
+              Sort
+            </span>
+            <select
+              id="token-sort"
+              aria-labelledby="token-sort-label"
+              value={sort}
+              onChange={(event) => setSort(event.target.value as TokenSort)}
+              className="rounded-lg border border-white/10 bg-bg-surface px-3 py-2 text-text-primary outline-none focus:border-solana-purple/50"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
 
       {error && (
@@ -192,89 +237,22 @@ export function TokenCatalogList() {
         </p>
       )}
 
-      <div className="space-y-4">
-        {sorted.map((snapshot, index) => (
-          <article
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {sorted.map((snapshot) => (
+          <CollectibleCard
             key={snapshot.token.id}
-            className="gradient-border rounded-2xl p-4 sm:p-5"
-          >
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-              <div className="flex items-start gap-4">
-                <RankBadge rank={index + 1} />
-                <div className="min-w-0 flex-1">
-                  <p className="font-mono text-sm font-semibold text-solana-purple sm:text-base">
-                    {snapshot.token.symbol}
-                    {snapshot.token.mintAddress ? (
-                      <span className="ml-2 rounded-full border border-solana-green/30 bg-solana-green/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-solana-green">
-                        {getClusterShortLabel()} mint
-                      </span>
-                    ) : null}
-                  </p>
-                  <h3 className="mt-1 text-lg font-semibold text-text-primary">
-                    {keyboardName(snapshot)}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-text-muted">
-                    {snapshot.token.rationale}
-                  </p>
-                  {snapshot.token.mintAddress ? (
-                    <p className="mt-2 text-xs text-text-muted">
-                      Mint:{" "}
-                      <a
-                        href={getExplorerAddressUrl(snapshot.token.mintAddress)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-mono text-solana-green underline-offset-2 hover:underline"
-                      >
-                        {snapshot.token.mintAddress.slice(0, 8)}…
-                        {snapshot.token.mintAddress.slice(-8)}
-                      </a>
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-
-              <dl className="grid shrink-0 grid-cols-2 gap-3 sm:grid-cols-4 lg:min-w-[22rem]">
-                <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">
-                  <dt className="text-[11px] uppercase tracking-wide text-text-muted">
-                    Effective
-                  </dt>
-                  <dd className="mt-0.5 text-lg font-bold text-solana-green">
-                    {loading ? "—" : snapshot.effectiveScore}
-                  </dd>
-                </div>
-                <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">
-                  <dt className="text-[11px] uppercase tracking-wide text-text-muted">
-                    Catalog
-                  </dt>
-                  <dd className="mt-0.5 font-semibold text-text-primary">
-                    {snapshot.rarityScore}
-                  </dd>
-                </div>
-                <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">
-                  <dt className="text-[11px] uppercase tracking-wide text-text-muted">
-                    Max supply
-                  </dt>
-                  <dd className="mt-0.5 font-semibold text-text-primary">
-                    {snapshot.token.maxSupply.toLocaleString()}
-                  </dd>
-                </div>
-                <div className="rounded-lg border border-white/10 bg-bg-primary/50 px-3 py-2">
-                  <dt className="text-[11px] uppercase tracking-wide text-text-muted">
-                    Stock
-                  </dt>
-                  <dd className="mt-1">
-                    {loading ? (
-                      <span className="text-xs text-text-muted">…</span>
-                    ) : (
-                      <StockBadge status={snapshot.stockStatus} />
-                    )}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          </article>
+            snapshot={snapshot}
+            keyboard={keyboardFor(snapshot.keyboardId)}
+            dexNumber={dexNumbers.get(snapshot.keyboardId) ?? 0}
+          />
         ))}
       </div>
+
+      {!loading && sorted.length === 0 ? (
+        <p className="mt-8 text-center text-sm text-text-muted">
+          No collectibles match this filter.
+        </p>
+      ) : null}
     </section>
   );
 }

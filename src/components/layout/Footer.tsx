@@ -26,7 +26,7 @@ export function Footer() {
               href="/tokens"
               className="text-sm text-text-muted transition-colors hover:text-text-primary"
             >
-              Token Guide
+              Collectibles
             </Link>
             <Link
               href="/privacy"

@@ -89,17 +89,17 @@ export function KeyboardCard({ keyboard, variant = "full" }: KeyboardCardProps) 
 
   if (variant === "compact") {
     return (
-      <div className="flex flex-col gap-3 rounded-xl border border-white/10 bg-bg-primary/40 p-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-xl border border-white/10 bg-bg-primary/40 p-3 sm:flex-row sm:items-stretch">
         <KeyboardShowcaseMedia
           keyboardId={keyboard.id}
           imageSrc={keyboard.image}
           alt={`${keyboard.name} product photo`}
-          className="aspect-[16/10] w-full shrink-0 rounded-lg sm:aspect-auto sm:h-24 sm:w-40"
+          className="aspect-[16/10] w-full shrink-0 rounded-lg sm:aspect-auto sm:h-28 sm:w-36"
           mediaInset="md"
-          sizes="160px"
+          sizes="144px"
         />
 
-        <div className="min-w-0 flex-1 space-y-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <h4 className="truncate font-semibold text-text-primary">
@@ -114,39 +114,41 @@ export function KeyboardCard({ keyboard, variant = "full" }: KeyboardCardProps) 
             </span>
           </div>
 
-          <dl className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
-            <div>
+          <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs sm:grid-cols-4">
+            <div className="min-w-0">
               <dt className="text-text-muted">Polling</dt>
-              <dd className="font-medium text-solana-green">
+              <dd className="truncate font-medium text-solana-green">
                 {formatPollingRate(stats.pollingRateHz)}
               </dd>
             </div>
-            <div>
+            <div className="min-w-0">
               <dt className="text-text-muted">Actuation</dt>
-              <dd className="font-medium text-text-primary">
+              <dd className="truncate font-medium text-text-primary">
                 {stats.actuationPointMm} mm
               </dd>
             </div>
-            <div>
+            <div className="min-w-0">
               <dt className="text-text-muted">Layout</dt>
-              <dd className="font-medium text-text-primary">{stats.layout}</dd>
+              <dd className="truncate font-medium text-text-primary">
+                {stats.layout}
+              </dd>
             </div>
-            <div>
+            <div className="min-w-0">
               <dt className="text-text-muted">Rapid trigger</dt>
-              <dd className="font-medium text-text-primary">
+              <dd className="truncate font-medium text-text-primary">
                 {stats.rapidTrigger ? "Yes" : "No"}
               </dd>
             </div>
           </dl>
-        </div>
 
-        <PurchaseLink
-          href={keyboard.purchaseUrl}
-          keyboardName={keyboard.name}
-          availabilityStatus={status}
-          loading={loading}
-          className="w-full shrink-0 sm:w-auto sm:min-w-[7.5rem]"
-        />
+          <PurchaseLink
+            href={keyboard.purchaseUrl}
+            keyboardName={keyboard.name}
+            availabilityStatus={status}
+            loading={loading}
+            className="mt-auto w-full max-w-full whitespace-normal text-center leading-snug"
+          />
+        </div>
       </div>
     );
   }

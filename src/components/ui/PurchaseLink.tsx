@@ -31,7 +31,7 @@ export function PurchaseLink({
   const unknown = !availabilityStatus || availabilityStatus === "unknown";
 
   const baseStyles =
-    "inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity";
+    "inline-flex max-w-full min-w-0 items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity";
 
   const enabledStyles =
     "bg-gradient-to-r from-solana-purple to-solana-green text-bg-primary hover:opacity-90";

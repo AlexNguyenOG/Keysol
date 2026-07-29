@@ -10,6 +10,7 @@ import {
   getClaimableTokens,
   getClaimableTokensAsync,
   getMintForKeyboard,
+  withMintAddresses,
 } from "@/lib/solana/mints";
 import { keyboardTokens } from "@/data/keyboard-tokens";
 import {
@@ -18,8 +19,18 @@ import {
   withRateLimitHeaders,
 } from "@/lib/security/api";
 import type { RateLimitResult } from "@/lib/security/rate-limit";
+import type { KeyboardToken } from "@/types";
 
 export const dynamic = "force-dynamic";
+
+async function getAllTokensForSimulation(): Promise<KeyboardToken[]> {
+  try {
+    const { getAllKeyboardTokens } = await import("@/lib/catalog.server");
+    return withMintAddresses(await getAllKeyboardTokens());
+  } catch {
+    return withMintAddresses(keyboardTokens);
+  }
+}
 
 export async function GET(request: Request) {
   if (!isDevnetClaimEnabled()) {
@@ -41,12 +52,13 @@ export async function GET(request: Request) {
   const clusterLabel = getClusterLabel();
 
   const minted = await getClaimableTokensAsync();
-  const claimableSource =
-    minted.length > 0
+  // Simulation: every catalog/drop token is claimable offline, even if a
+  // stale localnet registry still lists mint addresses that no longer exist.
+  const claimableSource = simulation
+    ? await getAllTokensForSimulation()
+    : minted.length > 0
       ? minted
-      : simulation
-        ? keyboardTokens
-        : getClaimableTokens();
+      : getClaimableTokens();
 
   if (!walletAddress) {
     return withRateLimitHeaders(

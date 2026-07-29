@@ -73,7 +73,9 @@ export async function claimDevnetToken(input: {
   }
 
   const mintRecord = getMintForKeyboard(keyboardId);
-  const simulation = isSimulationEnabled() && !mintRecord;
+  // Offline/UI claims: honor TOKEN_CLAIM_SIMULATION even when a registry
+  // lists mint addresses (those accounts may be wiped after Surfpool reset).
+  const simulation = isSimulationEnabled();
 
   if (!mintRecord && !simulation) {
     return {

@@ -1,149 +1,49 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { keyboardTokens } from "@/data/keyboard-tokens";
+import { getExplorerAddressUrl } from "@/lib/solana/cluster";
 import {
-  useConnect,
-  useDisconnect,
-  useWallets,
-  type UiWallet,
-  type UiWalletAccount,
-} from "@wallet-standard/react";
-import { getPublicKeyAsync, utils } from "@noble/ed25519";
-import bs58 from "bs58";
-import { isTokenizationEnabled } from "@/lib/tokens";
-import {
-  getClusterLabel,
-  getExplorerAddressUrl,
-  getSolanaCluster,
-} from "@/lib/solana/cluster";
+  CollectibleWalletConnectButton,
+  CollectibleWalletDisconnectButton,
+  useTokenCollectibles,
+} from "./TokenCollectiblesProvider";
 
-interface HoldingToken {
-  keyboardId: string;
-  symbol: string;
-  mintAddress?: string;
-  claimed?: boolean;
-  onChainAmount?: number;
-}
-
-const LOCAL_TEST_WALLET_KEY = "keysol.local-test-wallet.secret";
-
-function isSolanaWallet(wallet: UiWallet): boolean {
-  return wallet.chains.some((chain) => chain.startsWith("solana:"));
-}
-
-function ConnectButton({
-  wallet,
-  onConnected,
-}: {
-  wallet: UiWallet;
-  onConnected: (wallet: UiWallet, account: UiWalletAccount) => void;
-}) {
-  const [connecting, connect] = useConnect(wallet);
-  return (
-    <button
-      type="button"
-      disabled={connecting}
-      onClick={async () => {
-        const accounts = await connect();
-        if (accounts[0]) {
-          onConnected(wallet, accounts[0]);
-        }
-      }}
-      className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-text-primary hover:border-solana-purple/40 disabled:opacity-60"
-    >
-      {connecting ? "…" : wallet.name}
-    </button>
-  );
-}
-
-function DisconnectButton({
-  wallet,
-  onDisconnected,
-}: {
-  wallet: UiWallet;
-  onDisconnected: () => void;
-}) {
-  const [, disconnect] = useDisconnect(wallet);
-  return (
-    <button
-      type="button"
-      onClick={async () => {
-        await disconnect();
-        onDisconnected();
-      }}
-      className="text-xs text-text-muted hover:text-text-primary"
-    >
-      Disconnect
-    </button>
-  );
-}
+const MAX_PLACEHOLDERS = 12;
 
 export function TokenCollectionBadges() {
-  const enabled = isTokenizationEnabled();
-  const wallets = useWallets().filter(isSolanaWallet);
-  const clusterLabel = getClusterLabel();
-  const [wallet, setWallet] = useState<UiWallet | null>(null);
-  const [account, setAccount] = useState<UiWalletAccount | null>(null);
-  const [localAddress, setLocalAddress] = useState<string | null>(null);
-  const [holdings, setHoldings] = useState<HoldingToken[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const address = account?.address ?? localAddress;
-
-  const refresh = useCallback(async (walletAddress: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        `/api/tokens/holdings?wallet=${encodeURIComponent(walletAddress)}`,
-        { cache: "no-store" },
-      );
-      const data = (await response.json()) as {
-        error?: string;
-        claimable?: HoldingToken[];
-      };
-      if (!response.ok) {
-        throw new Error(data.error ?? "Failed to load holdings");
-      }
-      setHoldings((data.claimable ?? []).filter((token) => token.claimed));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load holdings");
-      setHoldings([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!enabled || !address) {
-      return;
-    }
-    void refresh(address);
-  }, [enabled, address, refresh]);
+  const {
+    enabled,
+    clusterLabel,
+    localTestAllowed,
+    wallets,
+    wallet,
+    activeAddress,
+    connected,
+    claimable,
+    claimedIds,
+    claimedCount,
+    catalogTotal,
+    holdingsLoading,
+    error,
+    startLocalTestWallet,
+    disconnectAll,
+  } = useTokenCollectibles();
 
   if (!enabled) {
     return null;
   }
 
-  async function useLocalWallet() {
-    setError(null);
-    let secret: Uint8Array;
-    const existing = window.sessionStorage.getItem(LOCAL_TEST_WALLET_KEY);
-    if (existing) {
-      secret = bs58.decode(existing);
-    } else {
-      secret = utils.randomSecretKey();
-      window.sessionStorage.setItem(LOCAL_TEST_WALLET_KEY, bs58.encode(secret));
-    }
-    const publicKey = await getPublicKeyAsync(secret);
-    const next = bs58.encode(publicKey);
-    setWallet(null);
-    setAccount(null);
-    setLocalAddress(next);
-  }
-
-  const claimed = holdings;
+  const claimed = claimable.filter((token) => token.claimed);
+  const total = Math.max(
+    catalogTotal,
+    claimable.length,
+    keyboardTokens.length,
+  );
+  const progress = total > 0 ? Math.round((claimedCount / total) * 100) : 0;
+  const missingPlaceholders = Math.min(
+    Math.max(total - claimedCount, 0),
+    MAX_PLACEHOLDERS,
+  );
 
   return (
     <section
@@ -151,43 +51,48 @@ export function TokenCollectionBadges() {
       className="mb-12 rounded-2xl border border-white/10 bg-bg-surface/80 p-6 sm:p-8"
     >
       <p className="text-xs font-semibold uppercase tracking-widest text-solana-green">
-        Collector status
+        Collection
       </p>
       <h2
         id="token-collection-title"
         className="mt-2 text-xl font-semibold text-text-primary sm:text-2xl"
       >
-        Your token badges
+        Caught {claimedCount}
+        <span className="text-text-muted"> / {total}</span>
       </h2>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-text-muted sm:text-base">
-        Connect the same wallet you used to claim on{" "}
-        <span className="text-text-primary">{clusterLabel}</span> to see your
-        collectible badges. Catalog, rankings, and buy links stay free without
-        holding tokens.
+        Connect the wallet you use on{" "}
+        <span className="text-text-primary">{clusterLabel}</span> to track your
+        keyboard collectibles. Rankings and buy links stay free without holding
+        tokens.
       </p>
 
+      <div
+        className="collectible-progress mt-5 h-2 overflow-hidden rounded-full bg-white/10"
+        role="progressbar"
+        aria-valuenow={claimedCount}
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-label="Collection progress"
+      >
+        <div
+          className="collectible-progress-fill h-full rounded-full bg-gradient-to-r from-solana-purple to-solana-green transition-[width] duration-700 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
       <div className="mt-6 space-y-4">
-        {address ? (
+        {connected && activeAddress ? (
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-mono text-sm text-solana-green">
-              {address.slice(0, 6)}…{address.slice(-6)}
+              {activeAddress.slice(0, 6)}…{activeAddress.slice(-6)}
             </span>
             {wallet ? (
-              <DisconnectButton
-                wallet={wallet}
-                onDisconnected={() => {
-                  setWallet(null);
-                  setAccount(null);
-                  setHoldings([]);
-                }}
-              />
+              <CollectibleWalletDisconnectButton wallet={wallet} />
             ) : (
               <button
                 type="button"
-                onClick={() => {
-                  setLocalAddress(null);
-                  setHoldings([]);
-                }}
+                onClick={disconnectAll}
                 className="text-xs text-text-muted hover:text-text-primary"
               >
                 Disconnect
@@ -196,11 +101,11 @@ export function TokenCollectionBadges() {
           </div>
         ) : (
           <div className="flex flex-wrap items-center gap-2">
-            {getSolanaCluster() !== "mainnet-beta" && (
+            {localTestAllowed && (
               <button
                 type="button"
                 onClick={() => {
-                  void useLocalWallet();
+                  void startLocalTestWallet();
                 }}
                 className="rounded-lg bg-gradient-to-r from-solana-purple to-solana-green px-3 py-2 text-sm font-semibold text-bg-primary"
               >
@@ -208,57 +113,60 @@ export function TokenCollectionBadges() {
               </button>
             )}
             {wallets.map((entry) => (
-              <ConnectButton
-                key={entry.name}
-                wallet={entry}
-                onConnected={(nextWallet, nextAccount) => {
-                  setLocalAddress(null);
-                  setWallet(nextWallet);
-                  setAccount(nextAccount);
-                }}
-              />
+              <CollectibleWalletConnectButton key={entry.name} wallet={entry} />
             ))}
           </div>
         )}
 
-        {loading && (
+        {holdingsLoading && (
           <p className="text-sm text-text-muted">Loading holdings…</p>
         )}
         {error && <p className="text-sm text-red-400">{error}</p>}
 
-        {!loading && address && claimed.length === 0 && (
+        {!holdingsLoading && connected && claimed.length === 0 && (
           <p className="text-sm text-text-muted">
-            No claims yet for this wallet. Use the Claim Lab above to mint your
-            first collectible.
+            No claims yet. Pick a card in the dex below and hit Claim.
           </p>
         )}
 
-        {claimed.length > 0 && (
-          <ul className="flex flex-wrap gap-2">
-            {claimed.map((token) => (
-              <li key={token.keyboardId}>
-                {token.mintAddress ? (
-                  <a
-                    href={getExplorerAddressUrl(token.mintAddress)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-solana-green/30 bg-solana-green/10 px-3 py-1.5 font-mono text-sm text-solana-green transition hover:border-solana-green/60"
-                    title={`${token.symbol} · balance ${token.onChainAmount ?? 1}`}
-                  >
-                    {token.symbol}
-                    <span className="text-[10px] uppercase tracking-wide text-solana-green/80">
-                      owned
-                    </span>
-                  </a>
-                ) : (
-                  <span className="inline-flex items-center gap-2 rounded-full border border-solana-green/30 bg-solana-green/10 px-3 py-1.5 font-mono text-sm text-solana-green">
-                    {token.symbol}
+        <ul className="flex flex-wrap gap-2">
+          {claimed.map((token) => (
+            <li key={token.keyboardId}>
+              {token.mintAddress ? (
+                <a
+                  href={getExplorerAddressUrl(token.mintAddress)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-solana-green/30 bg-solana-green/10 px-3 py-1.5 font-mono text-sm text-solana-green transition hover:border-solana-green/60"
+                  title={`${token.symbol} · balance ${token.onChainAmount ?? 1}`}
+                >
+                  {token.symbol}
+                  <span className="text-[10px] uppercase tracking-wide text-solana-green/80">
+                    caught
                   </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
+                </a>
+              ) : (
+                <span className="inline-flex items-center gap-2 rounded-full border border-solana-green/30 bg-solana-green/10 px-3 py-1.5 font-mono text-sm text-solana-green">
+                  {token.symbol}
+                </span>
+              )}
+            </li>
+          ))}
+          {connected
+            ? Array.from({ length: missingPlaceholders }).map((_, index) => (
+                <li
+                  key={`slot-${index}`}
+                  className="inline-flex h-9 min-w-[4.5rem] items-center justify-center rounded-full border border-dashed border-white/15 bg-white/[0.02] px-3 font-mono text-xs text-text-muted/50"
+                  aria-hidden
+                >
+                  ···
+                </li>
+              ))
+            : null}
+        </ul>
+
+        {/* Keep claimedIds referenced for future filters without lint noise */}
+        <span className="sr-only">{claimedIds.size} owned</span>
       </div>
     </section>
   );

@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { TokenGuideExplainer } from "@/components/tokens/TokenGuideExplainer";
-import { TokenPolicy } from "@/components/tokens/TokenPolicy";
-import { TokenClaimLab } from "@/components/tokens/TokenClaimLab";
-import { TokenCollectionBadges } from "@/components/tokens/TokenCollectionBadges";
-import { TokenCatalogList } from "@/components/tokens/TokenCatalogList";
-import { GradientText } from "@/components/ui/GradientText";
+import { TokensPageClient } from "@/components/tokens/TokensPageClient";
 import { isTokenizationEnabled } from "@/lib/tokens";
 import { getClusterLabel } from "@/lib/solana/cluster";
 
 export const metadata: Metadata = {
-  title: "Token Guide — KeySol",
+  title: "Keyboard Collectibles — KeySol",
   description:
-    "How KeySol keyboard tokens work: catalog scores, live stock scarcity, token policy, and the full token registry.",
+    "Browse the KeySol collectibles dex: keyboard tokens with rarity tiers, catch progress, and free claims.",
 };
 
 export default function TokensPage() {
@@ -25,31 +20,10 @@ export default function TokensPage() {
       <Navbar />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center">
-            <p className="mb-4 text-sm font-medium uppercase tracking-widest text-solana-green">
-              Collectibles
-            </p>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Token <GradientText as="span">Guide</GradientText>
-            </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-text-muted">
-              One token per keyboard — catalog score plus scarcity from
-              verified stock. Utility and collectibles, not gambling.
-              {tokenizationEnabled
-                ? ` Free claims are live on ${clusterLabel}.`
-                : ""}
-            </p>
-          </div>
-
-          <TokenGuideExplainer />
-          {tokenizationEnabled ? (
-            <>
-              <TokenClaimLab />
-              <TokenCollectionBadges />
-            </>
-          ) : null}
-          <TokenPolicy />
-          <TokenCatalogList />
+          <TokensPageClient
+            tokenizationEnabled={tokenizationEnabled}
+            clusterLabel={clusterLabel}
+          />
         </div>
       </main>
       <Footer />

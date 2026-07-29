@@ -29,7 +29,7 @@ export function TokenComingSoon() {
               itself, scarcity from live stock checks. Utility and collectibles,
               not gambling.
               {live
-                ? " Claim free pilot tokens on Devnet from the Token Guide."
+                ? " Browse the collectibles dex and claim free pilot tokens."
                 : ""}
             </p>
           </div>
@@ -50,7 +50,7 @@ export function TokenComingSoon() {
                 href="/tokens"
                 className="rounded-full border border-solana-green/40 bg-solana-green/15 px-5 py-2 text-base font-semibold text-solana-green transition hover:bg-solana-green/25 sm:text-lg"
               >
-                Claim on Token Guide →
+                Open collectibles dex →
               </Link>
             ) : (
               <>
@@ -61,7 +61,7 @@ export function TokenComingSoon() {
                   href="/tokens"
                   className="text-sm font-medium text-solana-green transition-colors hover:text-text-primary sm:text-base"
                 >
-                  Read the token guide →
+                  Preview the collectibles dex →
                 </Link>
               </>
             )}
