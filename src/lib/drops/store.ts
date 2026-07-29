@@ -291,6 +291,32 @@ export async function listPublishedDrops(): Promise<PublishedDrop[]> {
   ).map(mapPublished);
 }
 
+/** Remove a published featured drop from the catalog overlay. */
+export async function unpublishDrop(
+  keyboardId: string,
+): Promise<PublishedDrop | undefined> {
+  const db = await getAppDb();
+  if (!db) {
+    return undefined;
+  }
+
+  const existing = await db.execute({
+    sql: "SELECT * FROM published_drops WHERE keyboard_id = ?",
+    args: [keyboardId],
+  });
+  const row = existing.rows[0] as unknown as PublishedDropRow | undefined;
+  if (!row) {
+    return undefined;
+  }
+
+  await db.execute({
+    sql: "DELETE FROM published_drops WHERE keyboard_id = ?",
+    args: [keyboardId],
+  });
+
+  return mapPublished(row);
+}
+
 /** Patch keyboard image on an already-published drop without changing order. */
 export async function updatePublishedDropImage(
   keyboardId: string,
