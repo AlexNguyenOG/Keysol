@@ -29,8 +29,9 @@ export default async function RankingsPage() {
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-text-muted">
               Sorted by a composite speed score using polling rate, response
-              time, actuation point, and rapid trigger support. Switch sorting
-              to compare by price or release date.
+              time, actuation point, and rapid trigger support. Search and
+              filter by layout, stock, or rapid trigger — or sort by price and
+              release date.
             </p>
           </div>
 

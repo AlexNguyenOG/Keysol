@@ -16,10 +16,29 @@ export const SOLANA_KEYBOARD = {
   purchaseUrl:
     "https://www.thockking.com/products/solana-x-thock-king-tk65-pro-custom-65-aluminum-wireless-mechanical-keyboard",
   priceUsd: 189,
+  releasedAt: "2024-12-05",
   highlights: [
-    "65% aluminum case with metal knob",
+    "65% full aluminum case with metal knob (heavier than plastic boards)",
     "Tri-mode: USB-C, Bluetooth, 2.4 GHz",
     "Custom Solana gradient PBT legends",
-    "TTC Silent Brown RGB tactile switches",
+    "Stock TTC Silent Brown V2 RGB tactiles — 5-pin hot-swappable",
+  ],
+  facts: [
+    {
+      label: "Switches",
+      value: "TTC Silent Brown V2 (tactile, muted)",
+    },
+    {
+      label: "Hot-swap",
+      value: "Yes — 5-pin MX-style",
+    },
+    {
+      label: "Mount",
+      value: "Gasket, foam + silicone dampening",
+    },
+    {
+      label: "Release",
+      value: "Dec 5, 2024 · one-time Onchain Holiday run",
+    },
   ],
 } as const;

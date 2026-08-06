@@ -10,7 +10,7 @@ import { formatPrice } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Solana Keyboards — KeySol",
   description:
-    "The Solana x Thock King TK65 Pro — limited Foundation collab mechanical keyboard with Solana gradient legends.",
+    "The Solana x Thock King TK65 Pro — limited Foundation collab mechanical keyboard with Solana gradient legends, hot-swap PCB, and TTC Silent Brown V2 switches.",
 };
 
 export default function SolanaKeyboardsPage() {
@@ -91,6 +91,33 @@ export default function SolanaKeyboardsPage() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-semibold text-text-primary sm:text-2xl">
+            Board details
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-text-muted">
+            One-time Onchain Holiday collab. Leftover Assembled Solana Editions
+            may still appear on Thock King; barebones are the standard TK65 Pro
+            without Solana keycaps.
+          </p>
+
+          <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {SOLANA_KEYBOARD.facts.map((fact) => (
+              <div
+                key={fact.label}
+                className="rounded-2xl border border-white/10 bg-bg-surface/70 px-4 py-4"
+              >
+                <dt className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+                  {fact.label}
+                </dt>
+                <dd className="mt-2 text-sm font-medium text-text-primary">
+                  {fact.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </section>
       </main>
       <Footer />

@@ -1,6 +1,6 @@
 # KeySol — Keyboard Finder
 
-A Solana-themed website for discovering the world's best keyboards. Browse top brands, compare specs, and find your perfect board.
+A Solana-themed website for discovering the world's best keyboards. Browse top brands, compare specs, track live retailer stock, and collect optional keyboard tokens.
 
 ## Getting Started
 
@@ -44,11 +44,20 @@ CI runs the same checks on every push and pull request to `main`.
 
 ## Roadmap
 
-1. Rankings page — sort keyboards by score, price, switch type
-2. Brand detail pages — `/brands/wooting` with keyboard list
-3. Keyboard detail pages — specs, pros/cons, affiliate links
-4. Search + filters — client-side first, then URL-driven filters
-5. Comparison tool — side-by-side 2–3 keyboards
+### Shipped
+1. Rankings page — speed score leaderboard with search, layout, rapid-trigger, and stock filters
+2. Live retailer stock badges + availability snapshot / cron refresh
+3. Collectibles dex — rarity tiers, wallet claims (Devnet / simulation)
+4. Limited-edition drop radar (admin approve → featured home)
+5. Value Trends — catalog score blended with live stock signals
+6. Solana × Thock King collab page
+
+### Next
+1. Brand detail pages — `/brands/wooting` with keyboard list
+2. Keyboard detail pages — specs, pros/cons, affiliate links
+3. URL-driven filters + shareable ranking queries
+4. Comparison tool — side-by-side 2–3 keyboards
+5. Stock alerts for limited editions
 6. Performance — static generation, image optimization, optional CMS
 
 ## Project Structure

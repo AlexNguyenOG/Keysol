@@ -120,3 +120,19 @@ export function useAvailability(keyboardId: string) {
     refresh: context.refresh,
   };
 }
+
+/** Lookup helpers for list filters (rankings search, in-stock only, etc.). */
+export function useAvailabilityLookup() {
+  const context = useContext(AvailabilityContext);
+
+  if (!context) {
+    throw new Error(
+      "useAvailabilityLookup must be used within AvailabilityProvider",
+    );
+  }
+
+  return {
+    getStatus: context.getStatus,
+    loading: context.loading,
+  };
+}
