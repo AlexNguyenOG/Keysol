@@ -2,6 +2,7 @@
  * KeySol Guide scope and enforcement rules.
  * Keep prompts, local logic, and post-generation validation in sync here.
  */
+import { SOLANA_KEYBOARD } from "@/components/layout/nav-links";
 import { brands } from "@/data/brands";
 import { keyboards } from "@/data/keyboards";
 
@@ -80,6 +81,13 @@ const KEYBOARD_TOPIC_SIGNALS = [
   "omnipoint",
   "cherry mx",
   "gateron",
+  "thock",
+  "thock king",
+  "tk65",
+  "solana keyboard",
+  "solana collab",
+  "solana x",
+  "ttc silent",
 ];
 
 const STRONG_OFF_TOPIC_PATTERNS = [
@@ -129,6 +137,15 @@ export function isOffTopicMessage(text: string): boolean {
 
 function replyMentionsCatalogProduct(reply: string): boolean {
   const lower = normalize(reply);
+  if (
+    lower.includes(normalize(SOLANA_KEYBOARD.name)) ||
+    lower.includes("thock king") ||
+    lower.includes("tk65 pro") ||
+    lower.includes("solana x thock")
+  ) {
+    return true;
+  }
+
   return catalogKeyboardNames().some((name) => lower.includes(normalize(name)));
 }
 

@@ -48,7 +48,7 @@ export function TokenGuideExplainer() {
           keyboard is to obtain in general) and an{" "}
           <span className="text-text-primary">effective score</span> that blends
           that baseline with live retailer stock. Devnet wallet claims are live
-          in the Claim Lab below when tokenization is enabled. Track live movers
+          in the Claim Lab on this page when tokenization is enabled. Track live movers
           on the{" "}
           <Link
             href="/value-trends"

@@ -66,11 +66,24 @@ test.describe("rankings page", () => {
     await page.goto("/rankings");
 
     await page.locator("#rankings-sort").selectOption("price-asc");
+    await expect(page).toHaveURL(/sort=price-asc/);
 
     const firstRow = page.locator("article").first();
     await expect(
       firstRow.getByRole("heading", { name: "Keychron K2 HE" }),
     ).toBeVisible();
+  });
+
+  test("brand query filters the leaderboard", async ({ page }) => {
+    await page.goto("/rankings?brand=wooting");
+
+    await expect(page.locator("#rankings-brand")).toHaveValue("wooting");
+    await expect(
+      page.getByRole("heading", { name: "Wooting 60HE+" }).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "G Pro X TKL Lightspeed" }),
+    ).toHaveCount(0);
   });
 
   test("each keyboard has a buy link", async ({ page }) => {
@@ -93,7 +106,7 @@ test.describe("rankings page", () => {
 });
 
 test.describe("tokens page", () => {
-  test("shows guide and token catalog", async ({ page }) => {
+  test("shows collectibles dex and expandable guide", async ({ page }) => {
     await page.route("**/api/tokens/snapshot**", async (route) => {
       const { buildTokenSnapshots } = await import("../src/lib/tokens");
       const { mockAvailabilityFixture } = await import("./fixtures/availability");
@@ -116,24 +129,37 @@ test.describe("tokens page", () => {
     await page.goto("/tokens");
 
     await expect(
-      page.getByRole("heading", { name: /token guide/i }),
+      page.getByRole("heading", { name: /keyboard collectibles/i }),
     ).toBeVisible();
+    await expect(page.getByText("KSOL-W60HE").first()).toBeVisible();
+
+    await page
+      .locator("summary")
+      .filter({ hasText: /token guide/i })
+      .click();
+
     await expect(
       page.getByRole("heading", { name: /what are keysol tokens/i }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /how effective scores work/i }),
-    ).toBeVisible();
-    await expect(
       page.getByRole("heading", { name: /token policy/i }),
     ).toBeVisible();
+  });
+});
+
+test.describe("solana keyboards page", () => {
+  test("shows collab board and buy CTA", async ({ page }) => {
+    await page.goto("/solana-keyboards");
+
     await expect(
-      page.getByRole("heading", { name: /devnet technical checklist/i }),
+      page.getByRole("heading", { name: /solana/i }).first(),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /token catalog/i }),
+      page.getByRole("link", { name: /buy on thock king/i }),
+    ).toHaveAttribute("href", /thockking\.com/);
+    await expect(
+      page.getByRole("heading", { name: /board details/i }),
     ).toBeVisible();
-    await expect(page.getByText("KSOL-W60HE")).toBeVisible();
   });
 });
 

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { brands } from "@/data/brands";
 import { keyboards } from "@/data/keyboards";
 import { switchTypes } from "@/data/switch-types";
+import { SOLANA_KEYBOARD } from "@/components/layout/nav-links";
 import {
   buildCatalogContext,
   findSwitchTypesByQuery,
@@ -15,6 +16,13 @@ describe("assistant knowledge", () => {
     for (const keyboard of keyboards) {
       expect(context).toContain(keyboard.name);
     }
+  });
+
+  it("includes the Solana × Thock King collab board", () => {
+    const context = buildCatalogContext();
+    expect(context).toContain(SOLANA_KEYBOARD.name);
+    expect(context).toContain("/solana-keyboards");
+    expect(context).toContain("TTC Silent Brown");
   });
 
   it("includes switch guide data", () => {

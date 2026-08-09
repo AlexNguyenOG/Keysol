@@ -41,6 +41,7 @@ export async function BrandCard({ brand }: BrandCardProps) {
 
       {visible.length > 0 && (
         <BrandKeyboardList
+          brandId={brand.id}
           brandName={brand.name}
           keyboards={visible}
           remaining={remaining}

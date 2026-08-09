@@ -31,7 +31,7 @@ export default function SolanaKeyboardsPage() {
           <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-24">
             <div>
               <p className="mb-4 text-sm font-medium uppercase tracking-widest text-solana-green">
-                Official Collab for Thock King x Solana
+                Official Thock King × Solana collab
               </p>
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 <GradientText as="span">Solana</GradientText> Keyboards
@@ -52,7 +52,7 @@ export default function SolanaKeyboardsPage() {
                 ))}
               </ul>
 
-              <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
                 <a
                   href={SOLANA_KEYBOARD.purchaseUrl}
                   target="_blank"
@@ -66,6 +66,12 @@ export default function SolanaKeyboardsPage() {
                   className="inline-flex items-center justify-center rounded-lg border border-white/10 px-8 py-3 text-sm font-medium text-text-primary transition-colors hover:border-solana-purple/40 hover:bg-white/5"
                 >
                   Compare all boards
+                </Link>
+                <Link
+                  href="/tokens"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/10 px-8 py-3 text-sm font-medium text-text-primary transition-colors hover:border-solana-purple/40 hover:bg-white/5"
+                >
+                  Browse collectibles
                 </Link>
               </div>
             </div>
@@ -86,7 +92,7 @@ export default function SolanaKeyboardsPage() {
                   {SOLANA_KEYBOARD.name}
                 </p>
                 <p className="mt-1 text-sm text-text-muted">
-                  Solana Foundation × Thock King · limited run
+                  Solana Foundation × Thock King · limited run · Dec 2024
                 </p>
               </div>
             </div>

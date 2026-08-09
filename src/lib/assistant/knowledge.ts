@@ -2,6 +2,7 @@ import { brands } from "@/data/brands";
 import { keyboards as catalogKeyboards } from "@/data/keyboards";
 import { switchCategories, switchTypes } from "@/data/switch-types";
 import { keyboardTokens } from "@/data/keyboard-tokens";
+import { SOLANA_KEYBOARD } from "@/components/layout/nav-links";
 import { getBrandName } from "@/lib/keyboards";
 import { computeSpeedScore, SCORE_CRITERIA } from "@/lib/rankings";
 import type { Keyboard } from "@/types";
@@ -54,16 +55,32 @@ export function buildSwitchContext(): string {
   ].join("\n");
 }
 
+export function buildSolanaKeyboardContext(): string {
+  return [
+    "SOLANA COLLAB KEYBOARD (featured on /solana-keyboards, not in the speed catalog):",
+    `${SOLANA_KEYBOARD.name} — $${SOLANA_KEYBOARD.priceUsd}`,
+    SOLANA_KEYBOARD.tagline,
+    `Released ${SOLANA_KEYBOARD.releasedAt} as a one-time Solana Onchain Holiday / Foundation collab with Thock King.`,
+    `Highlights: ${SOLANA_KEYBOARD.highlights.join("; ")}`,
+    `Facts: ${SOLANA_KEYBOARD.facts.map((fact) => `${fact.label}: ${fact.value}`).join("; ")}`,
+    `Buy: ${SOLANA_KEYBOARD.purchaseUrl}`,
+    "Note: leftover Assembled Solana Editions may still be listed; barebone TK65 Pro variants are the standard board without Solana keycaps.",
+  ].join("\n");
+}
+
 export function buildSiteContext(): string {
   const { keyboardCount, brandCount } = getCatalogStats();
 
   return [
     "KEYSOL SITE FEATURES:",
     `- Catalog: ${keyboardCount} keyboards across ${brandCount} brands (always use this list — it is current).`,
-    "- /rankings — speed score leaderboard",
+    "- /rankings — speed score leaderboard (supports ?brand=&q=&layout=&stock=&rt= URL filters)",
     "- /value-trends — token value trends",
-    "- /tokens — KeySol keyboard token guide (Devnet claims live when enabled)",
+    "- /tokens — KeySol keyboard token collectibles (Devnet claims live when enabled)",
+    "- /solana-keyboards — Solana × Thock King TK65 Pro collab page",
     "- Home page includes a Switch Technology Guide section",
+    "",
+    buildSolanaKeyboardContext(),
   ].join("\n");
 }
 

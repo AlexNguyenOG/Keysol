@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { RankingsList } from "@/components/rankings/RankingsList";
@@ -30,13 +31,19 @@ export default async function RankingsPage() {
             <p className="mx-auto mt-4 max-w-2xl text-text-muted">
               Sorted by a composite speed score using polling rate, response
               time, actuation point, and rapid trigger support. Search and
-              filter by layout, stock, or rapid trigger — or sort by price and
-              release date.
+              filter by brand, layout, stock, or rapid trigger — shareable via
+              the URL.
             </p>
           </div>
 
           <SpeedScoreExplainer />
-          <RankingsList catalogKeyboards={catalogKeyboards} />
+          <Suspense
+            fallback={
+              <p className="text-sm text-text-muted">Loading rankings…</p>
+            }
+          >
+            <RankingsList catalogKeyboards={catalogKeyboards} />
+          </Suspense>
         </div>
       </main>
       <Footer />

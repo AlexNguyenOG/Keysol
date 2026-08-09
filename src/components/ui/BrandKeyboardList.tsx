@@ -6,12 +6,14 @@ import type { Keyboard } from "@/types";
 import { KeyboardCard } from "./KeyboardCard";
 
 interface BrandKeyboardListProps {
+  brandId: string;
   brandName: string;
   keyboards: Keyboard[];
   remaining: number;
 }
 
 export function BrandKeyboardList({
+  brandId,
   brandName,
   keyboards,
   remaining,
@@ -91,7 +93,7 @@ export function BrandKeyboardList({
           +{remaining} more {brandName} keyboard
           {remaining === 1 ? "" : "s"} on{" "}
           <Link
-            href="/rankings"
+            href={`/rankings?brand=${encodeURIComponent(brandId)}`}
             className="text-solana-green underline-offset-2 hover:underline"
           >
             rankings

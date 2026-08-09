@@ -45,9 +45,9 @@ CI runs the same checks on every push and pull request to `main`.
 ## Roadmap
 
 ### Shipped
-1. Rankings page — speed score leaderboard with search, layout, rapid-trigger, and stock filters
+1. Rankings page — speed score leaderboard with search, brand/layout/stock/RT filters, and shareable URL query params
 2. Live retailer stock badges + availability snapshot / cron refresh
-3. Collectibles dex — rarity tiers, wallet claims (Devnet / simulation)
+3. Collectibles dex — rarity tiers, wallet claims (Devnet / simulation), buy links on cards
 4. Limited-edition drop radar (admin approve → featured home)
 5. Value Trends — catalog score blended with live stock signals
 6. Solana × Thock King collab page
@@ -55,10 +55,9 @@ CI runs the same checks on every push and pull request to `main`.
 ### Next
 1. Brand detail pages — `/brands/wooting` with keyboard list
 2. Keyboard detail pages — specs, pros/cons, affiliate links
-3. URL-driven filters + shareable ranking queries
-4. Comparison tool — side-by-side 2–3 keyboards
-5. Stock alerts for limited editions
-6. Performance — static generation, image optimization, optional CMS
+3. Comparison tool — side-by-side 2–3 keyboards
+4. Stock alerts for limited editions
+5. Performance — static generation, image optimization, optional CMS
 
 ## Project Structure
 

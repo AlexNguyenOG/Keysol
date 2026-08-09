@@ -5,6 +5,8 @@ import type { Keyboard, TokenSnapshot } from "@/types";
 import { getRarityTierForToken } from "@/lib/tokens/rarity";
 import { AVAILABILITY_LABELS, AVAILABILITY_STYLES } from "@/lib/availability/labels";
 import { getExplorerAddressUrl, getClusterShortLabel } from "@/lib/solana/cluster";
+import { useAvailability } from "@/components/providers/AvailabilityProvider";
+import { PurchaseLink } from "@/components/ui/PurchaseLink";
 import { useTokenCollectibles } from "./TokenCollectiblesProvider";
 
 interface CollectibleCardProps {
@@ -53,6 +55,10 @@ export function CollectibleCard({
     claimBusyKeyboardId,
     claimToken,
   } = useTokenCollectibles();
+  const {
+    status: liveStockStatus,
+    loading: stockLoading,
+  } = useAvailability(snapshot.keyboardId);
 
   const rarity = getRarityTierForToken(snapshot.token);
   const claimed = claimedIds.has(snapshot.keyboardId);
@@ -153,31 +159,43 @@ export function CollectibleCard({
           </a>
         ) : null}
 
-        {claimableEntry ? (
-          <button
-            type="button"
-            disabled={busy || claimed || !connected}
-            onClick={() => {
-              void claimToken(snapshot.keyboardId);
-            }}
-            className="mt-auto w-full rounded-lg bg-gradient-to-r from-solana-purple to-solana-green px-3 py-2 text-sm font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
-            title={
-              !connected
-                ? "Connect a wallet to claim"
+        <div className="mt-auto flex flex-col gap-2">
+          {claimableEntry ? (
+            <button
+              type="button"
+              disabled={busy || claimed || !connected}
+              onClick={() => {
+                void claimToken(snapshot.keyboardId);
+              }}
+              className="w-full rounded-lg bg-gradient-to-r from-solana-purple to-solana-green px-3 py-2 text-sm font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
+              title={
+                !connected
+                  ? "Connect a wallet to claim"
+                  : claimed
+                    ? "Already in your collection"
+                    : "Claim this collectible"
+              }
+            >
+              {busy
+                ? "Claiming…"
                 : claimed
-                  ? "Already in your collection"
-                  : "Claim this collectible"
-            }
-          >
-            {busy
-              ? "Claiming…"
-              : claimed
-                ? "Caught"
-                : connected
-                  ? "Claim"
-                  : "Connect to claim"}
-          </button>
-        ) : null}
+                  ? "Caught"
+                  : connected
+                    ? "Claim"
+                    : "Connect to claim"}
+            </button>
+          ) : null}
+
+          {keyboard?.purchaseUrl ? (
+            <PurchaseLink
+              href={keyboard.purchaseUrl}
+              keyboardName={name}
+              availabilityStatus={liveStockStatus ?? snapshot.stockStatus}
+              loading={stockLoading}
+              className="w-full"
+            />
+          ) : null}
+        </div>
       </div>
     </article>
   );
