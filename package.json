@@ -42,7 +42,7 @@
     "@solana-program/token": "^0.15.0",
     "@solana/codecs-strings": "^7.0.0",
     "@solana/kit": "^7.0.0",
-    "@solana/react": "^7.0.0",
+    "@solana/react": "^7.1.0",
     "@solana/wallet-standard-features": "^1.4.0",
     "@wallet-standard/core": "^1.1.2",
     "@wallet-standard/react": "^1.0.3",
