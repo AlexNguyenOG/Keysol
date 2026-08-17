@@ -40,7 +40,7 @@
     "@noble/ed25519": "^3.1.0",
     "@solana-program/system": "^0.13.0",
     "@solana-program/token": "^0.15.0",
-    "@solana/codecs-strings": "^7.0.0",
+    "@solana/codecs-strings": "^7.1.0",
     "@solana/kit": "^7.0.0",
     "@solana/react": "^7.0.0",
     "@solana/wallet-standard-features": "^1.4.0",
