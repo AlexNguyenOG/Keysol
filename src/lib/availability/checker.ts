@@ -1,5 +1,5 @@
 import https from "node:https";
-import { getAllKeyboards } from "@/lib/catalog.server";
+import { getAllKeyboards } from "@/lib/catalog";
 import { isPublicHttpUrl, getPublicUrlGuardOptions } from "@/lib/security/url";
 import type { Keyboard } from "@/types";
 import {

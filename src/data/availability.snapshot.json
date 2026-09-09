@@ -1,170 +1,202 @@
 {
+  "keep-in-stock-le": {
+    "keyboardId": "keep-in-stock-le",
+    "status": "in_stock",
+    "checkedAt": "2026-07-29T23:19:27.169Z",
+    "source": "test"
+  },
+  "replace-oos-le": {
+    "keyboardId": "replace-oos-le",
+    "status": "out_of_stock",
+    "checkedAt": "2026-07-29T23:19:27.169Z",
+    "source": "test"
+  },
   "wooting-60he-plus": {
     "keyboardId": "wooting-60he-plus",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.306Z",
+    "checkedAt": "2026-09-09T00:01:28.083Z",
     "source": "https://wooting.io/wooting-60he"
-  },
-  "razer-huntsman-v3-pro-mini": {
-    "keyboardId": "razer-huntsman-v3-pro-mini",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.335Z",
-    "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-mini/RZ03-04990200-R3U1"
-  },
-  "corsair-k70-max": {
-    "keyboardId": "corsair-k70-max",
-    "status": "out_of_stock",
-    "checkedAt": "2026-06-18T23:23:40.336Z",
-    "source": "https://www.corsair.com/us/en/p/keyboards/ch-910961g-na/k70-max-rgb-magnetic-mechanical-gaming-keyboard-adjustable-corsair-mgx-switches-steel-grey-ch-910961g-na"
-  },
-  "corsair-k70-rgb-pro": {
-    "keyboardId": "corsair-k70-rgb-pro",
-    "status": "in_stock",
-    "checkedAt": "2026-07-10T13:36:00.000Z",
-    "source": "https://www.corsair.com/us/en/p/keyboards/CH-9109414-NA/k70-rgb-pro-mechanical-gaming-keyboard-with-pbt-double-shot-pro-keycaps-cherry-mx-speed-ch-9109414-na"
-  },
-  "logitech-g-pro-x-tkl-lightspeed": {
-    "keyboardId": "logitech-g-pro-x-tkl-lightspeed",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.337Z",
-    "source": "https://www.logitechg.com/en-us/shop/p/pro-x-tkl-wireless-keyboard"
-  },
-  "keychron-q1-he": {
-    "keyboardId": "keychron-q1-he",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://www.keychron.com/products/keychron-q1-he-qmk-wireless-custom-keyboard"
-  },
-  "ducky-one-3-mini-sf": {
-    "keyboardId": "ducky-one-3-mini-sf",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://ducky.global/products/one-3-rgb"
-  },
-  "steelseries-apex-pro-gen3-tkl": {
-    "keyboardId": "steelseries-apex-pro-gen3-tkl",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://steelseries.com/gaming-keyboards/apex-pro-gen-3?keyboardSize=tkl"
-  },
-  "hyperx-alloy-rise": {
-    "keyboardId": "hyperx-alloy-rise",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.339Z",
-    "source": "https://hyperx.com/products/hyperx-alloy-rise-mechanical-gaming-keyboard"
   },
   "wooting-two-he": {
     "keyboardId": "wooting-two-he",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.334Z",
+    "checkedAt": "2026-09-09T00:01:28.102Z",
     "source": "https://wooting.io/wooting-two-he"
+  },
+  "wooting-80he": {
+    "keyboardId": "wooting-80he",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.103Z",
+    "source": "https://wooting.io/wooting-80he"
   },
   "razer-huntsman-v3-pro-tkl-8khz": {
     "keyboardId": "razer-huntsman-v3-pro-tkl-8khz",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.335Z",
+    "checkedAt": "2026-09-09T00:01:28.104Z",
     "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-tenkeyless-8khz"
+  },
+  "razer-huntsman-v3-pro-mini": {
+    "keyboardId": "razer-huntsman-v3-pro-mini",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.104Z",
+    "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-mini/RZ03-04990200-R3U1"
+  },
+  "razer-huntsman-v3-pro-8khz": {
+    "keyboardId": "razer-huntsman-v3-pro-8khz",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.105Z",
+    "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-8khz"
   },
   "corsair-k70-pro-tkl-he": {
     "keyboardId": "corsair-k70-pro-tkl-he",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.336Z",
+    "checkedAt": "2026-09-09T00:01:28.105Z",
     "source": "https://www.corsair.com/us/en/p/keyboards/ch-911911g-na/k70-pro-tkl-hall-effect-programmable-keyboard-ch-911911g-na"
+  },
+  "corsair-k70-max": {
+    "keyboardId": "corsair-k70-max",
+    "status": "out_of_stock",
+    "checkedAt": "2026-09-09T00:01:28.106Z",
+    "source": "https://www.corsair.com/us/en/p/keyboards/ch-910961g-na/k70-max-rgb-magnetic-mechanical-gaming-keyboard-adjustable-corsair-mgx-switches-steel-grey-ch-910961g-na"
+  },
+  "corsair-k70-rgb-pro": {
+    "keyboardId": "corsair-k70-rgb-pro",
+    "status": "out_of_stock",
+    "checkedAt": "2026-09-09T00:01:28.106Z",
+    "source": "https://www.corsair.com/us/en/p/keyboards/CH-9109414-NA/k70-rgb-pro-mechanical-gaming-keyboard-with-pbt-double-shot-pro-keycaps-cherry-mx-speed-ch-9109414-na"
   },
   "corsair-k70-rgb-mk2": {
     "keyboardId": "corsair-k70-rgb-mk2",
     "status": "unknown",
-    "checkedAt": "2026-06-18T23:23:40.337Z",
+    "checkedAt": "2026-09-09T00:01:28.107Z",
     "source": "https://www.corsair.com/us/en/p/keyboards/ch-9109010-na/k70-rgb-mk-2-mechanical-gaming-keyboard-cherry-mx-red-ch-9109010-na"
   },
   "logitech-g515-rapid-tkl": {
     "keyboardId": "logitech-g515-rapid-tkl",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.337Z",
+    "checkedAt": "2026-09-09T00:01:28.107Z",
     "source": "https://www.logitechg.com/en-us/shop/p/g515-rapid-tkl"
+  },
+  "logitech-g-pro-x-tkl-lightspeed": {
+    "keyboardId": "logitech-g-pro-x-tkl-lightspeed",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.107Z",
+    "source": "https://www.logitechg.com/en-us/shop/p/pro-x-tkl-wireless-keyboard"
   },
   "keychron-k2-he": {
     "keyboardId": "keychron-k2-he",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.338Z",
+    "checkedAt": "2026-09-09T00:01:28.108Z",
     "source": "https://www.keychron.com/products/keychron-k2-he-wireless-magnetic-switch-keyboard"
   },
-  "ducky-one-3-rgb-tkl": {
-    "keyboardId": "ducky-one-3-rgb-tkl",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://ducky.global/products/one-3-rgb"
-  },
-  "ducky-one-3-rgb-full": {
-    "keyboardId": "ducky-one-3-rgb-full",
-    "status": "in_stock",
-    "checkedAt": "2026-06-23T00:00:00.000Z",
-    "source": "https://ducky.global/products/one-3-rgb"
-  },
-  "steelseries-apex-pro-gen3": {
-    "keyboardId": "steelseries-apex-pro-gen3",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.338Z",
-    "source": "https://steelseries.com/gaming-keyboards/apex-pro-gen-3"
-  },
-  "hyperx-origins-2-65": {
-    "keyboardId": "hyperx-origins-2-65",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.339Z",
-    "source": "https://hyperx.com/products/hyperx-origins-2-65-gaming-keyboard"
-  },
-  "hyperx-origins-2-pro-65": {
-    "keyboardId": "hyperx-origins-2-pro-65",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.339Z",
-    "source": "https://hyperx.com/products/hyperx-origins-2-pro-65-gaming-keyboard"
-  },
-  "hyperx-origins-2-1800": {
-    "keyboardId": "hyperx-origins-2-1800",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.339Z",
-    "source": "https://hyperx.com/products/hyperx-origins-2-1800-gaming-keyboard"
-  },
-  "wooting-80he": {
-    "keyboardId": "wooting-80he",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.335Z",
-    "source": "https://wooting.io/wooting-80he"
-  },
-  "razer-huntsman-v3-pro-8khz": {
-    "keyboardId": "razer-huntsman-v3-pro-8khz",
-    "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.336Z",
-    "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-8khz"
+  "keychron-q1-he": {
+    "keyboardId": "keychron-q1-he",
+    "status": "unknown",
+    "checkedAt": "2026-09-09T00:01:28.108Z",
+    "source": "https://www.keychron.com/products/keychron-q1-he-qmk-wireless-custom-keyboard",
+    "error": "HTTP 500"
   },
   "keychron-q3-he-8k": {
     "keyboardId": "keychron-q3-he-8k",
     "status": "in_stock",
-    "checkedAt": "2026-06-18T23:23:40.338Z",
+    "checkedAt": "2026-09-09T00:01:28.109Z",
     "source": "https://www.keychron.com/products/keychron-q3-he-8k-magnetic-switch-keyboard"
   },
   "keychron-q6-he-8k": {
     "keyboardId": "keychron-q6-he-8k",
     "status": "in_stock",
-    "checkedAt": "2026-06-23T00:00:00.000Z",
+    "checkedAt": "2026-09-09T00:01:28.109Z",
     "source": "https://www.keychron.com/products/keychron-q6-he-8k-magnetic-switch-keyboard"
+  },
+  "ducky-one-3-rgb-tkl": {
+    "keyboardId": "ducky-one-3-rgb-tkl",
+    "status": "unknown",
+    "checkedAt": "2026-09-09T00:01:28.109Z",
+    "source": "https://ducky.global/products/one-3-rgb"
+  },
+  "ducky-one-3-rgb-full": {
+    "keyboardId": "ducky-one-3-rgb-full",
+    "status": "unknown",
+    "checkedAt": "2026-09-09T00:01:28.110Z",
+    "source": "https://ducky.global/products/one-3-rgb"
+  },
+  "ducky-one-3-mini-sf": {
+    "keyboardId": "ducky-one-3-mini-sf",
+    "status": "unknown",
+    "checkedAt": "2026-09-09T00:01:28.110Z",
+    "source": "https://ducky.global/products/one-3-rgb"
+  },
+  "steelseries-apex-pro-gen3": {
+    "keyboardId": "steelseries-apex-pro-gen3",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.110Z",
+    "source": "https://steelseries.com/gaming-keyboards/apex-pro-gen-3"
+  },
+  "steelseries-apex-pro-gen3-tkl": {
+    "keyboardId": "steelseries-apex-pro-gen3-tkl",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.111Z",
+    "source": "https://steelseries.com/gaming-keyboards/apex-pro-gen-3?keyboardSize=tkl"
   },
   "steelseries-apex-pro-tkl-v2": {
     "keyboardId": "steelseries-apex-pro-tkl-v2",
     "status": "in_stock",
-    "checkedAt": "2026-07-10T13:45:00.000Z",
+    "checkedAt": "2026-09-09T00:01:28.111Z",
     "source": "https://steelseries.com/gaming-keyboards/apex-pro-2023"
   },
   "steelseries-apex-pro-mini": {
     "keyboardId": "steelseries-apex-pro-mini",
-    "status": "in_stock",
-    "checkedAt": "2026-07-10T13:45:00.000Z",
+    "status": "out_of_stock",
+    "checkedAt": "2026-09-09T00:01:28.111Z",
     "source": "https://steelseries.com/gaming-keyboards/apex-pro?keyboardSize=mini"
+  },
+  "hyperx-alloy-rise": {
+    "keyboardId": "hyperx-alloy-rise",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.112Z",
+    "source": "https://hyperx.com/products/hyperx-alloy-rise-mechanical-gaming-keyboard"
+  },
+  "hyperx-origins-2-pro-65": {
+    "keyboardId": "hyperx-origins-2-pro-65",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.112Z",
+    "source": "https://hyperx.com/products/hyperx-origins-2-pro-65-gaming-keyboard"
+  },
+  "hyperx-origins-2-65": {
+    "keyboardId": "hyperx-origins-2-65",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.112Z",
+    "source": "https://hyperx.com/products/hyperx-origins-2-65-gaming-keyboard"
+  },
+  "hyperx-origins-2-1800": {
+    "keyboardId": "hyperx-origins-2-1800",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.113Z",
+    "source": "https://hyperx.com/products/hyperx-origins-2-1800-gaming-keyboard"
   },
   "nuphy-field75-he": {
     "keyboardId": "nuphy-field75-he",
+    "status": "unknown",
+    "checkedAt": "2026-09-09T00:01:28.113Z",
+    "source": "https://nuphy.com/products/field75-he",
+    "error": "HTTP 429"
+  },
+  "keychron-dayz-special-edition-75-compact": {
+    "keyboardId": "keychron-dayz-special-edition-75-compact",
+    "status": "in_stock",
+    "checkedAt": "2026-09-09T00:01:28.113Z",
+    "source": "https://www.keychron.com/products/dayz-special-edition-wireless-magnetic-switch-custom-keyboard"
+  },
+  "razer-razer-huntsman-signature-edition": {
+    "keyboardId": "razer-razer-huntsman-signature-edition",
     "status": "out_of_stock",
-    "checkedAt": "2026-06-18T23:23:40.339Z",
-    "source": "https://nuphy.com/products/field75-he"
+    "checkedAt": "2026-09-09T00:01:28.113Z",
+    "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-signature-edition"
+  },
+  "ducky-one-3-rgb-fallout-vault-tec-edition": {
+    "keyboardId": "ducky-one-3-rgb-fallout-vault-tec-edition",
+    "status": "unknown",
+    "checkedAt": "2026-09-09T00:01:28.114Z",
+    "source": "https://ducky.global/products/one-3-rgb-fallout%C2%AE-vault-tec%E2%84%A2-edition"
   }
 }
