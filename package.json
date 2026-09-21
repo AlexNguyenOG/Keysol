@@ -33,7 +33,7 @@
     "check": "npm run lint && npm run test && npm run audit:ci && npm run build"
   },
   "dependencies": {
-    "@libsql/client": "^0.17.4",
+    "@libsql/client": "^0.18.0",
     "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
     "@metaplex-foundation/umi": "^1.5.1",
     "@metaplex-foundation/umi-bundle-defaults": "^1.5.1",
