@@ -39,7 +39,7 @@
     "@metaplex-foundation/umi-bundle-defaults": "^1.5.1",
     "@noble/ed25519": "^3.1.0",
     "@solana-program/system": "^0.13.0",
-    "@solana-program/token": "^0.15.0",
+    "@solana-program/token": "^0.16.0",
     "@solana/codecs-strings": "^7.0.0",
     "@solana/kit": "^7.0.0",
     "@solana/react": "^7.0.0",
