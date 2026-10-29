@@ -14,170 +14,169 @@
   "wooting-60he-plus": {
     "keyboardId": "wooting-60he-plus",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.260Z",
+    "checkedAt": "2026-10-29T04:00:20.472Z",
     "source": "https://wooting.io/wooting-60he"
   },
   "wooting-two-he": {
     "keyboardId": "wooting-two-he",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.292Z",
+    "checkedAt": "2026-10-29T04:00:20.506Z",
     "source": "https://wooting.io/wooting-two-he"
   },
   "wooting-80he": {
     "keyboardId": "wooting-80he",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.294Z",
+    "checkedAt": "2026-10-29T04:00:20.508Z",
     "source": "https://wooting.io/wooting-80he"
   },
   "razer-huntsman-v3-pro-tkl-8khz": {
     "keyboardId": "razer-huntsman-v3-pro-tkl-8khz",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.295Z",
+    "checkedAt": "2026-10-29T04:00:20.509Z",
     "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-tenkeyless-8khz"
   },
   "razer-huntsman-v3-pro-mini": {
     "keyboardId": "razer-huntsman-v3-pro-mini",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.296Z",
+    "checkedAt": "2026-10-29T04:00:20.510Z",
     "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-mini/RZ03-04990200-R3U1"
   },
   "razer-huntsman-v3-pro-8khz": {
     "keyboardId": "razer-huntsman-v3-pro-8khz",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.297Z",
+    "checkedAt": "2026-10-29T04:00:20.511Z",
     "source": "https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-8khz"
   },
   "corsair-k70-pro-tkl-he": {
     "keyboardId": "corsair-k70-pro-tkl-he",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.298Z",
+    "checkedAt": "2026-10-29T04:00:20.512Z",
     "source": "https://www.corsair.com/us/en/p/keyboards/ch-911911g-na/k70-pro-tkl-hall-effect-programmable-keyboard-ch-911911g-na"
   },
   "corsair-k70-max": {
     "keyboardId": "corsair-k70-max",
     "status": "unknown",
-    "checkedAt": "2026-10-28T18:08:50.300Z",
+    "checkedAt": "2026-10-29T04:00:20.513Z",
     "source": "https://www.corsair.com/us/en/p/keyboards/ch-910961g-na/k70-max-rgb-magnetic-mechanical-gaming-keyboard-adjustable-corsair-mgx-switches-steel-grey-ch-910961g-na"
   },
   "corsair-k70-rgb-pro": {
     "keyboardId": "corsair-k70-rgb-pro",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.301Z",
+    "checkedAt": "2026-10-29T04:00:20.514Z",
     "source": "https://www.corsair.com/us/en/p/keyboards/CH-9109414-NA/k70-rgb-pro-mechanical-gaming-keyboard-with-pbt-double-shot-pro-keycaps-cherry-mx-speed-ch-9109414-na"
   },
   "corsair-k70-rgb-mk2": {
     "keyboardId": "corsair-k70-rgb-mk2",
     "status": "unknown",
-    "checkedAt": "2026-10-28T18:08:50.303Z",
+    "checkedAt": "2026-10-29T04:00:20.516Z",
     "source": "https://www.corsair.com/us/en/p/keyboards/ch-9109010-na/k70-rgb-mk-2-mechanical-gaming-keyboard-cherry-mx-red-ch-9109010-na"
   },
   "logitech-g515-rapid-tkl": {
     "keyboardId": "logitech-g515-rapid-tkl",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.304Z",
+    "checkedAt": "2026-10-29T04:00:20.517Z",
     "source": "https://www.logitechg.com/en-us/shop/p/g515-rapid-tkl"
   },
   "logitech-g-pro-x-tkl-lightspeed": {
     "keyboardId": "logitech-g-pro-x-tkl-lightspeed",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.304Z",
+    "checkedAt": "2026-10-29T04:00:20.519Z",
     "source": "https://www.logitechg.com/en-us/shop/p/pro-x-tkl-wireless-keyboard"
   },
   "keychron-k2-he": {
     "keyboardId": "keychron-k2-he",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.305Z",
+    "checkedAt": "2026-10-29T04:00:20.519Z",
     "source": "https://www.keychron.com/products/keychron-k2-he-wireless-magnetic-switch-keyboard"
   },
   "keychron-q1-he": {
     "keyboardId": "keychron-q1-he",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.306Z",
+    "checkedAt": "2026-10-29T04:00:20.520Z",
     "source": "https://www.keychron.com/products/keychron-q1-he-qmk-wireless-custom-keyboard"
   },
   "keychron-q3-he-8k": {
     "keyboardId": "keychron-q3-he-8k",
-    "status": "unknown",
-    "checkedAt": "2026-10-28T18:08:50.307Z",
-    "source": "https://www.keychron.com/products/keychron-q3-he-8k-magnetic-switch-keyboard",
-    "error": "HTTP 500"
+    "status": "in_stock",
+    "checkedAt": "2026-10-29T04:00:20.521Z",
+    "source": "https://www.keychron.com/products/keychron-q3-he-8k-magnetic-switch-keyboard"
   },
   "keychron-q6-he-8k": {
     "keyboardId": "keychron-q6-he-8k",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.307Z",
+    "checkedAt": "2026-10-29T04:00:20.522Z",
     "source": "https://www.keychron.com/products/keychron-q6-he-8k-magnetic-switch-keyboard"
   },
   "ducky-one-3-rgb-tkl": {
     "keyboardId": "ducky-one-3-rgb-tkl",
     "status": "unknown",
-    "checkedAt": "2026-10-28T18:08:50.308Z",
+    "checkedAt": "2026-10-29T04:00:20.522Z",
     "source": "https://ducky.global/products/one-3-rgb"
   },
   "ducky-one-3-rgb-full": {
     "keyboardId": "ducky-one-3-rgb-full",
     "status": "unknown",
-    "checkedAt": "2026-10-28T18:08:50.308Z",
+    "checkedAt": "2026-10-29T04:00:20.523Z",
     "source": "https://ducky.global/products/one-3-rgb"
   },
   "ducky-one-3-mini-sf": {
     "keyboardId": "ducky-one-3-mini-sf",
     "status": "unknown",
-    "checkedAt": "2026-10-28T18:08:50.309Z",
+    "checkedAt": "2026-10-29T04:00:20.524Z",
     "source": "https://ducky.global/products/one-3-rgb"
   },
   "steelseries-apex-pro-gen3": {
     "keyboardId": "steelseries-apex-pro-gen3",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.310Z",
+    "checkedAt": "2026-10-29T04:00:20.525Z",
     "source": "https://steelseries.com/gaming-keyboards/apex-pro-gen-3"
   },
   "steelseries-apex-pro-gen3-tkl": {
     "keyboardId": "steelseries-apex-pro-gen3-tkl",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.311Z",
+    "checkedAt": "2026-10-29T04:00:20.526Z",
     "source": "https://steelseries.com/gaming-keyboards/apex-pro-gen-3?keyboardSize=tkl"
   },
   "steelseries-apex-pro-tkl-v2": {
     "keyboardId": "steelseries-apex-pro-tkl-v2",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.312Z",
+    "checkedAt": "2026-10-29T04:00:20.527Z",
     "source": "https://steelseries.com/gaming-keyboards/apex-pro-2023"
   },
   "steelseries-apex-pro-mini": {
     "keyboardId": "steelseries-apex-pro-mini",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.313Z",
+    "checkedAt": "2026-10-29T04:00:20.527Z",
     "source": "https://steelseries.com/gaming-keyboards/apex-pro?keyboardSize=mini"
   },
   "hyperx-alloy-rise": {
     "keyboardId": "hyperx-alloy-rise",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.313Z",
+    "checkedAt": "2026-10-29T04:00:20.528Z",
     "source": "https://hyperx.com/products/hyperx-alloy-rise-mechanical-gaming-keyboard"
   },
   "hyperx-origins-2-pro-65": {
     "keyboardId": "hyperx-origins-2-pro-65",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.314Z",
+    "checkedAt": "2026-10-29T04:00:20.529Z",
     "source": "https://hyperx.com/products/hyperx-origins-2-pro-65-gaming-keyboard"
   },
   "hyperx-origins-2-65": {
     "keyboardId": "hyperx-origins-2-65",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.315Z",
+    "checkedAt": "2026-10-29T04:00:20.529Z",
     "source": "https://hyperx.com/products/hyperx-origins-2-65-gaming-keyboard"
   },
   "hyperx-origins-2-1800": {
     "keyboardId": "hyperx-origins-2-1800",
     "status": "in_stock",
-    "checkedAt": "2026-10-28T18:08:50.316Z",
+    "checkedAt": "2026-10-29T04:00:20.530Z",
     "source": "https://hyperx.com/products/hyperx-origins-2-1800-gaming-keyboard"
   },
   "nuphy-field75-he": {
     "keyboardId": "nuphy-field75-he",
     "status": "unknown",
-    "checkedAt": "2026-10-28T18:08:50.318Z",
+    "checkedAt": "2026-10-29T04:00:20.530Z",
     "source": "https://nuphy.com/products/field75-he",
     "error": "HTTP 429"
   },
